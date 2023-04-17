@@ -20,6 +20,6 @@ import com.fortyseven.core.Something
 
 object Main:
   def main(args: Array[String]): Unit = Program.run(
-    Something("This is a test!")
+    Something("This is a test for the codeowners!")
   )
 
