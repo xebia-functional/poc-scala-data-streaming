@@ -1,16 +1,21 @@
 import Dependencies._
-import Util._
+import CustomSbt._
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
+
 ThisBuild / organization := "com.47deg"
-ThisBuild / scmInfo := Some(
+
+ThisBuild / scmInfo      := Some(
   ScmInfo(
     url("https://github.com/47deg/poc-scala-data-streaming"),
     "scm:git@github.com:47deg/poc-scala-data-streaming.git"
   )
 )
+
 ThisBuild / scalaVersion := Versions.scala
+
 ThisBuild / semanticdbEnabled := true
+
 ThisBuild / scalafixDependencies += SbtPlugins.organizeImports
 
 ThisBuild / scalacOptions ++=
@@ -23,11 +28,12 @@ ThisBuild / scalacOptions ++=
     "-Xfatal-warnings",
     "-Yexplicit-nulls", // experimental (I've seen it cause issues with circe)
     "-Ykind-projector",
-    "-Ysafe-init", // experimental (I've seen it cause issues with circe)
+    "-Ysafe-init"       // experimental (I've seen it cause issues with circe)
   ) ++ Seq("-rewrite", "-indent") ++ Seq("-source", "future-migration")
 
 lazy val `poc-scala-data-streaming`: Project =
-  project.in(file("."))
+  project
+    .in(file("."))
     .aggregate(
       // layer 1
       // team red
@@ -45,7 +51,7 @@ lazy val `poc-scala-data-streaming`: Project =
 
       // layer 3
       // team red
-      main,
+      main
     )
 
 // layer 1
@@ -124,7 +130,6 @@ lazy val core: Project =
       libraryDependencies ++= Seq()
     )
 
-
 // layer 3
 // team red
 lazy val main: Project =
@@ -155,10 +160,10 @@ lazy val commonSettings = commonScalacOptions ++ Seq(
 lazy val commonScalacOptions = Seq(
   Compile / console / scalacOptions --= Seq(
     "-Wunused:_",
-    "-Xfatal-warnings",
+    "-Xfatal-warnings"
   ),
   Test / console / scalacOptions :=
-    (Compile / console / scalacOptions).value,
+    (Compile / console / scalacOptions).value
 )
 
 lazy val commonDependencies = Seq(
@@ -167,7 +172,6 @@ lazy val commonDependencies = Seq(
   ),
   libraryDependencies ++= Seq(
     org.scalatest.scalatest,
-    org.scalatestplus.`scalacheck-1-15`,
+    org.scalatestplus.`scalacheck-1-15`
   ).map(_ % Test)
 )
-

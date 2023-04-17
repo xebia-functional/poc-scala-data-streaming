@@ -3,24 +3,19 @@ import scala.sys.process._
 
 import sbt._
 
-object Util {
+object CustomSbt {
+
   def styled(in: Any): String =
     scala.Console.CYAN + in + scala.Console.RESET
 
   def prompt(projectName: String): String =
-    gitPrompt
-      .fold(projectPrompt(projectName)) { g =>
-        s"$g:${projectPrompt(projectName)}"
-      }
+    gitPrompt.fold(projectPrompt(projectName)) { g => s"$g:${projectPrompt(projectName)}" }
 
   private def projectPrompt(projectName: String): String =
     s"sbt:${styled(projectName)}"
 
   def projectName(state: State): String =
-    Project
-      .extract(state)
-      .currentRef
-      .project
+    Project.extract(state).currentRef.project
 
   private def gitPrompt: Option[String] =
     for {
@@ -36,11 +31,7 @@ object Util {
 
   private def run(command: String): Option[String] =
     Try(
-      command
-        .split(" ")
-        .toSeq
-        .!!(noopProcessLogger)
-        .trim
+      command.split(" ").toSeq.!!(noopProcessLogger).trim
     ).toOption
 
   private val noopProcessLogger: ProcessLogger =
