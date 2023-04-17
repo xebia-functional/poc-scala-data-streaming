@@ -12,23 +12,22 @@ ThisBuild / scalaVersion := Versions.scala
 ThisBuild / semanticdbEnabled := true
 ThisBuild / scalafixDependencies += SbtPlugins.organizeImports
 
-lazy val `poc-scala-data-streaming`: Project = project
-  .in(file("."))
+lazy val `poc-scala-data-streaming`: Project = (project in file("."))
   .settings(
     name := "poc-scala-data-streaming"
   )
 
-lazy val common: Project = project.in(file("common"))
+lazy val common: Project = (project in file("common"))
   .settings(
     name := "common"
   )
 
-lazy val `data-generator`: Project = project.in(file("data-generator"))
+lazy val `data-generator`: Project = (project in file("data-generator"))
   .settings(
     name := "data-generator"
   )
 
-lazy val `processor-flink`: Project = project.in(file("processor/flink"))
+lazy val `processor-flink`: Project = (project in file("processor/flink"))
   .settings(
     name := "processor-flink"
   )
