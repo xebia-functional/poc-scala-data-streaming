@@ -164,10 +164,10 @@ lazy val commonScalacOptions = Seq(
 lazy val commonDependencies = Seq(
   libraryDependencies ++= Seq(
     // main dependencies
-  )//,
-  //libraryDependencies ++= Seq(
-  //  org.scalatest.scalatest,
-  //  org.scalatestplus.`scalacheck-1-15`,
-  //).map(_ % Test),
+  ),
+  libraryDependencies ++= Seq(
+    org.scalatest.scalatest,
+    org.scalatestplus.`scalacheck-1-15`,
+  ).map(_ % Test)
 )
 
