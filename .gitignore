@@ -1,5 +1,9 @@
 /target/
 /project/target/
 /project/project/target/
+/common/target/
+/data-generator/target/
+/processor/flink/target/
+/processor/kafka/target/
 .bsp
 .idea
