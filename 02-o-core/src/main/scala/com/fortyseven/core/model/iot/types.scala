@@ -3,6 +3,8 @@ package com.fortyseven.core.model.iot
 object types:
 
   opaque type Coordinate <: Double = Double // Should be limited to earth coordinates
+  opaque type Latitude <: Coordinate = Coordinate
+  opaque type Longitude <: Coordinate = Coordinate
   opaque type Percentage <: Double = Double //Should be limited to 0.00 and 100.00
   opaque type Speed <: Double = Double // Should be typed better. Meters/second or Km/h?
 
