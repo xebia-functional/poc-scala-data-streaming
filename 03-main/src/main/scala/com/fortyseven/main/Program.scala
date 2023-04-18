@@ -16,7 +16,7 @@
 
 package com.fortyseven.main
 
-import com.fortyseven.coreheaders.DoSomething
+import com.fortyseven.coreheaders.Program
 
-object Program:
-  def run(some: DoSomething): Unit = some.printToConsole()
+object Program extends Program:
+  override def run(configuration: String): Unit = println(configuration)
