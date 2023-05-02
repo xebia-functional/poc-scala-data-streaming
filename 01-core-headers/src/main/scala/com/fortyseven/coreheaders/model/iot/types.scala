@@ -23,6 +23,7 @@ object types:
   opaque type Longitude <: Coordinate = Coordinate
   opaque type Percentage <: Double = Double //Should be limited to 0.00 and 100.00
   opaque type Speed <: Double = Double // Should be typed better. Meters/second or Km/h?
+  opaque type Hz <: Double = Double // IS measure for frequency 1/60 Hz would be 1 RPM
 
   object Coordinate:
     def apply(coordinate: Double): Coordinate = coordinate
@@ -35,5 +36,9 @@ object types:
   object Speed:
     def apply(speed: Double): Speed = speed
 
-    extension (speed: Speed) def value: Double = speed  
+    extension (speed: Speed) def value: Double = speed
 
+  object Hz:
+    def apply(hertz: Double): Hz = hertz
+
+    extension (hertz: Hz) def value: Double = hertz
