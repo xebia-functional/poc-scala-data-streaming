@@ -35,10 +35,8 @@ object types:
 
   object Speed:
     def apply(speed: Double): Speed = speed
-
     extension (speed: Speed) def value: Double = speed
 
   object Hz:
     def apply(hertz: Double): Hz = hertz
-
     extension (hertz: Hz) def value: Double = hertz

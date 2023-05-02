@@ -17,6 +17,7 @@
 package com.fortyseven.coreheaders.model
 
 import java.util.UUID
+import scala.util.Try
 
 object ids:
 
@@ -26,24 +27,12 @@ object ids:
 
   object BicycleId:
     def apply(id: UUID): BicycleId = id
-    def unapply(arg: String): Option[BicycleId] =
-      val candidate = UUID.fromString(arg)
-      if candidate != null then Some(candidate) else None
-
     extension (bicycleId: BicycleId) def value: UUID = bicycleId
 
   object UserId:
     def apply(id: UUID): UserId = id
-
-    def unapply(arg: String): Option[UserId] =
-      val candidate = UUID.fromString(arg)
-      if candidate != null then Some(candidate) else None
-
     extension (userId: UserId) def value: UUID = userId
 
   object TripId:
     def apply(tripID: UUID): TripId = tripID
-    def unapply(arg: String): Option[BicycleId] =
-      val candidate = UUID.fromString(arg)
-      if candidate != null then Some(candidate) else None
     extension (tripId: TripId) def value: UUID = tripId  
