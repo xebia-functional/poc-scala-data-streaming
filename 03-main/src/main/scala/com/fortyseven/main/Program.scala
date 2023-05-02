@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Xebia Functional
+ * Copyright 2023 Xebia Functional
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,4 +17,5 @@
 package com.fortyseven.main
 
 object Program:
+
   def run(configuration: String): Unit = println(configuration)
