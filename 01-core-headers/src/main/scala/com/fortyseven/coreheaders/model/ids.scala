@@ -14,10 +14,25 @@
  * limitations under the License.
  */
 
-package com.fortyseven.main
+package com.fortyseven.coreheaders.model
 
-object Main:
+import java.util.UUID
+import scala.util.Try
 
-  def main(args: Array[String]): Unit = Program.run(
-    "This is a test!"
-  )
+object ids:
+
+  opaque type BicycleId <: UUID = UUID
+  opaque type UserId <: UUID = UUID
+  opaque type TripId <: UUID = UUID
+
+  object BicycleId:
+    def apply(id: UUID): BicycleId = id
+    extension (bicycleId: BicycleId) def value: UUID = bicycleId
+
+  object UserId:
+    def apply(id: UUID): UserId = id
+    extension (userId: UserId) def value: UUID = userId
+
+  object TripId:
+    def apply(tripID: UUID): TripId = tripID
+    extension (tripId: TripId) def value: UUID = tripId  

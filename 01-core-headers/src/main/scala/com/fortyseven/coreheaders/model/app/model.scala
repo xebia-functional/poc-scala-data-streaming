@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-package com.fortyseven.main
+package com.fortyseven.coreheaders.model.app
 
-object Main:
+import com.fortyseven.coreheaders.model.app.types.Meters
+import com.fortyseven.coreheaders.model.ids.{BicycleId, TripId, UserId}
+import com.fortyseven.coreheaders.model.iot.types.Speed
 
-  def main(args: Array[String]): Unit = Program.run(
-    "This is a test!"
-  )
+object model:
+
+  case class TotalDistanceByTrip(tripId: TripId, distance: Meters)
+  case class TotalDistanceByUser(userId: UserId, distance: Meters)
+  case class CurrentSpeed(tripId: TripId, speed: Speed)
+  case class TotalRange(tripId: TripId, bicycleId: BicycleId, remainingRange: Meters)

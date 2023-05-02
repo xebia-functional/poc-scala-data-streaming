@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-package com.fortyseven.main
+package com.fortyseven.coreheaders
 
-object Main:
-
-  def main(args: Array[String]): Unit = Program.run(
-    "This is a test!"
-  )
+trait JobProcessorSpark:
+  def process(): Unit  

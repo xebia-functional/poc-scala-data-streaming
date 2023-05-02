@@ -14,10 +14,22 @@
  * limitations under the License.
  */
 
-package com.fortyseven.main
+package com.fortyseven.coreheaders.model.app
 
-object Main:
+import java.util.UUID
 
-  def main(args: Array[String]): Unit = Program.run(
-    "This is a test!"
-  )
+object types:
+  
+  opaque type Meters <: Int = Int
+  opaque type Kilometers <: Double = Double
+  
+  object Meters:
+    def apply(meters: Int): Meters = meters
+    extension (meters: Meters)
+      def value: Int = meters
+      def toKilometers: Kilometers = meters.toDouble / 1000
+      
+  
+  object Kilometers:
+    def apply(kilometers: Double): Kilometers = kilometers
+    extension (kilometers: Kilometers) def value: Double = kilometers
