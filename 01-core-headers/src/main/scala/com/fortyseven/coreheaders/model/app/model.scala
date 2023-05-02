@@ -16,13 +16,13 @@
 
 package com.fortyseven.coreheaders.model.app
 
-import com.fortyseven.coreheaders.model.app.types.Kilometers
-import com.fortyseven.coreheaders.model.ids.{BicycleId, UserId, TripId}
+import com.fortyseven.coreheaders.model.app.types.Meters
+import com.fortyseven.coreheaders.model.ids.{BicycleId, TripId, UserId}
 import com.fortyseven.coreheaders.model.iot.types.Speed
 
 object model:
 
-  case class TotalDistanceByTrip(tripId: TripId, distance:Kilometers)
-  case class TotalDistanceByUser(userId: UserId, distance: Kilometers)
+  case class TotalDistanceByTrip(tripId: TripId, distance: Meters)
+  case class TotalDistanceByUser(userId: UserId, distance: Meters)
   case class CurrentSpeed(tripId: TripId, speed: Speed)
-  case class TotalRange(tripId: TripId, bicycleId: BicycleId, remainingRange: Kilometers)
+  case class TotalRange(tripId: TripId, bicycleId: BicycleId, remainingRange: Meters)
