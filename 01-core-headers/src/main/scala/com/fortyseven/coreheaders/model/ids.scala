@@ -23,24 +23,24 @@ object ids:
 
   opaque type BicycleId <: UUID = UUID
 
-  opaque type UserId <: UUID    = UUID
+  opaque type UserId <: UUID = UUID
 
-  opaque type TripId <: UUID    = UUID
+  opaque type TripId <: UUID = UUID
 
   object BicycleId:
 
-    def apply(id: UUID): BicycleId                   = id
+    def apply(id: UUID): BicycleId = id
 
     extension (bicycleId: BicycleId) def value: UUID = bicycleId
 
   object UserId:
 
-    def apply(id: UUID): UserId                = id
+    def apply(id: UUID): UserId = id
 
     extension (userId: UserId) def value: UUID = userId
 
   object TripId:
 
-    def apply(tripID: UUID): TripId            = tripID
+    def apply(tripID: UUID): TripId = tripID
 
     extension (tripId: TripId) def value: UUID = tripId

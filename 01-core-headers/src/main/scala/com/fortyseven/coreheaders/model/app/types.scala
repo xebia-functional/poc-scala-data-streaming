@@ -20,7 +20,7 @@ import java.util.UUID
 
 object types:
 
-  opaque type Meters <: Int        = Int
+  opaque type Meters <: Int = Int
 
   opaque type Kilometers <: Double = Double
 
@@ -30,12 +30,12 @@ object types:
 
     extension (meters: Meters)
 
-      def value: Int               = meters
+      def value: Int = meters
 
       def toKilometers: Kilometers = meters.toDouble / 1000
 
   object Kilometers:
 
-    def apply(kilometers: Double): Kilometers            = kilometers
+    def apply(kilometers: Double): Kilometers = kilometers
 
     extension (kilometers: Kilometers) def value: Double = kilometers

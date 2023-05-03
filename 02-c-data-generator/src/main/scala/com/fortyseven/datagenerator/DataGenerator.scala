@@ -1,28 +1,29 @@
 package com.fortyseven.datagenerator
 
-import com.fortyseven.coreheaders.DataGenerator
+import cats.effect.IO
+import com.fortyseven.coreheaders.DataGeneratorHeader
 import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
 
-object DataGenerator extends DataGenerator:
-  override def generateBatteryCharge: BateryCharge = ???
+class DataGenerator[F[_]] extends DataGeneratorHeader[F]:
+  override def generateBatteryCharge: F[BateryCharge] = ???
 
-  override def generateBatteryHealth: BatteryHealth = ???
+  override def generateBatteryHealth: F[BatteryHealth] = ???
 
-  override def generateBreaksHealth: BreaksHealth = ???
+  override def generateBreaksHealth: F[BreaksHealth] = ???
 
-  override def generateBreaksUsage: BreaksUsage = ???
+  override def generateBreaksUsage: F[BreaksUsage] = ???
 
-  override def generateGPSPosition: GPSPosition = ???
+  override def generateGPSPosition: F[GPSPosition] = ???
 
-  override def generatePneumaticPressure: PneumaticPressure = ???
+  override def generatePneumaticPressure: F[PneumaticPressure] = ???
 
-  override def generateWheelRotation: WheelRotation = ???
+  override def generateWheelRotation: F[WheelRotation] = ???
 
-  override def generateCurrentSpeed: CurrentSpeed = ???
+  override def generateCurrentSpeed: F[CurrentSpeed] = ???
 
-  override def generateTotalDistanceByTrip: TotalDistanceByTrip = ???
+  override def generateTotalDistanceByTrip: F[TotalDistanceByTrip] = ???
 
-  override def generateTotalDistancePerUser: TotalDistanceByUser = ???
+  override def generateTotalDistancePerUser: F[TotalDistanceByUser] = ???
 
-  override def generateTotalRange: TotalRange = ???
+  override def generateTotalRange: F[TotalRange] = ???

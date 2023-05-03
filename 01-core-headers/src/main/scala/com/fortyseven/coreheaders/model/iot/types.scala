@@ -18,38 +18,38 @@ package com.fortyseven.coreheaders.model.iot
 
 object types:
 
-  opaque type Coordinate <: Double    = Double // Should be limited to earth coordinates
+  opaque type Coordinate <: Double = Double // Should be limited to earth coordinates
 
-  opaque type Latitude <: Coordinate  = Coordinate
+  opaque type Latitude <: Coordinate = Coordinate
 
   opaque type Longitude <: Coordinate = Coordinate
 
-  opaque type Percentage <: Double    = Double // Should be limited to 0.00 and 100.00
+  opaque type Percentage <: Double = Double // Should be limited to 0.00 and 100.00
 
-  opaque type Speed <: Double         = Double // Should be typed better. Meters/second or Km/h?
+  opaque type Speed <: Double = Double // Should be typed better. Meters/second or Km/h?
 
-  opaque type Hz <: Double            = Double // IS measure for frequency 1/60 Hz would be 1 RPM
+  opaque type Hz <: Double = Double // IS measure for frequency 1/60 Hz would be 1 RPM
 
   object Coordinate:
 
-    def apply(coordinate: Double): Coordinate            = coordinate
+    def apply(coordinate: Double): Coordinate = coordinate
 
     extension (coordinate: Coordinate) def value: Double = coordinate
 
   object Percentage:
 
-    def apply(percentage: Double): Percentage            = percentage
+    def apply(percentage: Double): Percentage = percentage
 
     extension (percentage: Percentage) def value: Double = percentage
 
   object Speed:
 
-    def apply(speed: Double): Speed            = speed
+    def apply(speed: Double): Speed = speed
 
     extension (speed: Speed) def value: Double = speed
 
   object Hz:
 
-    def apply(hertz: Double): Hz            = hertz
+    def apply(hertz: Double): Hz = hertz
 
     extension (hertz: Hz) def value: Double = hertz

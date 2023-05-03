@@ -1,27 +1,34 @@
 package com.fortyseven.kafkaconsumer
 
+import cats.*
+import cats.effect.kernel.{Async, Sync}
 import cats.effect.{IO, IOApp}
+import cats.implicits.*
+import com.fortyseven.coreheaders.KafkaConsumerHeader
 import fs2.kafka.*
-
-import com.fortyseven.coreheaders.KafkaConsumer
 
 import scala.concurrent.duration.*
 
-object KafkaConsumer extends KafkaConsumer with IOApp.Simple:
-  override def consume(): IO[Unit] = run
+object KafkaConsumer extends IOApp.Simple:
 
-  val run: IO[Unit] =
-    def processRecord(record: ConsumerRecord[String, String]): IO[(String, String)] =
-      IO.pure(record.key -> record.value)
+  val run: IO[Unit] = new KafkaConsumer[IO].run
+
+private class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
+
+  override def consume(): F[Unit] = run
+
+  val run: F[Unit] =
+    def processRecord(record: ConsumerRecord[String, String]): F[(String, String)] =
+      Applicative[F].pure(record.key -> record.value)
 
     val consumerSettings =
-      ConsumerSettings[IO, String, String]
+      ConsumerSettings[F, String, String]
         .withAutoOffsetReset(AutoOffsetReset.Earliest)
         .withBootstrapServers("localhost:9092")
         .withGroupId("group")
 
     val producerSettings =
-      ProducerSettings[IO, String, String].withBootstrapServers("localhost:9092")
+      ProducerSettings[F, String, String].withBootstrapServers("localhost:9092")
 
     val stream =
       fs2.kafka.KafkaConsumer
