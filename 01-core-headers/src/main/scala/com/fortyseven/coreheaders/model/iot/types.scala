@@ -30,6 +30,8 @@ object types:
 
   opaque type Hz <: Double = Double // IS measure for frequency 1/60 Hz would be 1 RPM
 
+  opaque type Bar <: Double = Double // Should be positive
+
   object Coordinate:
 
     def apply(coordinate: Double): Coordinate = coordinate
@@ -53,3 +55,9 @@ object types:
     def apply(hertz: Double): Hz = hertz
 
     extension (hertz: Hz) def value: Double = hertz
+
+  object Bar:
+
+    def apply(bar: Double): Bar = bar
+
+    extension (bar: Bar) def value: Double = bar

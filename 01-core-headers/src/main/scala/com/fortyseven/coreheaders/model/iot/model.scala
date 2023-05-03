@@ -16,7 +16,7 @@
 
 package com.fortyseven.coreheaders.model.iot
 
-import com.fortyseven.coreheaders.model.iot.types.{Hz, Latitude, Longitude, Percentage}
+import com.fortyseven.coreheaders.model.iot.types.*
 
 import scala.concurrent.duration.Duration
 
@@ -30,7 +30,7 @@ object model:
 
   case class BatteryHealth(remaining: Percentage)
 
-  case class PneumaticPressure()
+  case class PneumaticPressure(pressure: Bar)
 
   case class BreaksUsage(duration: Duration)
 

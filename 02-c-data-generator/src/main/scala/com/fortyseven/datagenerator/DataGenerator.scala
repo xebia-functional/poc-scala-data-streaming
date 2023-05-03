@@ -1,11 +1,20 @@
 package com.fortyseven.datagenerator
 
-import cats.effect.IO
+import cats.effect.{IO, IOApp}
+import cats.effect.Sync
 import com.fortyseven.coreheaders.DataGeneratorHeader
 import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
+import com.fortyseven.coreheaders.model.iot.types.*
 
-class DataGenerator[F[_]] extends DataGeneratorHeader[F]:
+object DataGenerator extends IOApp.Simple:
+
+  val run: IO[Unit] = new DataGenerator[IO].run
+
+protected class DataGenerator[F[_]: Sync] extends DataGeneratorHeader[F]:
+
+  val run: F[Unit] = generatePneumaticPressure.compile.drain
+
   override def generateBatteryCharge: F[BateryCharge] = ???
 
   override def generateBatteryHealth: F[BatteryHealth] = ???
@@ -16,7 +25,10 @@ class DataGenerator[F[_]] extends DataGeneratorHeader[F]:
 
   override def generateGPSPosition: F[GPSPosition] = ???
 
-  override def generatePneumaticPressure: F[PneumaticPressure] = ???
+  override def generatePneumaticPressure: fs2.Stream[F, PneumaticPressure] =
+    val initValue = 2.0
+    val pressureVariance: Double = (math.random() - 0.5) * 1e-1
+    fs2.Stream.emit(PneumaticPressure(Bar(initValue + pressureVariance))).repeat
 
   override def generateWheelRotation: F[WheelRotation] = ???
 

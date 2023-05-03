@@ -31,7 +31,7 @@ trait DataGeneratorHeader[F[_]]:
 
   def generateGPSPosition: F[GPSPosition]
 
-  def generatePneumaticPressure: F[PneumaticPressure]
+  def generatePneumaticPressure: fs2.Stream[F, PneumaticPressure]
 
   def generateWheelRotation: F[WheelRotation]
 

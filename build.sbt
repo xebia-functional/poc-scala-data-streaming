@@ -66,7 +66,7 @@ lazy val `core-headers`: Project =
     .settings(
       name := "core-headers",
       libraryDependencies ++= Seq(
-        // the less the better
+        Libraries.kafka.fs2Kafka
       )
     )
 
@@ -74,10 +74,16 @@ lazy val `core-headers`: Project =
 
 // team yellow (c=common)
 lazy val `data-generator`: Project = (project in file("02-c-data-generator"))
+  .dependsOn(`core-headers`)
   .settings(
     name := "data-generator"
   )
-  .dependsOn(`core-headers`)
+  .settings(commonSettings)
+  .settings(commonDependencies)
+  .settings(
+    libraryDependencies ++= Seq(Libraries.kafka.fs2Kafka)
+  )
+
 
 lazy val `kafka-util`: Project = (project in file("02-c-kafka-util"))
   .settings(
@@ -175,7 +181,8 @@ lazy val commonDependencies = Seq(
     Libraries.cats.catsEffect
   ),
   libraryDependencies ++= Seq(
+    Libraries.test.munitCatsEffect,
+    Libraries.test.munitScalacheck,
     Libraries.test.scalatest,
-    Libraries.test.`scalacheck-1-15`
   ).map(_ % Test)
 )
