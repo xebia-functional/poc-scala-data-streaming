@@ -3,9 +3,12 @@ package com.fortyseven.kafkaconsumer
 import cats.effect.{IO, IOApp}
 import fs2.kafka.*
 
+import com.fortyseven.coreheaders.KafkaConsumer
+
 import scala.concurrent.duration.*
 
-object KafkaConsumer extends IOApp.Simple:
+object KafkaConsumer extends KafkaConsumer with IOApp.Simple:
+  override def consume(): IO[Unit] = run
 
   val run: IO[Unit] =
     def processRecord(record: ConsumerRecord[String, String]): IO[(String, String)] =
