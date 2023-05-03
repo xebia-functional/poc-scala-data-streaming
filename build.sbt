@@ -51,7 +51,7 @@ lazy val `poc-scala-data-streaming`: Project =
 
       // layer 3
       // team red
-      main
+      entryPoint
     )
 
 // layer 1
@@ -136,9 +136,9 @@ lazy val core: Project =
 
 // layer 3
 // team red
-lazy val main: Project =
+lazy val entryPoint: Project =
   project
-    .in(file("03-main"))
+    .in(file("03-entryPoint"))
     // the dependency on `core-headers` is added transitively
     // the dependencies on team yellow are added transitively
     // team blue
@@ -151,7 +151,7 @@ lazy val main: Project =
     .dependsOn(core % Cctt)
     .settings(commonSettings)
     .settings(
-      name := "main",
+      name := "entryPoint",
       libraryDependencies ++= Seq(
         // the less the better (usually zero)
       )
