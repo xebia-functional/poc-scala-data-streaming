@@ -19,26 +19,26 @@ package com.fortyseven.coreheaders
 import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
 
-trait DataGenerator:
+trait DataGenerator[F[_]]:
 
-  def generateBatteryCharge: BateryCharge
+  def generateBatteryCharge: F[BateryCharge]
 
-  def generateBatteryHealth: BatteryHealth
+  def generateBatteryHealth: F[BatteryHealth]
 
-  def generateBreaksHealth: BreaksHealth
+  def generateBreaksHealth: F[BreaksHealth]
 
-  def generateBreaksUsage: BreaksUsage
+  def generateBreaksUsage: F[BreaksUsage]
 
-  def generateGPSPosition: GPSPosition
+  def generateGPSPosition: F[GPSPosition]
 
-  def generatePneumaticPressure: PneumaticPressure
+  def generatePneumaticPressure: F[PneumaticPressure]
 
-  def generateWheelRotation: WheelRotation
+  def generateWheelRotation: F[WheelRotation]
 
-  def generateCurrentSpeed: CurrentSpeed
+  def generateCurrentSpeed: F[CurrentSpeed]
 
-  def generateTotalDistanceByTrip: TotalDistanceByTrip
+  def generateTotalDistanceByTrip: F[TotalDistanceByTrip]
 
-  def generateTotalDistancePerUser: TotalDistanceByUser
+  def generateTotalDistancePerUser: F[TotalDistanceByUser]
 
-  def generateTotalRange: TotalRange
+  def generateTotalRange: F[TotalRange]

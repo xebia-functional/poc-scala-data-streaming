@@ -16,6 +16,6 @@
 
 package com.fortyseven.coreheaders
 
-trait JobProcessorFlink:
+trait JobProcessorFlink[F[_]]:
 
-  def process(): Unit
+  def process(): F[Unit]
