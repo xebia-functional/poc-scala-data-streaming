@@ -23,6 +23,9 @@ import com.fortyseven.coreheaders.model.iot.types.Speed
 object model:
 
   case class TotalDistanceByTrip(tripId: TripId, distance: Meters)
+
   case class TotalDistanceByUser(userId: UserId, distance: Meters)
+
   case class CurrentSpeed(tripId: TripId, speed: Speed)
+
   case class TotalRange(tripId: TripId, bicycleId: BicycleId, remainingRange: Meters)

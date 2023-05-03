@@ -17,4 +17,5 @@
 package com.fortyseven.coreheaders
 
 trait KafkaConsumer:
+
   def consume(): Unit

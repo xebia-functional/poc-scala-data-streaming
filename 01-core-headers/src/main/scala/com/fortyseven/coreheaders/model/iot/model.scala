@@ -15,16 +15,23 @@
  */
 
 package com.fortyseven.coreheaders.model.iot
-import com.fortyseven.coreheaders.model.iot.types.{Latitude, Longitude, Percentage, Hz}
+
+import com.fortyseven.coreheaders.model.iot.types.{Hz, Latitude, Longitude, Percentage}
 
 import scala.concurrent.duration.Duration
 
 object model:
-  case class GPSPosition(latitude: Latitude, longitude: Longitude)
-  case class WheelRotation(s: Hz)
-  case class BateryCharge(percentage: Percentage)
-  case class BatteryHealth(remaining: Percentage)
-  case class PneumaticPressure()
-  case class BreaksUsage(duration: Duration)
-  case class BreaksHealth(remaining: Percentage)
 
+  case class GPSPosition(latitude: Latitude, longitude: Longitude)
+
+  case class WheelRotation(s: Hz)
+
+  case class BateryCharge(percentage: Percentage)
+
+  case class BatteryHealth(remaining: Percentage)
+
+  case class PneumaticPressure()
+
+  case class BreaksUsage(duration: Duration)
+
+  case class BreaksHealth(remaining: Percentage)
