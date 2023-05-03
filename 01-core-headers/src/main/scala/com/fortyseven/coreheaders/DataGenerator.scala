@@ -20,16 +20,25 @@ import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
 
 trait DataGenerator:
+
   def generateBatteryCharge: BateryCharge
+
   def generateBatteryHealth: BatteryHealth
+
   def generateBreaksHealth: BreaksHealth
+
   def generateBreaksUsage: BreaksUsage
+
   def generateGPSPosition: GPSPosition
+
   def generatePneumaticPressure: PneumaticPressure
+
   def generateWheelRotation: WheelRotation
+
   def generateCurrentSpeed: CurrentSpeed
+
   def generateTotalDistanceByTrip: TotalDistanceByTrip
+
   def generateTotalDistancePerUser: TotalDistanceByUser
+
   def generateTotalRange: TotalRange
-  
-  

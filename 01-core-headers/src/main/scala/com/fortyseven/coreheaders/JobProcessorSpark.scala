@@ -17,4 +17,5 @@
 package com.fortyseven.coreheaders
 
 trait JobProcessorSpark:
-  def process(): Unit  
+
+  def process(): Unit

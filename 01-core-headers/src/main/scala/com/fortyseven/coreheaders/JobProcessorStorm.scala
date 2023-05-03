@@ -17,4 +17,5 @@
 package com.fortyseven.coreheaders
 
 trait JobProcessorStorm:
+
   def process(): Unit

@@ -91,6 +91,10 @@ lazy val `kafka-consumer`: Project =
     .in(file("02-i-kafka-consumer"))
     .dependsOn(`kafka-util` % Cctt) // does not depend in core-headers because it depends on kafka-utils (transitive)
     .settings(commonSettings)
+    .settings(commonDependencies)
+    .settings(
+      libraryDependencies ++= Seq(Libraries.kafka.fs2Kafka)
+    )
 
 lazy val `job-processor-spark`: Project =
   project
@@ -168,10 +172,10 @@ lazy val commonScalacOptions = Seq(
 
 lazy val commonDependencies = Seq(
   libraryDependencies ++= Seq(
-    // main dependencies
+    Libraries.cats.catsEffect
   ),
   libraryDependencies ++= Seq(
-    org.scalatest.scalatest,
-    org.scalatestplus.`scalacheck-1-15`
+    Libraries.test.scalatest,
+    Libraries.test.`scalacheck-1-15`
   ).map(_ % Test)
 )
