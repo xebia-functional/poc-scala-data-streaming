@@ -12,7 +12,8 @@ object Dependencies {
     val ciris = "3.1.0"
     val `fs2-kafka` = "3.0.0"
     val scalatest = "3.2.15"
-    val `scalacheck-1-15` = "3.2.11.0"
+    val munitScalacheck = "0.7.29"
+    val munitCatsEffect = "1.0.7"
   }
 
   object SbtPlugins {
@@ -35,7 +36,8 @@ object Dependencies {
 
     object test {
       val scalatest = "org.scalatest" %% "scalatest" % Versions.scalatest
-      val `scalacheck-1-15` = "org.scalatestplus" %% "scalacheck-1-15" % Versions.`scalacheck-1-15`
+      val munitScalacheck = "org.scalameta" %% "munit-scalacheck" % Versions.munitScalacheck
+      val munitCatsEffect = "org.typelevel" %% "munit-cats-effect-3" % Versions.munitCatsEffect
     }
   }
 }
