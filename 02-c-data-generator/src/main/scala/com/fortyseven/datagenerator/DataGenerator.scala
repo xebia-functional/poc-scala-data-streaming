@@ -26,7 +26,9 @@ protected class DataGenerator[F[_]: Sync] extends DataGeneratorHeader[F]:
   override def generateGPSPosition: F[GPSPosition] = ???
 
   override def generatePneumaticPressure: fs2.Stream[F, PneumaticPressure] =
-    fs2.Stream.emit(PneumaticPressure(Bar(2.0))).repeat
+    val initValue = 2.0
+    val pressureVariance: Double = (math.random() - 0.5) * 1e-1
+    fs2.Stream.emit(PneumaticPressure(Bar(initValue + pressureVariance))).repeat
 
   override def generateWheelRotation: F[WheelRotation] = ???
 

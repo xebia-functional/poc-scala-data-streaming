@@ -13,6 +13,7 @@ class DataGeneratorSuite extends CatsEffectSuite with ScalaCheckSuite:
   property("generatePneumaticPressure - check no negative pressures") {
     forAll(Gen.choose(1, 20)) { (size: Int) =>
       dataGenerator.generatePneumaticPressure
-        .take(size).compile.toList.unsafeRunSync().foreach(it => assert(it.pressure.value >= 0.0))
+        .take(size).compile.toList.unsafeRunSync()
+        .foreach(it => assert(it.pressure.value >= 0.0))
     }
   }
