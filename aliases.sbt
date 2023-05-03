@@ -8,7 +8,7 @@ addCommandAlias("ls", "projects")
 
 addCommandAlias("cd", "project")
 
-addCommandAlias("root", "cd diamond-slides")
+addCommandAlias("root", "cd poc-scala-data-streaming")
 
 addCommandAlias("c", "compile")
 
