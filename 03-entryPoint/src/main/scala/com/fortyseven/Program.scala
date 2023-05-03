@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.fortyseven.main
+package com.fortyseven
 
 object Program:
 
