@@ -16,6 +16,6 @@
 
 package com.fortyseven.coreheaders
 
-trait JobProcessorStorm[F[_]]:
+trait JobProcessorStormHeader[F[_]]:
 
   def process(): F[Unit]

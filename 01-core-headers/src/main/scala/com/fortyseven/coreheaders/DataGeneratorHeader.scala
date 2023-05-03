@@ -19,7 +19,7 @@ package com.fortyseven.coreheaders
 import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
 
-trait DataGenerator[F[_]]:
+trait DataGeneratorHeader[F[_]]:
 
   def generateBatteryCharge: F[BateryCharge]
 

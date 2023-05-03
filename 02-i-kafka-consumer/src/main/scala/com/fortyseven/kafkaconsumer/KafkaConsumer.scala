@@ -4,7 +4,7 @@ import cats.*
 import cats.effect.kernel.{Async, Sync}
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
-import com.fortyseven.coreheaders.KafkaConsumer as KafkaConsumerCore
+import com.fortyseven.coreheaders.KafkaConsumerHeader
 import fs2.kafka.*
 
 import scala.concurrent.duration.*
@@ -13,7 +13,7 @@ object KafkaConsumer extends IOApp.Simple:
 
   val run: IO[Unit] = new KafkaConsumer[IO].run
 
-class KafkaConsumer[F[_]: Async] extends KafkaConsumerCore[F]:
+private class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
 
   override def consume(): F[Unit] = run
 

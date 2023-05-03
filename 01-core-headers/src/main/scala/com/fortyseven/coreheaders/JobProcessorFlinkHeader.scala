@@ -16,6 +16,6 @@
 
 package com.fortyseven.coreheaders
 
-trait JobProcessorSparkStreaming[F[_]]:
+trait JobProcessorFlinkHeader[F[_]]:
 
   def process(): F[Unit]

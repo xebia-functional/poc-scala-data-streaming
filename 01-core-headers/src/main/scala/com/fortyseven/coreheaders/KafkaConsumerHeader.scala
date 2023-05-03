@@ -16,6 +16,8 @@
 
 package com.fortyseven.coreheaders
 
-trait JobProcessorFlink[F[_]]:
+import cats.effect.IO
 
-  def process(): F[Unit]
+trait KafkaConsumerHeader[F[_]]:
+
+  def consume(): F[Unit]

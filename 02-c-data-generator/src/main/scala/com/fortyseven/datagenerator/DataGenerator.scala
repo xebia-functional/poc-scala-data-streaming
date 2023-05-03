@@ -1,11 +1,11 @@
 package com.fortyseven.datagenerator
 
 import cats.effect.IO
-import com.fortyseven.coreheaders.{DataGenerator as DataGeneratorCore}
+import com.fortyseven.coreheaders.DataGeneratorHeader
 import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
 
-class DataGenerator[F[_]] extends DataGeneratorCore[F]:
+class DataGenerator[F[_]] extends DataGeneratorHeader[F]:
   override def generateBatteryCharge: F[BateryCharge] = ???
 
   override def generateBatteryHealth: F[BatteryHealth] = ???
