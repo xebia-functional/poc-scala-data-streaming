@@ -22,7 +22,6 @@ import com.fortyseven.config.AppConfiguration
 
 object Program:
 
-
   def run: IO[Unit] = IO.apply(
     print(AppConfiguration.config.load[IO].unsafeRunSync())
   )
