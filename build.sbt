@@ -159,6 +159,7 @@ lazy val entryPoint: Project =
     .settings(commonSettings)
     .settings(
       name := "entryPoint",
+      libraryDependencies ++= Libraries.config.all,
       libraryDependencies ++= Seq(
         // the less the better (usually zero)
       )

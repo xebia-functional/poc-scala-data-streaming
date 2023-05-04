@@ -27,7 +27,9 @@ object Dependencies {
     }
 
     object config {
-      val ciris = "is.cir" %% "ciris" % Versions.ciris
+      private val ciris = "is.cir" %% "ciris" % Versions.ciris
+      private val cirisRefined = "is.cir" %% "ciris-refined" % Versions.ciris
+      val all: Seq[ModuleID] = Seq(ciris, cirisRefined)
     }
 
     object kafka {
