@@ -42,6 +42,7 @@ lazy val `poc-scala-data-streaming`: Project =
 
       // layer 2
       // team blue
+      `data-generator`,
       `kafka-consumer`,
       `job-processor-flink`,
       `job-processor-spark`,

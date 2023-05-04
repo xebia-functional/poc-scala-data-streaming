@@ -29,7 +29,7 @@ trait DataGeneratorHeader[F[_]]:
 
   def generateBreaksUsage: F[BreaksUsage]
 
-  def generateGPSPosition: F[GPSPosition]
+  def generateGPSPosition: fs2.Stream[F, GPSPosition]
 
   def generatePneumaticPressure: fs2.Stream[F, PneumaticPressure]
 
