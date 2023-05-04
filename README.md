@@ -17,6 +17,20 @@ For more information, see [specification](https://docs.google.com/document/d/1f6
 
 * [JDK](https://openjdk.org/projects/jdk/20/)
 * [SBT](https://www.scala-sbt.org/download.html)
+* [Docker Compose](https://docs.docker.com/compose/install/linux/)
+
+### How-to
+
+#### Sanity checks
+
+* Compile -> `sbt compile`
+* Format -> `sbt styleFix`
+* Test -> `sbt test`
+
+#### Integration checks
+
+* Start docker images -> `docker-compose up -d`
+* Inspect Kafka -> `kcat -b localhost:9092 -L`
 
 ### License
 
