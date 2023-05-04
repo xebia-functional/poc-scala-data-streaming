@@ -16,8 +16,7 @@
 
 package com.fortyseven
 
-object Main:
+import cats.effect.{ExitCode, IO, IOApp}
 
-  def main(args: Array[String]): Unit = Program.run(
-    "This is a test!"
-  )
+object Main extends IOApp:
+  override def run(args: List[String]): IO[ExitCode] = Program.run.as(ExitCode.Success)

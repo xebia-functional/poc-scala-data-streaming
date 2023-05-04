@@ -16,6 +16,13 @@
 
 package com.fortyseven
 
+import cats.effect.IO
+import cats.effect.unsafe.implicits.global
+import com.fortyseven.config.AppConfiguration
+
 object Program:
 
-  def run(configuration: String): Unit = println(configuration)
+
+  def run: IO[Unit] = IO.apply(
+    print(AppConfiguration.config.load[IO].unsafeRunSync())
+  )
