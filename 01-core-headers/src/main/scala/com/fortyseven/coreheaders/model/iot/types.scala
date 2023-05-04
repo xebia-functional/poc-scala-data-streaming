@@ -16,13 +16,13 @@
 
 package com.fortyseven.coreheaders.model.iot
 
+import com.fortyseven.coreheaders.model.iot.errors.*
+
 object types:
 
-  opaque type Coordinate <: Double = Double // Should be limited to earth coordinates
+  opaque type Latitude <: Double = Double // Should be limited to earth coordinates
 
-  opaque type Latitude <: Coordinate = Coordinate
-
-  opaque type Longitude <: Coordinate = Coordinate
+  opaque type Longitude <: Double = Double // Should be limited to earth coordinates
 
   opaque type Percentage <: Double = Double // Should be limited to 0.00 and 100.00
 
@@ -32,11 +32,21 @@ object types:
 
   opaque type Bar <: Double = Double // Should be positive
 
-  object Coordinate:
+  object Latitude:
 
-    def apply(coordinate: Double): Coordinate = coordinate
+    def apply(coordinate: Double): Either[OutOfBoundsError, Latitude] = coordinate match
+      case c if c < -90.0 || c > 90.0 => Left(OutOfBoundsError(s"Invalid latitude value $c"))
+      case c                          => Right(c)
 
-    extension (coordinate: Coordinate) def value: Double = coordinate
+    extension (coordinate: Latitude) def value: Double = coordinate
+
+  object Longitude:
+
+    def apply(coordinate: Double): Either[OutOfBoundsError, Longitude] = coordinate match
+      case c if c < -180.0 || c > 180.0 => Left(OutOfBoundsError(s"Invalid longitude value $c"))
+      case c                            => Right(c)
+
+    extension (coordinate: Longitude) def value: Double = coordinate
 
   object Percentage:
 
@@ -58,6 +68,8 @@ object types:
 
   object Bar:
 
-    def apply(bar: Double): Bar = bar
+    def apply(bar: Double): Either[OutOfBoundsError, Bar] = bar match
+      case p if p < 0.0 => Left(OutOfBoundsError(s"Invalid pressure value $p"))
+      case p            => Right(p)
 
     extension (bar: Bar) def value: Double = bar
