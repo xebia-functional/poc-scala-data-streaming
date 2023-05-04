@@ -37,13 +37,9 @@ protected class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
       .compile
       .drain
 
-  override def generateBatteryCharge: F[BateryCharge] = ???
+  override def generateBatteryCharge: fs2.Stream[F, BateryCharge] = ???
 
-  override def generateBatteryHealth: F[BatteryHealth] = ???
-
-  override def generateBreaksHealth: F[BreaksHealth] = ???
-
-  override def generateBreaksUsage: F[BreaksUsage] = ???
+  override def generateBreaksUsage: fs2.Stream[F, BreaksUsage] = ???
 
   override def generateGPSPosition: fs2.Stream[F, GPSPosition] =
     def emitLoop(latValue: Double, lonValue: Double): fs2.Stream[F, GPSPosition] =
@@ -61,12 +57,4 @@ protected class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
 
     emitLoop(pValue = 2.0) // ToDo: Soft-code initial value
 
-  override def generateWheelRotation: F[WheelRotation] = ???
-
-  override def generateCurrentSpeed: F[CurrentSpeed] = ???
-
-  override def generateTotalDistanceByTrip: F[TotalDistanceByTrip] = ???
-
-  override def generateTotalDistancePerUser: F[TotalDistanceByUser] = ???
-
-  override def generateTotalRange: F[TotalRange] = ???
+  override def generateWheelRotation: fs2.Stream[F, WheelRotation] = ???

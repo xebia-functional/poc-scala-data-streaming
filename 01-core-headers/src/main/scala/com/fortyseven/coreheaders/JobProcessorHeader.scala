@@ -16,6 +16,19 @@
 
 package com.fortyseven.coreheaders
 
-trait JobProcessorFlinkHeader[F[_]]:
+import com.fortyseven.coreheaders.model.app.model.*
+import com.fortyseven.coreheaders.model.iot.model.*
 
-  def process(): F[Unit]
+trait JobProcessorHeader[F[_]]:
+
+  def generateBatteryHealth: fs2.Stream[F, BatteryHealth]
+
+  def generateBreaksHealth: fs2.Stream[F, BreaksHealth]
+
+  def generateCurrentSpeed: fs2.Stream[F, CurrentSpeed]
+
+  def generateTotalDistanceByTrip: fs2.Stream[F, TotalDistanceByTrip]
+
+  def generateTotalDistancePerUser: fs2.Stream[F, TotalDistanceByUser]
+
+  def generateTotalRange: fs2.Stream[F, TotalRange]

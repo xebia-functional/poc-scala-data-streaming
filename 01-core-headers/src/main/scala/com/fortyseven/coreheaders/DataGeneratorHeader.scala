@@ -21,24 +21,12 @@ import com.fortyseven.coreheaders.model.iot.model.*
 
 trait DataGeneratorHeader[F[_]]:
 
-  def generateBatteryCharge: F[BateryCharge]
+  def generateBatteryCharge: fs2.Stream[F, BateryCharge]
 
-  def generateBatteryHealth: F[BatteryHealth]
-
-  def generateBreaksHealth: F[BreaksHealth]
-
-  def generateBreaksUsage: F[BreaksUsage]
+  def generateBreaksUsage: fs2.Stream[F, BreaksUsage]
 
   def generateGPSPosition: fs2.Stream[F, GPSPosition]
 
   def generatePneumaticPressure: fs2.Stream[F, PneumaticPressure]
 
-  def generateWheelRotation: F[WheelRotation]
-
-  def generateCurrentSpeed: F[CurrentSpeed]
-
-  def generateTotalDistanceByTrip: F[TotalDistanceByTrip]
-
-  def generateTotalDistancePerUser: F[TotalDistanceByUser]
-
-  def generateTotalRange: F[TotalRange]
+  def generateWheelRotation: fs2.Stream[F, WheelRotation]

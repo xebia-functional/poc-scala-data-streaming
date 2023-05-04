@@ -179,7 +179,9 @@ lazy val commonScalacOptions = Seq(
 
 lazy val commonDependencies = Seq(
   libraryDependencies ++= Seq(
-    Libraries.cats.catsEffect
+    Libraries.cats.catsEffect,
+    Libraries.logging.log4catsSlf4j,
+    Libraries.logging.logback
   ),
   libraryDependencies ++= Seq(
     Libraries.test.munitCatsEffect,
