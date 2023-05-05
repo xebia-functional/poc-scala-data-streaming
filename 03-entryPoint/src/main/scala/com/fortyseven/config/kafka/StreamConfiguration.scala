@@ -16,17 +16,27 @@
 
 package com.fortyseven.config.kafka
 
-import ciris.{default, ConfigValue, Effect}
+import ciris.*
 import ciris.refined.*
-import eu.timepit.refined.api.Refined
 import eu.timepit.refined.types.string.NonEmptyString
+import cats.syntax.all.*
+import eu.timepit.refined.types.numeric.PosInt
 
-private[kafka] final case class BrokerConfiguration(
-    brokerAddress: NonEmptyString
-  )
+import scala.concurrent.duration.*
 
-private[kafka] object BrokerConfiguration:
 
-  val config: ConfigValue[Effect, BrokerConfiguration] =
-    default("localhost:9092").as[NonEmptyString]
-      .map(BrokerConfiguration.apply)
+private [kafka] final case class StreamConfiguration (
+  inputStream: NonEmptyString,
+  outputStream: NonEmptyString,
+  maxConcurrent: PosInt,
+  commitBatchWithin: (Int, FiniteDuration)
+)
+
+private [kafka] object StreamConfiguration:
+  val config: ConfigValue[Effect, StreamConfiguration] =
+    (
+      default("input-topic").as[NonEmptyString],
+      default("output-topic").as[NonEmptyString],
+      default(Int.MaxValue).as[PosInt],
+      default((500, 15.seconds)).as[(Int, FiniteDuration)]
+    ).parMapN(StreamConfiguration.apply)
