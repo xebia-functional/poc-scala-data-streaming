@@ -2,35 +2,42 @@ package com.fortyseven.datagenerator
 
 import cats.effect.IO
 import cats.implicits.*
-import munit.{CatsEffectSuite, ScalaCheckSuite}
+import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.*
+import org.scalacheck.effect.PropF
 import org.scalacheck.Prop.*
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
-class DataGeneratorSuite extends CatsEffectSuite with ScalaCheckSuite:
+class DataGeneratorSuite extends CatsEffectSuite with ScalaCheckEffectSuite:
 
   private val dataGenerator = new DataGenerator[IO]
 
-  property("generateGPSPosition") {
-    forAll(Gen.choose(1, 20)) { (size: Int) =>
-      val sample = dataGenerator.generateGPSPosition.take(size).compile.toList.unsafeRunSync()
-      // Assert coordinates are in desired bounds
-      sample.foreach(it => assert(it.latitude >= -90.0 && it.latitude <= 90.0))
-      sample.foreach(it => assert(it.longitude >= -180.0 && it.longitude <= 180.0))
-      // Assert coordinates delta is small
-      sample
-        .sliding(2).map(l =>
-          (math.abs(l.head.latitude - l.last.latitude), math.abs(l.head.longitude - l.last.longitude))
-        )
-        .foreach(it => assert(it._1 <= 1e-3 && it._2 <= 1e-3))
+  test("generateGPSPosition") {
+    PropF.forAllF(Gen.choose(1, 20)) { (sampleSize: Int) =>
+      for
+        logger <- Slf4jLogger.create[IO]
+        sample <- dataGenerator.generateGPSPosition.take(sampleSize).compile.toList
+        _      <- logger.debug("Assert coordinates are in desired bounds")
+        _       = sample.foreach(it => assert(it.latitude >= -90.0 && it.latitude <= 90.0))
+        _       = sample.foreach(it => assert(it.longitude >= -180.0 && it.longitude <= 180.0))
+        _      <- logger.debug("Assert small coordinate changes")
+        _       = sample
+                    .sliding(2).map(l =>
+                      (math.abs(l.head.latitude - l.last.latitude), math.abs(l.head.longitude - l.last.longitude))
+                    ).foreach(it => assert(it._1 <= 1e-3 && it._2 <= 1e-3))
+      yield ()
     }
   }
 
-  property("generatePneumaticPressure") {
-    forAll(Gen.choose(1, 20)) { (size: Int) =>
-      val sample = dataGenerator.generatePneumaticPressure.take(size).compile.toList.unsafeRunSync()
-      // Assert pressures are positive
-      sample.foreach(it => assert(it.pressure > 0.0))
-      // Assert pressure delta is small
-      sample.sliding(2).map(l => l.head.pressure - l.last.pressure).foreach(it => assert(it >= 0 && it <= 1e-3))
+  test("generatePneumaticPressure") {
+    PropF.forAllF(Gen.choose(1, 20)) { (sampleSize: Int) =>
+      for
+        logger <- Slf4jLogger.create[IO]
+        sample <- dataGenerator.generatePneumaticPressure.take(sampleSize).compile.toList
+        _      <- logger.debug("Assert pressures are positive")
+        _       = sample.foreach(it => assert(it.pressure > 0.0))
+        _      <- logger.debug("Assert small pressure decrements")
+        _       = sample.sliding(2).map(l => l.head.pressure - l.last.pressure).foreach(it => assert(it >= 0 && it <= 1e-3))
+      yield ()
     }
   }
