@@ -1,41 +1,19 @@
 package com.fortyseven.datagenerator
 
-import cats.effect.kernel.Async
 import cats.effect.{IO, IOApp}
-import cats.implicits.*
+import cats.effect.Sync
 import com.fortyseven.coreheaders.DataGeneratorHeader
 import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
 import com.fortyseven.coreheaders.model.iot.types.*
-import fs2.kafka.*
-
-import scala.concurrent.duration.*
 
 object DataGenerator extends IOApp.Simple:
 
   val run: IO[Unit] = new DataGenerator[IO].run
 
-protected class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
+protected class DataGenerator[F[_]: Sync] extends DataGeneratorHeader[F]:
 
-  val run: F[Unit] =
-    val producerSettings = ProducerSettings[F, String, Double].withBootstrapServers("localhost:9092")
-
-    KafkaProducer
-      .stream(producerSettings)
-      .flatMap { producer =>
-        generatePneumaticPressure
-          .map { committable =>
-            val key    = committable.getClass.getSimpleName.toString // generatePneumaticPressure
-            val value  = committable.pressure
-            val record = ProducerRecord("data-generator", key, value)
-            ProducerRecords.one(record)
-          }
-          .evalMap(producer.produce)
-          .groupWithin(1, 15.seconds)
-          .evalMap(_.sequence)
-      }
-      .compile
-      .drain
+  val run: F[Unit] = generatePneumaticPressure.compile.drain
 
   override def generateBatteryCharge: fs2.Stream[F, BateryCharge] = ???
 
