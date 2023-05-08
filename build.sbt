@@ -1,5 +1,5 @@
-import Dependencies.*
-import CustomSbt.*
+import Dependencies._
+import CustomSbt._
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
@@ -26,6 +26,7 @@ ThisBuild / scalacOptions ++=
     "-language:implicitConversions",
     "-unchecked",
     "-Xfatal-warnings",
+    "-Yexplicit-nulls", // experimental (I've seen it cause issues with circe)
     "-Ykind-projector",
     "-Ysafe-init"       // experimental (I've seen it cause issues with circe)
   ) ++ Seq("-rewrite", "-indent") ++ Seq("-source", "future-migration")
@@ -57,6 +58,7 @@ lazy val `poc-scala-data-streaming`: Project =
 // layer 1
 
 // team red
+
 lazy val `core-headers`: Project =
   project
     .in(file("01-core-headers"))
@@ -65,8 +67,7 @@ lazy val `core-headers`: Project =
     .settings(
       name := "core-headers",
       libraryDependencies ++= Seq(
-        Libraries.kafka.fs2Kafka,
-        Libraries.codec.fs2KafkaVulcan,
+        Libraries.kafka.fs2Kafka
       )
     )
 
@@ -81,11 +82,9 @@ lazy val `data-generator`: Project = (project in file("02-c-data-generator"))
   .settings(commonSettings)
   .settings(commonDependencies)
   .settings(
-    libraryDependencies ++= Seq(
-      Libraries.kafka.fs2Kafka,
-      Libraries.codec.fs2KafkaVulcan
-    )
+    libraryDependencies ++= Seq(Libraries.kafka.fs2Kafka)
   )
+
 
 lazy val `kafka-util`: Project = (project in file("02-c-kafka-util"))
   .settings(
@@ -166,7 +165,6 @@ lazy val entryPoint: Project =
     )
 
 lazy val commonSettings = commonScalacOptions ++ Seq(
-  resolvers += "confluent" at "https://packages.confluent.io/maven/",
   update / evictionWarningOptions := EvictionWarningOptions.empty
 )
 
