@@ -8,6 +8,8 @@ import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
 import com.fortyseven.coreheaders.model.iot.types.*
 import fs2.kafka.*
+import io.confluent.kafka.serializers.KafkaAvroSerializer
+import com.fortyseven.coreheaders.codecs.Codecs
 
 import scala.concurrent.duration.*
 
@@ -17,18 +19,27 @@ object DataGenerator extends IOApp.Simple:
 
 protected class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
 
+  import VulcanSerdes.*
+
+  private val sourceTopic = "data-generator"
+
   val run: F[Unit] =
-    val producerSettings = ProducerSettings[F, String, Double].withBootstrapServers("localhost:9092")
+    val producerSettings = ProducerSettings[F, String, Array[Byte]]
+      .withBootstrapServers("localhost:9092")
+      .withProperty("value.serializer", "io.confluent.kafka.serializers.KafkaAvroSerializer")
+
+    val pneumaticPressureSerializer = avroSerializer(Config("http://localhost:8081"), includeKey = false)(
+      using Codecs.pneumaticPressureCodec
+    )
 
     KafkaProducer
       .stream(producerSettings)
       .flatMap { producer =>
         generatePneumaticPressure
           .map { committable =>
-            val key    = committable.getClass.getSimpleName.toString // generatePneumaticPressure
-            val value  = committable.pressure
-            val record = ProducerRecord("data-generator", key, value)
-            ProducerRecords.one(record)
+            val key   = committable.getClass.getSimpleName
+            val value = pneumaticPressureSerializer.serialize(sourceTopic, committable)
+            ProducerRecords.one(ProducerRecord(sourceTopic, key, value))
           }
           .evalMap(producer.produce)
           .groupWithin(1, 15.seconds)
