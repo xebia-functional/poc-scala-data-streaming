@@ -1,4 +1,4 @@
-import CustomSbt._
+import CustomSbt.*
 
 addCommandAlias("l", "projects")
 
@@ -31,12 +31,17 @@ addCommandAlias(
 
 addCommandAlias(
   "styleFix",
-  "scalafmtSbt; scalafmtAll"
+  "scalafix; scalafmtSbt; scalafmtAll"
 )
 
 addCommandAlias(
   "up2date",
   "reload plugins; dependencyUpdates; reload return; dependencyUpdates"
+)
+
+addCommandAlias(
+  "runCoverage",
+  "clean; coverage; test; coverageReport; coverageAggregate"
 )
 
 onLoadMessage +=
@@ -56,5 +61,6 @@ onLoadMessage +=
       |│ ${styled("star")}        │ thankYouStars     │
       |│ ${styled("styleCheck")}  │ fmt check         │
       |│ ${styled("styleFix")}    │ fmt               │
-      |│ ${styled("up2date")}     │ dependencyUpdates │
+      |│ ${styled("up2date")}     │ dependency updates│
+      |│ ${styled("coverage")}    │ coverage report   │
       |╰─────────────┴───────────────────╯""".stripMargin

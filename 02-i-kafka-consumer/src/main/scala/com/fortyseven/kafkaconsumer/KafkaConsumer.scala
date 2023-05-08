@@ -1,13 +1,13 @@
 package com.fortyseven.kafkaconsumer
 
+import scala.concurrent.duration.*
+
 import cats.*
 import cats.effect.kernel.{Async, Sync}
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
 import com.fortyseven.coreheaders.KafkaConsumerHeader
 import fs2.kafka.*
-
-import scala.concurrent.duration.*
 
 object KafkaConsumer extends IOApp.Simple:
 
