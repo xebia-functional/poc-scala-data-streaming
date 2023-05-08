@@ -26,11 +26,12 @@ For more information, see [specification](https://docs.google.com/document/d/1f6
 * Compile -> `sbt compile`
 * Format -> `sbt styleFix`
 * Test -> `sbt test`
+* Code Coverage -> `sbt coverage`
 
 #### Integration checks
 
 * Start docker images -> `docker-compose up -d`
-* Inspect Kafka -> `kcat -b localhost:9092 -L`
+* Inspect Kafka topics -> `kcat -b localhost:9092 -L`
 
 ### License
 

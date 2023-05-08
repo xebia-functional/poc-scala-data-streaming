@@ -16,9 +16,9 @@
 
 package com.fortyseven.coreheaders.model.iot
 
-import com.fortyseven.coreheaders.model.iot.types.*
-
 import scala.concurrent.duration.Duration
+
+import com.fortyseven.coreheaders.model.iot.types.*
 
 object model:
 
