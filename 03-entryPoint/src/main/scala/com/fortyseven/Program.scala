@@ -24,9 +24,9 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 object Program:
 
-  val run: IO[Unit] = for {
-    logger <- Slf4jLogger.create[IO]
-    config <- new KafkaConfigurationEffect[IO].configuration
-    _ <- logger.info(config.toString)
+  val run: IO[Unit] = for
+    logger   <- Slf4jLogger.create[IO]
+    config   <- new KafkaConfigurationEffect[IO].configuration
+    _        <- logger.info(config.toString)
     consumer <- new KafkaConsumer[IO].consume()
-  } yield consumer
+  yield consumer
