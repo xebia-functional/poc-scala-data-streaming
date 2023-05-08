@@ -26,10 +26,11 @@ import scala.concurrent.duration.*
 
 
 private [kafka] final case class StreamConfiguration (
-  inputStream: NonEmptyString,
-  outputStream: NonEmptyString,
+  inputTopic: NonEmptyString,
+  outputTopic: NonEmptyString,
   maxConcurrent: PosInt,
-  commitBatchWithin: (Int, FiniteDuration)
+  commitBatchWithinSize: Int,
+  commitBatchWithinTime: FiniteDuration
 )
 
 private [kafka] object StreamConfiguration:
@@ -38,5 +39,6 @@ private [kafka] object StreamConfiguration:
       default("input-topic").as[NonEmptyString],
       default("output-topic").as[NonEmptyString],
       default(Int.MaxValue).as[PosInt],
-      default((500, 15.seconds)).as[(Int, FiniteDuration)]
+      default(500).as[Int],
+      default(15.seconds).as[FiniteDuration]
     ).parMapN(StreamConfiguration.apply)
