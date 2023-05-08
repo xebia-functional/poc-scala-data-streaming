@@ -62,13 +62,13 @@ lazy val `core-headers`: Project =
   project
     .in(file("01-core-headers"))
     .settings(commonSettings)
-    .settings(commonDependencies)
     .settings(
       name := "core-headers",
-      libraryDependencies ++= Libraries.config.all,
       libraryDependencies ++= Seq(
         Libraries.kafka.fs2Kafka,
         Libraries.codec.fs2KafkaVulcan,
+        Libraries.test.munitScalacheck,
+        Libraries.test.scalatest
       )
     )
 

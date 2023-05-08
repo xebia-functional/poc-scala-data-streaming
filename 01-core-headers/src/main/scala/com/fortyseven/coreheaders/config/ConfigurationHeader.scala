@@ -16,8 +16,6 @@
 
 package com.fortyseven.coreheaders.config
 
-import ciris.{ConfigValue, Effect}
-
 trait ConfigurationHeader[F[_], C]:
 
   def configuration: F[C]
