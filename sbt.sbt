@@ -1,4 +1,4 @@
-import CustomSbt._
+import CustomSbt.*
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 

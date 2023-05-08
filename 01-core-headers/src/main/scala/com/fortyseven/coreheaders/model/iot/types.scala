@@ -72,4 +72,6 @@ object types:
       case p if p < 0.0 => Left(OutOfBoundsError(s"Invalid pressure value $p"))
       case p            => Right(p)
 
+    def unsafeApply(bar: Double): Bar = bar
+
     extension (bar: Bar) def value: Double = bar

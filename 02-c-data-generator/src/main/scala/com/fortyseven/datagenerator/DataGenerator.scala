@@ -16,28 +16,57 @@
 
 package com.fortyseven.datagenerator
 
+import scala.concurrent.duration.*
+
+import cats.effect.kernel.Async
 import cats.effect.{IO, IOApp}
-import cats.effect.Sync
+import cats.implicits.*
 import com.fortyseven.coreheaders.DataGeneratorHeader
 import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
 import com.fortyseven.coreheaders.model.iot.types.*
+import fs2.kafka.*
+import io.confluent.kafka.serializers.KafkaAvroSerializer
+import com.fortyseven.coreheaders.codecs.Codecs
 
 object DataGenerator extends IOApp.Simple:
 
   val run: IO[Unit] = new DataGenerator[IO].run
 
-protected class DataGenerator[F[_]: Sync] extends DataGeneratorHeader[F]:
+protected class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
 
-  val run: F[Unit] = generatePneumaticPressure.compile.drain
+  import VulcanSerdes.*
 
-  override def generateBatteryCharge: F[BateryCharge] = ???
+  private val sourceTopic = "data-generator"
 
-  override def generateBatteryHealth: F[BatteryHealth] = ???
+  val run: F[Unit] =
+    val producerSettings = ProducerSettings[F, String, Array[Byte]]
+      .withBootstrapServers("localhost:9092")
+      .withProperty("value.serializer", "io.confluent.kafka.serializers.KafkaAvroSerializer")
 
-  override def generateBreaksHealth: F[BreaksHealth] = ???
+    val pneumaticPressureSerializer = avroSerializer(Config("http://localhost:8081"), includeKey = false)(
+      using Codecs.pneumaticPressureCodec
+    )
 
-  override def generateBreaksUsage: F[BreaksUsage] = ???
+    KafkaProducer
+      .stream(producerSettings)
+      .flatMap { producer =>
+        generatePneumaticPressure
+          .map { committable =>
+            val key   = committable.getClass.getSimpleName
+            val value = pneumaticPressureSerializer.serialize(sourceTopic, committable)
+            ProducerRecords.one(ProducerRecord(sourceTopic, key, value))
+          }
+          .evalMap(producer.produce)
+          .groupWithin(1, 15.seconds)
+          .evalMap(_.sequence)
+      }
+      .compile
+      .drain
+
+  override def generateBatteryCharge: fs2.Stream[F, BateryCharge] = ???
+
+  override def generateBreaksUsage: fs2.Stream[F, BreaksUsage] = ???
 
   override def generateGPSPosition: fs2.Stream[F, GPSPosition] =
     def emitLoop(latValue: Double, lonValue: Double): fs2.Stream[F, GPSPosition] =
@@ -55,12 +84,4 @@ protected class DataGenerator[F[_]: Sync] extends DataGeneratorHeader[F]:
 
     emitLoop(pValue = 2.0) // ToDo: Soft-code initial value
 
-  override def generateWheelRotation: F[WheelRotation] = ???
-
-  override def generateCurrentSpeed: F[CurrentSpeed] = ???
-
-  override def generateTotalDistanceByTrip: F[TotalDistanceByTrip] = ???
-
-  override def generateTotalDistancePerUser: F[TotalDistanceByUser] = ???
-
-  override def generateTotalRange: F[TotalRange] = ???
+  override def generateWheelRotation: fs2.Stream[F, WheelRotation] = ???

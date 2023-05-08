@@ -1,7 +1,7 @@
-import scala.util._
-import scala.sys.process._
+import scala.util.*
+import scala.sys.process.*
 
-import sbt._
+import sbt.*
 
 object CustomSbt {
 

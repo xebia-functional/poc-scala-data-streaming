@@ -26,7 +26,6 @@ ThisBuild / scalacOptions ++=
     "-language:implicitConversions",
     "-unchecked",
     "-Xfatal-warnings",
-    "-Yexplicit-nulls", // experimental (I've seen it cause issues with circe)
     "-Ykind-projector",
     "-Ysafe-init"       // experimental (I've seen it cause issues with circe)
   ) ++ Seq("-rewrite", "-indent") ++ Seq("-source", "future-migration")
@@ -58,7 +57,6 @@ lazy val `poc-scala-data-streaming`: Project =
 // layer 1
 
 // team red
-
 lazy val `core-headers`: Project =
   project
     .in(file("01-core-headers"))
@@ -67,7 +65,8 @@ lazy val `core-headers`: Project =
     .settings(
       name := "core-headers",
       libraryDependencies ++= Seq(
-        Libraries.kafka.fs2Kafka
+        Libraries.kafka.fs2Kafka,
+        Libraries.codec.fs2KafkaVulcan,
       )
     )
 
@@ -92,9 +91,11 @@ lazy val `data-generator`: Project = (project in file("02-c-data-generator"))
   .settings(commonSettings)
   .settings(commonDependencies)
   .settings(
-    libraryDependencies ++= Seq(Libraries.kafka.fs2Kafka)
+    libraryDependencies ++= Seq(
+      Libraries.kafka.fs2Kafka,
+      Libraries.codec.fs2KafkaVulcan
+    )
   )
-
 
 lazy val `kafka-util`: Project = (project in file("02-c-kafka-util"))
   .settings(
@@ -175,6 +176,7 @@ lazy val entryPoint: Project =
     )
 
 lazy val commonSettings = commonScalacOptions ++ Seq(
+  resolvers += "confluent" at "https://packages.confluent.io/maven/",
   update / evictionWarningOptions := EvictionWarningOptions.empty
 )
 
@@ -189,7 +191,9 @@ lazy val commonScalacOptions = Seq(
 
 lazy val commonDependencies = Seq(
   libraryDependencies ++= Seq(
-    Libraries.cats.catsEffect
+    Libraries.cats.catsEffect,
+    Libraries.logging.log4catsSlf4j,
+    Libraries.logging.logback
   ),
   libraryDependencies ++= Seq(
     Libraries.test.munitCatsEffect,
