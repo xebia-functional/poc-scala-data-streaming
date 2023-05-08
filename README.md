@@ -26,7 +26,7 @@ For more information, see [specification](https://docs.google.com/document/d/1f6
 * Compile -> `sbt compile`
 * Format -> `sbt styleFix`
 * Test -> `sbt test`
-* Code Coverage -> `sbt coverage`
+* Code Coverage -> `sbt runCoverage`
 
 #### Integration checks
 

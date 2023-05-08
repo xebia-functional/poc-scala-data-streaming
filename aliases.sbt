@@ -40,7 +40,7 @@ addCommandAlias(
 )
 
 addCommandAlias(
-  "coverage",
+  "runCoverage",
   "clean; coverage; test; coverageReport; coverageAggregate"
 )
 
