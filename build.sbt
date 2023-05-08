@@ -118,8 +118,12 @@ lazy val `job-processor-flink`: Project =
     .in(file("02-i-job-processor-flink"))
     .dependsOn(`core-headers` % Cctt)
     .settings(commonSettings)
+    .settings(commonDependencies)
     .settings(
-      libraryDependencies ++= Seq()
+      libraryDependencies ++= Seq(
+        Libraries.integrationTest.munit,
+        Libraries.integrationTest.kafka
+      )
     )
 
 lazy val `job-processor-storm`: Project =

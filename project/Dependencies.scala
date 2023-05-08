@@ -16,6 +16,7 @@ object Dependencies {
     val scalatest = "3.2.15"
     val munitScalacheck = "1.0.4"
     val munitCatsEffect = "1.0.7"
+    val testContainers  = "0.40.15"
   }
 
   object SbtPlugins {
@@ -34,6 +35,11 @@ object Dependencies {
 
     object config {
       val ciris = "is.cir" %% "ciris" % Versions.ciris
+    }
+
+    object integrationTest {
+      val munit = "com.dimafeng" %% "testcontainers-scala-munit" % Versions.testContainers
+      val kafka = "com.dimafeng" %% "testcontainers-scala-kafka" % Versions.testContainers
     }
 
     object kafka {
