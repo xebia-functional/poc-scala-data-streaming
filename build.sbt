@@ -1,5 +1,5 @@
-import Dependencies._
-import CustomSbt._
+import Dependencies.*
+import CustomSbt.*
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
@@ -74,6 +74,16 @@ lazy val `core-headers`: Project =
 // layer 2
 
 // team yellow (c=common)
+lazy val configuration: Project = (project in file("02-c-config-ciris"))
+  .dependsOn(`core-headers`)
+  .settings(
+    name := "configuration",
+    libraryDependencies ++= Libraries.config.all
+  )
+  .settings(commonSettings)
+  .settings(commonDependencies)
+
+
 lazy val `data-generator`: Project = (project in file("02-c-data-generator"))
   .dependsOn(`core-headers`)
   .settings(
@@ -90,13 +100,13 @@ lazy val `kafka-util`: Project = (project in file("02-c-kafka-util"))
   .settings(
     name := "kafka-util"
   )
-  .dependsOn(`core-headers`)
 
 // team blue (i=input) from here
 lazy val `kafka-consumer`: Project =
   project
     .in(file("02-i-kafka-consumer"))
-    .dependsOn(`kafka-util` % Cctt) // does not depend in core-headers because it depends on kafka-utils (transitive)
+    .dependsOn(`kafka-util` % Cctt)
+    .dependsOn(configuration % Cctt) // does not depend in core-headers because it depends on kafka-utils (transitive)
     .settings(commonSettings)
     .settings(commonDependencies)
     .settings(
@@ -159,7 +169,6 @@ lazy val entryPoint: Project =
     .settings(commonSettings)
     .settings(
       name := "entryPoint",
-      libraryDependencies ++= Libraries.config.all,
       libraryDependencies ++= Seq(
         // the less the better (usually zero)
       )
