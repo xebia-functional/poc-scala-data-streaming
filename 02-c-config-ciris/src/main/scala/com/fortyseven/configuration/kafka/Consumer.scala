@@ -20,14 +20,18 @@ import cats.syntax.all.*
 import ciris.refined.*
 import ciris.{default, ConfigValue, Effect}
 import eu.timepit.refined.types.string.NonEmptyString
+import fs2.kafka.AutoOffsetReset
 
-private[kafka] final case class Consumer(bootstrapServers: NonEmptyString, groupId: NonEmptyString)
+private[kafka] final case class Consumer(
+    autoOffsetReset: AutoOffsetReset,
+    bootstrapServers: NonEmptyString,
+    groupId: NonEmptyString
+  )
 
-object Consumer:
+private[kafka] object Consumer:
 
   val config: ConfigValue[Effect, Consumer] = (
+    default(AutoOffsetReset.Earliest).as[AutoOffsetReset],
     default("localhost:9092").as[NonEmptyString],
     default("group").as[NonEmptyString]
   ).parMapN(Consumer.apply)
-
-end Consumer

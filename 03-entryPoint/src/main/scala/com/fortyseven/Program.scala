@@ -16,11 +16,11 @@
 
 package com.fortyseven
 
-import cats.effect.{IO, IOApp}
 import cats.effect.unsafe.implicits.global
+import cats.effect.{IO, IOApp}
 import com.fortyseven.configuration.kafka.KafkaConfiguration
 import com.fortyseven.kafkaconsumer.KafkaConsumer
 
 object Program:
-  
+
   val run: IO[Unit] = new KafkaConsumer[IO].consume()

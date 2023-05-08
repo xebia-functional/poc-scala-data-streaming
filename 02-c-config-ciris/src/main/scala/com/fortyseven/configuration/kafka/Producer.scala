@@ -16,15 +16,21 @@
 
 package com.fortyseven.configuration.kafka
 
+import cats.syntax.all.*
 import ciris.refined.*
 import ciris.{default, ConfigValue, Effect}
+import eu.timepit.refined.types.numeric.PosInt
 import eu.timepit.refined.types.string.NonEmptyString
 
-case class Producer(bootstrapServers: NonEmptyString)
+private[kafka] final case class Producer(
+    bootstrapServers: NonEmptyString,
+    maxConcurrent: PosInt
+  )
 
-object Producer:
+private[kafka] object Producer:
 
   val config: ConfigValue[Effect, Producer] =
-    default("localhost:9092").as[NonEmptyString].map(Producer.apply)
-
-end Producer
+    (
+      default("localhost:9092").as[NonEmptyString],
+      default(Int.MaxValue).as[PosInt]
+    ).parMapN(Producer.apply)

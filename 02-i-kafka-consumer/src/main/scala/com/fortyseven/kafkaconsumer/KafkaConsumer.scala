@@ -17,23 +17,23 @@
 package com.fortyseven.kafkaconsumer
 
 import scala.concurrent.duration.*
+
 import cats.*
 import cats.effect.kernel.{Async, Sync}
+import cats.effect.unsafe.implicits.global
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
 import ciris.{ConfigValue, Effect}
-import com.fortyseven.configuration.kafka.KafkaConfiguration
+import com.fortyseven.configuration.kafka.{KafkaConfiguration, KafkaConfigurationEffect}
 import com.fortyseven.coreheaders.KafkaConsumerHeader
-import com.fortyseven.coreheaders.config.kafka.KafkaConfigurationHeader
 import fs2.kafka.*
-import cats.effect.unsafe.implicits.global
 
 class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
 
-  override def consume(): F[Unit] = for {
-    conf <- KafkaConfiguration.config.load[F]
-    runnned <- run(conf)
-  } yield runnned
+  override def consume(): F[Unit] = for
+    conf   <- new KafkaConfigurationEffect[F].configuration
+    runned <- run(conf)
+  yield runned
 
   def run(kc: KafkaConfiguration): F[Unit] =
     def processRecord(record: ConsumerRecord[String, String]): F[(String, String)] =
@@ -41,7 +41,7 @@ class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
 
     val consumerSettings =
       ConsumerSettings[F, String, String]
-        .withAutoOffsetReset(AutoOffsetReset.Earliest)
+        .withAutoOffsetReset(kc.consumerConfiguration.autoOffsetReset)
         .withBootstrapServers(kc.consumerConfiguration.bootstrapServers.toString)
         .withGroupId(kc.consumerConfiguration.groupId.toString)
 
@@ -53,7 +53,7 @@ class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
         .stream(consumerSettings)
         .subscribeTo(kc.streamConfiguration.inputTopic.toString)
         .records
-        .mapAsync(25) { committable =>
+        .mapAsync(kc.streamConfiguration.maxConcurrent.toString.toInt) { committable =>
           processRecord(committable.record).map { case (key, value) =>
             val record = ProducerRecord(kc.streamConfiguration.outputTopic.toString, key, value)
             committable.offset -> ProducerRecords.one(record)
@@ -63,8 +63,13 @@ class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
             offsetsAndProducerRecords
               .evalMap { case (offset, producerRecord) =>
                 producer.produce(producerRecord).map(_.as(offset))
-              }.parEvalMap(Int.MaxValue)(identity)
+              }.parEvalMap(kc.producerConfiguration.maxConcurrent.toString.toInt)(identity)
           }
-        }.through(commitBatchWithin(kc.streamConfiguration.commitBatchWithinSize.toString.toInt, kc.streamConfiguration.commitBatchWithinTime))
+        }.through(
+          commitBatchWithin(
+            kc.streamConfiguration.commitBatchWithinSize.toString.toInt,
+            kc.streamConfiguration.commitBatchWithinTime
+          )
+        )
 
     stream.compile.drain

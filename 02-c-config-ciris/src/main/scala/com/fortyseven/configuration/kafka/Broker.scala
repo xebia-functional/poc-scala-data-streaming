@@ -22,10 +22,6 @@ import eu.timepit.refined.types.string.NonEmptyString
 
 private[kafka] final case class Broker(brokerAddress: NonEmptyString)
 
-object Broker:
+private[kafka] object Broker:
 
-  val config: ConfigValue[Effect, Broker] = (
-    default("localhost:9092").as[NonEmptyString]
-  ).map(Broker.apply)
-
-end Broker
+  val config: ConfigValue[Effect, Broker] = default("localhost:9092").as[NonEmptyString].map(Broker.apply)

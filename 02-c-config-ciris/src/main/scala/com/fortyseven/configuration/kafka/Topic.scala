@@ -21,11 +21,8 @@ import org.apache.kafka.common.record.CompressionType
 import ciris.refined.*
 import ciris.{default, ConfigValue, Effect}
 
-case class Topic(compressionType: CompressionType)
+private[kafka] final case class Topic(compressionType: CompressionType)
 
-object Topic:
+private[kafka] object Topic:
 
-  val config: ConfigValue[Effect, Topic] =
-    default(CompressionType.LZ4).as[CompressionType].map(Topic.apply)
-
-end Topic
+  val config: ConfigValue[Effect, Topic] = default(CompressionType.LZ4).as[CompressionType].map(Topic.apply)
