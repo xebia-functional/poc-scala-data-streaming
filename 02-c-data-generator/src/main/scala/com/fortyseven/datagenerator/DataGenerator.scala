@@ -22,12 +22,12 @@ import cats.effect.kernel.Async
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
 import com.fortyseven.coreheaders.DataGeneratorHeader
+import com.fortyseven.coreheaders.codecs.Codecs
 import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
 import com.fortyseven.coreheaders.model.iot.types.*
 import fs2.kafka.*
 import io.confluent.kafka.serializers.KafkaAvroSerializer
-import com.fortyseven.coreheaders.codecs.Codecs
 
 object DataGenerator extends IOApp.Simple:
 

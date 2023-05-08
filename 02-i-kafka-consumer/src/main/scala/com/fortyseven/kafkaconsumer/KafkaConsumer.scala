@@ -17,43 +17,45 @@
 package com.fortyseven.kafkaconsumer
 
 import scala.concurrent.duration.*
-
 import cats.*
 import cats.effect.kernel.{Async, Sync}
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
+import ciris.{ConfigValue, Effect}
+import com.fortyseven.configuration.kafka.KafkaConfiguration
 import com.fortyseven.coreheaders.KafkaConsumerHeader
+import com.fortyseven.coreheaders.config.kafka.KafkaConfigurationHeader
 import fs2.kafka.*
+import cats.effect.unsafe.implicits.global
 
-object KafkaConsumer extends IOApp.Simple:
+class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
 
-  val run: IO[Unit] = new KafkaConsumer[IO].run
+  override def consume(): F[Unit] = for {
+    conf <- KafkaConfiguration.config.load[F]
+    runnned <- run(conf)
+  } yield runnned
 
-private class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
-
-  override def consume(): F[Unit] = run
-
-  val run: F[Unit] =
+  def run(kc: KafkaConfiguration): F[Unit] =
     def processRecord(record: ConsumerRecord[String, String]): F[(String, String)] =
       Applicative[F].pure(record.key -> record.value)
 
     val consumerSettings =
       ConsumerSettings[F, String, String]
         .withAutoOffsetReset(AutoOffsetReset.Earliest)
-        .withBootstrapServers("localhost:9092")
-        .withGroupId("group")
+        .withBootstrapServers(kc.consumerConfiguration.bootstrapServers.toString)
+        .withGroupId(kc.consumerConfiguration.groupId.toString)
 
     val producerSettings =
-      ProducerSettings[F, String, String].withBootstrapServers("localhost:9092")
+      ProducerSettings[F, String, String].withBootstrapServers(kc.producerConfiguration.bootstrapServers.toString)
 
     val stream =
       fs2.kafka.KafkaConsumer
         .stream(consumerSettings)
-        .subscribeTo("input-topic")
+        .subscribeTo(kc.streamConfiguration.inputTopic.toString)
         .records
         .mapAsync(25) { committable =>
           processRecord(committable.record).map { case (key, value) =>
-            val record = ProducerRecord("output-topic", key, value)
+            val record = ProducerRecord(kc.streamConfiguration.outputTopic.toString, key, value)
             committable.offset -> ProducerRecords.one(record)
           }
         }.through { offsetsAndProducerRecords =>
@@ -63,6 +65,6 @@ private class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
                 producer.produce(producerRecord).map(_.as(offset))
               }.parEvalMap(Int.MaxValue)(identity)
           }
-        }.through(commitBatchWithin(500, 15.seconds))
+        }.through(commitBatchWithin(kc.streamConfiguration.commitBatchWithinSize.toString.toInt, kc.streamConfiguration.commitBatchWithinTime))
 
     stream.compile.drain

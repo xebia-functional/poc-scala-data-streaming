@@ -17,6 +17,10 @@
 package com.fortyseven.coreheaders
 
 import cats.effect.IO
+import ciris.{ConfigValue, Effect}
+import com.fortyseven.coreheaders.config.kafka.KafkaConfigurationHeader
+
+
 
 trait KafkaConsumerHeader[F[_]]:
 
