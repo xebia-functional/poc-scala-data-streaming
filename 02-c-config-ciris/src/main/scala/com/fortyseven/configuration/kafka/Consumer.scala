@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package com.fortyseven.config
+package com.fortyseven.configuration.kafka
 
 import cats.syntax.all.*
-import ciris.*
 import ciris.refined.*
-import com.fortyseven.config.kafka.KafkaConfiguration
+import ciris.{default, ConfigValue, Effect}
+import eu.timepit.refined.types.string.NonEmptyString
 
-final case class AppConfiguration(
-    kafkaConfiguration: KafkaConfiguration
-  )
+private[kafka] final case class Consumer(bootstrapServers: NonEmptyString, groupId: NonEmptyString)
 
-object AppConfiguration:
+object Consumer:
 
-  val config: ConfigValue[Effect, AppConfiguration] =
-    KafkaConfiguration.config.map(AppConfiguration.apply)
+  val config: ConfigValue[Effect, Consumer] = (
+    default("localhost:9092").as[NonEmptyString],
+    default("group").as[NonEmptyString]
+  ).parMapN(Consumer.apply)
+
+end Consumer

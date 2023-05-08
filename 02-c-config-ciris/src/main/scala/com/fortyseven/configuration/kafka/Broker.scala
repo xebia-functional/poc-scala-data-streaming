@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package com.fortyseven.config.kafka
+package com.fortyseven.configuration.kafka
 
-import ciris.{default, ConfigValue, Effect}
 import ciris.refined.*
-import eu.timepit.refined.api.Refined
+import ciris.{default, ConfigValue, Effect}
 import eu.timepit.refined.types.string.NonEmptyString
 
-private[kafka] final case class BrokerConfiguration(
-    brokerAddress: NonEmptyString
-  )
+private[kafka] final case class Broker(brokerAddress: NonEmptyString)
 
-private[kafka] object BrokerConfiguration:
+object Broker:
 
-  val config: ConfigValue[Effect, BrokerConfiguration] =
+  val config: ConfigValue[Effect, Broker] = (
     default("localhost:9092").as[NonEmptyString]
-      .map(BrokerConfiguration.apply)
+  ).map(Broker.apply)
+
+end Broker

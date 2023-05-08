@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package com.fortyseven.config.kafka
+package com.fortyseven.configuration
 
-import ciris.{default, ConfigValue, Effect}
-import cats.syntax.all.*
-import org.apache.kafka.common.record.CompressionType
+import ciris.{ConfigValue, Effect}
+import com.fortyseven.configuration.kafka.KafkaConfiguration
+import com.fortyseven.coreheaders.config.AppConfigurationHeader
 
-private[kafka] final case class TopicConfiguration(
-    compressionType: CompressionType
-  )
+case class AppConfig(kc: KafkaConfiguration)
 
-private[kafka] object TopicConfiguration:
+object AppConfig:
 
-  val config: ConfigValue[Effect, TopicConfiguration] =
-    default(CompressionType.LZ4).as[CompressionType].map(TopicConfiguration.apply)
+  val config: ConfigValue[Effect, AppConfig] =
+    (KafkaConfiguration.config).map(AppConfig.apply)

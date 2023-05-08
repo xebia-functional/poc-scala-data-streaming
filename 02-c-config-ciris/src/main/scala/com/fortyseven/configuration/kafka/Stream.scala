@@ -14,31 +14,33 @@
  * limitations under the License.
  */
 
-package com.fortyseven.config.kafka
+package com.fortyseven.configuration.kafka
 
-import ciris.*
-import ciris.refined.*
-import eu.timepit.refined.types.string.NonEmptyString
+import scala.concurrent.duration.{DurationInt, FiniteDuration}
+
 import cats.syntax.all.*
+import ciris.refined.*
+import ciris.{default, ConfigValue, Effect}
 import eu.timepit.refined.types.numeric.PosInt
+import eu.timepit.refined.types.string.NonEmptyString
 
-import scala.concurrent.duration.*
+case class Stream(
+    inputTopic: NonEmptyString,
+    outputTopic: NonEmptyString,
+    maxConcurrent: PosInt,
+    commitBatchWithinSize: PosInt,
+    commitBatchWithinTime: FiniteDuration
+  )
 
+object Stream:
 
-private [kafka] final case class StreamConfiguration (
-  inputTopic: NonEmptyString,
-  outputTopic: NonEmptyString,
-  maxConcurrent: PosInt,
-  commitBatchWithinSize: Int,
-  commitBatchWithinTime: FiniteDuration
-)
-
-private [kafka] object StreamConfiguration:
-  val config: ConfigValue[Effect, StreamConfiguration] =
+  val config: ConfigValue[Effect, Stream] =
     (
       default("input-topic").as[NonEmptyString],
       default("output-topic").as[NonEmptyString],
       default(Int.MaxValue).as[PosInt],
-      default(500).as[Int],
+      default(500).as[PosInt],
       default(15.seconds).as[FiniteDuration]
-    ).parMapN(StreamConfiguration.apply)
+    ).parMapN(Stream.apply)
+
+end Stream

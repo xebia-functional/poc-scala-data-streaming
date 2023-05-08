@@ -14,14 +14,27 @@
  * limitations under the License.
  */
 
-package com.fortyseven
+package com.fortyseven.configuration.kafka
 
-import cats.effect.IO
-import cats.effect.unsafe.implicits.global
-import com.fortyseven.configuration.AppConfig
+import cats.syntax.all.*
+import ciris.{ConfigValue, Effect}
+import com.fortyseven.configuration.kafka.*
 
-object Program:
-
-  def run: IO[Unit] = IO.apply(
-    print(AppConfig.config.load[IO].unsafeRunSync())
+case class KafkaConfiguration(
+    brokerConfiguration: Broker,
+    consumerConfiguration: Consumer,
+    producerConfiguration: Producer,
+    streamConfiguration: Stream,
+    topicConfiguration: Topic
   )
+
+object KafkaConfiguration:
+
+  val config: ConfigValue[Effect, KafkaConfiguration] =
+    (
+      Broker.config,
+      Consumer.config,
+      Producer.config,
+      Stream.config,
+      Topic.config
+    ).parMapN(KafkaConfiguration.apply)

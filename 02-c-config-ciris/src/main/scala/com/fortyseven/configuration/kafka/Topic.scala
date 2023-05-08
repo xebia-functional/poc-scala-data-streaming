@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package com.fortyseven.config.kafka
+package com.fortyseven.configuration.kafka
 
+import org.apache.kafka.common.record.CompressionType
+
+import ciris.refined.*
 import ciris.{default, ConfigValue, Effect}
-import ciris.refined.refTypeConfigDecoder
-import eu.timepit.refined.types.string.NonEmptyString
 
-private[kafka] final case class ProducerConfiguration(
-    bootstrapServers: NonEmptyString
-  )
+case class Topic(compressionType: CompressionType)
 
-private[kafka] object ProducerConfiguration:
+object Topic:
 
-  val config: ConfigValue[Effect, ProducerConfiguration] =
-    default("localhost:9092").as[NonEmptyString].map(ProducerConfiguration.apply)
+  val config: ConfigValue[Effect, Topic] =
+    default(CompressionType.LZ4).as[CompressionType].map(Topic.apply)
+
+end Topic
