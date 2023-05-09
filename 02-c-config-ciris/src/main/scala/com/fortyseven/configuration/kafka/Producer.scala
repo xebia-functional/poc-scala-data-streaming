@@ -16,6 +16,8 @@
 
 package com.fortyseven.configuration.kafka
 
+import org.apache.kafka.common.record.CompressionType
+
 import cats.syntax.all.*
 import ciris.refined.*
 import ciris.{default, ConfigValue, Effect}
@@ -23,14 +25,11 @@ import eu.timepit.refined.types.numeric.PosInt
 import eu.timepit.refined.types.string.NonEmptyString
 
 private[kafka] final case class Producer(
-    bootstrapServers: NonEmptyString,
-    maxConcurrent: PosInt
+    maxConcurrent: PosInt,
+    compressionType: CompressionType
   )
 
 private[kafka] object Producer:
 
   val config: ConfigValue[Effect, Producer] =
-    (
-      default("localhost:9092").as[NonEmptyString],
-      default(Int.MaxValue).as[PosInt]
-    ).parMapN(Producer.apply)
+    (default(Int.MaxValue).as[PosInt], default(CompressionType.LZ4).as[CompressionType]).parMapN(Producer.apply)
