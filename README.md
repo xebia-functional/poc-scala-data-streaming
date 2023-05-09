@@ -18,6 +18,7 @@ For more information, see [specification](https://docs.google.com/document/d/1f6
 * [JDK](https://openjdk.org/projects/jdk/20/)
 * [SBT](https://www.scala-sbt.org/download.html)
 * [Docker Compose](https://docs.docker.com/compose/install/linux/)
+* [Kafkacat](https://formulae.brew.sh/formula/kcat)
 
 ### How-to
 
@@ -27,6 +28,7 @@ For more information, see [specification](https://docs.google.com/document/d/1f6
 * Format -> `sbt styleFix`
 * Test -> `sbt test`
 * Code Coverage -> `sbt runCoverage`
+* Run Flink integration tests -> `sbt flinkIT`
 
 #### Integration checks
 
