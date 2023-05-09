@@ -125,10 +125,10 @@ lazy val `job-processor-flink`: Project =
     .settings(
         name := "flink",
         libraryDependencies ++= Seq(
-        Libraries.flink.clients,
-        Libraries.flink.kafka,
-        Libraries.flink.streaming
-      )
+          Libraries.flink.clients,
+          Libraries.flink.kafka,
+          Libraries.flink.streaming
+        )
     )
 
 lazy val `job-processor-flink-integration`: Project =
