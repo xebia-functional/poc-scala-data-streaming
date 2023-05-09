@@ -124,11 +124,24 @@ lazy val `job-processor-flink`: Project =
     .settings(commonDependencies)
     .settings(
         name := "flink",
-        Libraries.flink.clients,
-        Libraries.flink.kafka,
-        Libraries.flink.streaming
-      )
-      libraryDependencies ++= Seq()
+        libraryDependencies ++= Seq(
+          Libraries.flink.clients,
+          Libraries.flink.kafka,
+          Libraries.flink.streaming
+        )
+    )
+
+lazy val `job-processor-flink-integration`: Project =
+  project.in(file("02-i-job-processor-flink/integration"))
+    .dependsOn(`job-processor-flink`)
+    .settings(commonSettings)
+    .settings(commonDependencies)
+    .settings(
+      publish / skip := true,
+      libraryDependencies ++= Seq(
+        Libraries.integrationTest.kafka,
+        Libraries.integrationTest.munit
+      ).map(_ % Test)
     )
 
 lazy val `job-processor-kafka`: Project =
