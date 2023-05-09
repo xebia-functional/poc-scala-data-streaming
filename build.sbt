@@ -123,7 +123,11 @@ lazy val `job-processor-flink`: Project =
     .settings(commonSettings)
     .settings(commonDependencies)
     .settings(
-      name := "flink",
+        name := "flink",
+        Libraries.flink.clients,
+        Libraries.flink.kafka,
+        Libraries.flink.streaming
+      )
       libraryDependencies ++= Seq()
     )
 
