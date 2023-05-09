@@ -20,6 +20,8 @@ import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
 
 trait DataGeneratorHeader[F[_]]:
+  
+  def generateAll: F[Unit]
 
   def generateBatteryCharge: fs2.Stream[F, BateryCharge]
 
