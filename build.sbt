@@ -45,6 +45,7 @@ lazy val `poc-scala-data-streaming`: Project =
       `data-generator`,
       `kafka-consumer`,
       `job-processor-flink`,
+      `job-processor-kafka`,
       `job-processor-spark`,
       `job-processor-storm`,
       // team green
@@ -116,15 +117,6 @@ lazy val `kafka-consumer`: Project =
       libraryDependencies ++= Seq(Libraries.kafka.fs2Kafka)
     )
 
-lazy val `job-processor-spark`: Project =
-  project
-    .in(file("02-i-job-processor-spark"))
-    .dependsOn(`core-headers` % Cctt)
-    .settings(commonSettings)
-    .settings(
-      libraryDependencies ++= Seq()
-    )
-
 lazy val `job-processor-flink`: Project =
   project
     .in(file("02-i-job-processor-flink"))
@@ -133,6 +125,24 @@ lazy val `job-processor-flink`: Project =
     .settings(
       libraryDependencies ++= Seq()
     )
+
+lazy val `job-processor-kafka`: Project =
+  project
+    .in(file("02-i-job-processor-kafka"))
+    .dependsOn(`core-headers` % Cctt)
+    .settings(commonSettings)
+    .settings(
+      libraryDependencies ++= Seq()
+    )
+
+lazy val `job-processor-spark`: Project =
+project
+    .in(file("02-i-job-processor-spark"))
+    .dependsOn(`core-headers` % Cctt)
+    .settings(commonSettings)
+    .settings(
+libraryDependencies ++= Seq()
+)
 
 lazy val `job-processor-storm`: Project =
   project
@@ -165,6 +175,7 @@ lazy val entryPoint: Project =
     .dependsOn(`kafka-consumer` % Cctt)
     .dependsOn(`data-generator` % Cctt)
     .dependsOn(`job-processor-flink` % Cctt)
+    .dependsOn(`job-processor-kafka` % Cctt)
     .dependsOn(`job-processor-spark` % Cctt)
     .dependsOn(`job-processor-storm` % Cctt)
     // team green
