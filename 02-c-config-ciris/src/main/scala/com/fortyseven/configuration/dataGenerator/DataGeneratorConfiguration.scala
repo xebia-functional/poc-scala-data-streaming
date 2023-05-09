@@ -21,19 +21,11 @@ import cats.syntax.all.*
 import ciris.{ConfigValue, Effect}
 import com.fortyseven.coreheaders.config.ConfigurationHeader
 
-case class DataGeneratorConfiguration (
-  gpsPosition: GpsPosition,
-  pneumaticPressure: PneumaticPressure,
-  producer: Producer
-)
+case class DataGeneratorConfiguration (kafkaProducer: KafkaProducer)
 
 object DataGeneratorConfiguration:
   val config: ConfigValue[Effect, DataGeneratorConfiguration] =
-    (
-      GpsPosition.config,
-      PneumaticPressure.config,
-      Producer.config
-    ).parMapN(DataGeneratorConfiguration.apply)
+    KafkaProducer.config.map(DataGeneratorConfiguration.apply)
 
 final class DataGeneratorConfigurationEffect[F[_] : Async] extends ConfigurationHeader[F, DataGeneratorConfiguration]:
 

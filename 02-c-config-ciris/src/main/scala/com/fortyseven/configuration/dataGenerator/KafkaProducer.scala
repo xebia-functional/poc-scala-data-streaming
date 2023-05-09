@@ -24,18 +24,18 @@ import eu.timepit.refined.types.numeric.PosInt
 import eu.timepit.refined.types.string.NonEmptyString
 
 
-private [dataGenerator] final case class Producer (
+private [dataGenerator] final case class KafkaProducer (
   bootstrapServers: NonEmptyString,
   propertyKey: NonEmptyString,
   propertyValue: NonEmptyString,
   schemaRegistryUrl: NonEmptyString,
   includeKey: Boolean,
-  chunkSize: PosInt,
-  timeOut: PosInt
+  commitBatchWithinSize: PosInt,
+  commitBatchWithinTime: PosInt
 )
 
-private [dataGenerator] object Producer:
-  val config: ConfigValue[Effect, Producer] =
+private [dataGenerator] object KafkaProducer:
+  val config: ConfigValue[Effect, KafkaProducer] =
     (
       default("localhost:9092").as[NonEmptyString],
       default("value.serializer").as[NonEmptyString],
@@ -44,4 +44,4 @@ private [dataGenerator] object Producer:
       default(false).as[Boolean],
       default(1).as[PosInt],
       default(15).as[PosInt]
-    ).parMapN(Producer.apply)
+    ).parMapN(KafkaProducer.apply)

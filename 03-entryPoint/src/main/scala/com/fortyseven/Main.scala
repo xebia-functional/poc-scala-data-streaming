@@ -16,7 +16,7 @@
 
 package com.fortyseven
 
-import cats.effect.{ExitCode, IO, IOApp}
+import cats.effect.*
 
 object Main extends IOApp.Simple:
 

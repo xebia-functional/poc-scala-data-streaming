@@ -17,7 +17,6 @@
 package com.fortyseven.datagenerator
 
 import scala.concurrent.duration.*
-
 import cats.effect.kernel.Async
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
@@ -32,27 +31,26 @@ import io.confluent.kafka.serializers.KafkaAvroSerializer
 
 object DataGenerator extends IOApp.Simple:
 
-  val run: IO[Unit] = new DataGenerator[IO].generateAll
+  val run: IO[Unit] = new DataGenerator[IO].run
 
 final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
-class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
 
-  override def generateAll: F[Unit] = for
+  override def run: F[Unit] = for
     conf <- new DataGeneratorConfigurationEffect[F].configuration
-    runned <- run(conf)
+    runned <- run2(conf)
   yield runned
 
   import VulcanSerdes.*
 
   private val sourceTopic = "data-generator"
 
-  def run(dg: DataGeneratorConfiguration): F[Unit] =
+  def run2(dg: DataGeneratorConfiguration): F[Unit] =
     val producerSettings = ProducerSettings[F, String, Array[Byte]]
-      .withBootstrapServers(dg.producer.bootstrapServers.toString)
-      .withProperty(dg.producer.propertyKey.toString, dg.producer.propertyValue.toString)
+      .withBootstrapServers(dg.kafkaProducer.bootstrapServers.toString)
+      .withProperty(dg.kafkaProducer.propertyKey.toString, dg.kafkaProducer.propertyValue.toString)
 
-    val pneumaticPressureSerializer = avroSerializer(Config(dg.producer.schemaRegistryUrl.toString),
-      includeKey = dg.producer.includeKey)(using Codecs.pneumaticPressureCodec)
+    val pneumaticPressureSerializer = avroSerializer(Config(dg.kafkaProducer.schemaRegistryUrl.toString),
+      includeKey = dg.kafkaProducer.includeKey)(using Codecs.pneumaticPressureCodec)
 
     KafkaProducer
       .stream(producerSettings)
@@ -64,7 +62,7 @@ class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
             ProducerRecords.one(ProducerRecord(sourceTopic, key, value))
           }
           .evalMap(producer.produce)
-          .groupWithin(dg.producer.chunkSize.toString.toInt, dg.producer.timeOut.toString.toInt.seconds)
+          .groupWithin(dg.kafkaProducer.commitBatchWithinSize.toString.toInt, dg.kafkaProducer.commitBatchWithinTime.toString.toInt.seconds)
           .evalMap(_.sequence)
       }
       .compile

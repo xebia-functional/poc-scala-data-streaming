@@ -86,7 +86,7 @@ lazy val configuration: Project = (project in file("02-c-config-ciris"))
 
 
 lazy val `data-generator`: Project = (project in file("02-c-data-generator"))
-  .dependsOn(configuration % Cctt) // does not depend in core-headers because it depends on kafka-utils (transitive)
+  .dependsOn(configuration % Cctt) // does not depend in core-headers because it depends on configuration (transitive)
   .settings(
     name := "data-generator"
   )
@@ -122,7 +122,11 @@ lazy val `job-processor-flink`: Project =
     .dependsOn(`core-headers` % Cctt)
     .settings(commonSettings)
     .settings(
-      libraryDependencies ++= Seq()
+      libraryDependencies ++= Seq(
+        Libraries.flink.clients,
+        Libraries.flink.kafka,
+        Libraries.flink.streaming
+      )
     )
 
 lazy val `job-processor-kafka`: Project =
