@@ -17,10 +17,11 @@
 package com.fortyseven.datagenerator
 
 import scala.concurrent.duration.*
+
 import cats.effect.kernel.Async
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
-import com.fortyseven.configuration.dataGenerator.{DataGeneratorConfigurationEffect, DataGeneratorConfiguration}
+import com.fortyseven.configuration.dataGenerator.{DataGeneratorConfiguration, DataGeneratorConfigurationEffect}
 import com.fortyseven.coreheaders.DataGeneratorHeader
 import com.fortyseven.coreheaders.codecs.Codecs
 import com.fortyseven.coreheaders.model.app.model.*
@@ -49,8 +50,10 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
       .withBootstrapServers(dg.kafkaProducer.bootstrapServers.toString)
       .withProperty(dg.kafkaProducer.propertyKey.toString, dg.kafkaProducer.propertyValue.toString)
 
-    val pneumaticPressureSerializer = avroSerializer(Config(dg.kafkaProducer.schemaRegistryUrl.toString),
-      includeKey = dg.kafkaProducer.includeKey)(using Codecs.pneumaticPressureCodec)
+    val pneumaticPressureSerializer = avroSerializer(
+      Config(dg.kafkaProducer.schemaRegistryUrl.toString),
+      includeKey = dg.kafkaProducer.includeKey
+    )(using Codecs.pneumaticPressureCodec)
 
     KafkaProducer
       .stream(producerSettings)
@@ -62,7 +65,10 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
             ProducerRecords.one(ProducerRecord(sourceTopic, key, value))
           }
           .evalMap(producer.produce)
-          .groupWithin(dg.kafkaProducer.commitBatchWithinSize.toString.toInt, dg.kafkaProducer.commitBatchWithinTime.toString.toInt.seconds)
+          .groupWithin(
+            dg.kafkaProducer.commitBatchWithinSize.toString.toInt,
+            dg.kafkaProducer.commitBatchWithinTime.toString.toInt.seconds
+          )
           .evalMap(_.sequence)
       }
       .compile

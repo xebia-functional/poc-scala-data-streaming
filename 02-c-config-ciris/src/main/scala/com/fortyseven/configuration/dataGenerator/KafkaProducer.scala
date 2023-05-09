@@ -18,23 +18,23 @@ package com.fortyseven.configuration.dataGenerator
 
 import cats.syntax.all.*
 import ciris.refined.*
-import ciris.{ConfigValue, Effect, default}
+import ciris.{default, ConfigValue, Effect}
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.types.numeric.PosInt
 import eu.timepit.refined.types.string.NonEmptyString
 
+private[dataGenerator] final case class KafkaProducer(
+    bootstrapServers: NonEmptyString,
+    propertyKey: NonEmptyString,
+    propertyValue: NonEmptyString,
+    schemaRegistryUrl: NonEmptyString,
+    includeKey: Boolean,
+    commitBatchWithinSize: PosInt,
+    commitBatchWithinTime: PosInt
+  )
 
-private [dataGenerator] final case class KafkaProducer (
-  bootstrapServers: NonEmptyString,
-  propertyKey: NonEmptyString,
-  propertyValue: NonEmptyString,
-  schemaRegistryUrl: NonEmptyString,
-  includeKey: Boolean,
-  commitBatchWithinSize: PosInt,
-  commitBatchWithinTime: PosInt
-)
+private[dataGenerator] object KafkaProducer:
 
-private [dataGenerator] object KafkaProducer:
   val config: ConfigValue[Effect, KafkaProducer] =
     (
       default("localhost:9092").as[NonEmptyString],

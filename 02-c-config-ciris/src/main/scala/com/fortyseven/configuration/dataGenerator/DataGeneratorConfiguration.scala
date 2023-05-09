@@ -21,12 +21,13 @@ import cats.syntax.all.*
 import ciris.{ConfigValue, Effect}
 import com.fortyseven.coreheaders.config.ConfigurationHeader
 
-case class DataGeneratorConfiguration (kafkaProducer: KafkaProducer)
+case class DataGeneratorConfiguration(kafkaProducer: KafkaProducer)
 
 object DataGeneratorConfiguration:
+
   val config: ConfigValue[Effect, DataGeneratorConfiguration] =
     KafkaProducer.config.map(DataGeneratorConfiguration.apply)
 
-final class DataGeneratorConfigurationEffect[F[_] : Async] extends ConfigurationHeader[F, DataGeneratorConfiguration]:
+final class DataGeneratorConfigurationEffect[F[_]: Async] extends ConfigurationHeader[F, DataGeneratorConfiguration]:
 
   override def configuration: F[DataGeneratorConfiguration] = DataGeneratorConfiguration.config.load[F]
