@@ -17,10 +17,10 @@
 package com.fortyseven.datagenerator
 
 import scala.concurrent.duration.*
-
 import cats.effect.kernel.Async
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
+import com.fortyseven.configuration.dataGenerator.{DataGeneratorConfiguration, DataGeneratorConfigurationEffect}
 import com.fortyseven.coreheaders.DataGeneratorHeader
 import com.fortyseven.coreheaders.codecs.Codecs
 import com.fortyseven.coreheaders.model.app.model.*
@@ -31,22 +31,26 @@ import io.confluent.kafka.serializers.KafkaAvroSerializer
 
 object DataGenerator extends IOApp.Simple:
 
-  val run: IO[Unit] = new DataGenerator[IO].run
+  val run: IO[Unit] = new DataGenerator[IO].generateAll
 
 final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
+
+  override def generateAll: F[Unit] = for
+    conf <- new DataGeneratorConfigurationEffect[F].configuration
+    runned <- run(conf)
+  yield runned
 
   import VulcanSerdes.*
 
   private val sourceTopic = "data-generator"
 
-  val run: F[Unit] =
+  def run(dg: DataGeneratorConfiguration): F[Unit] =
     val producerSettings = ProducerSettings[F, String, Array[Byte]]
-      .withBootstrapServers("localhost:9092")
-      .withProperty("value.serializer", "io.confluent.kafka.serializers.KafkaAvroSerializer")
+      .withBootstrapServers(dg.producer.bootstrapServers.toString)
+      .withProperty(dg.producer.propertyKey.toString, dg.producer.propertyValue.toString)
 
-    val pneumaticPressureSerializer = avroSerializer(Config("http://localhost:8081"), includeKey = false)(
-      using Codecs.pneumaticPressureCodec
-    )
+    val pneumaticPressureSerializer = avroSerializer(Config(dg.producer.schemaRegistryUrl.toString),
+      includeKey = dg.producer.includeKey)(using Codecs.pneumaticPressureCodec)
 
     KafkaProducer
       .stream(producerSettings)
@@ -58,7 +62,7 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
             ProducerRecords.one(ProducerRecord(sourceTopic, key, value))
           }
           .evalMap(producer.produce)
-          .groupWithin(1, 15.seconds)
+          .groupWithin(dg.producer.chunkSize.toString.toInt, dg.producer.timeOut.toString.toInt.seconds)
           .evalMap(_.sequence)
       }
       .compile

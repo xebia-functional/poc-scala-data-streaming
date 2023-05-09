@@ -26,8 +26,8 @@ import eu.timepit.refined.types.string.NonEmptyString
 
 private [dataGenerator] final case class Producer (
   bootstrapServers: NonEmptyString,
-  PropertyKey: NonEmptyString,
-  PropertyValue: NonEmptyString,
+  propertyKey: NonEmptyString,
+  propertyValue: NonEmptyString,
   schemaRegistryUrl: NonEmptyString,
   includeKey: Boolean,
   chunkSize: PosInt,
