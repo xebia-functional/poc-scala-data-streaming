@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-package com.fortyseven
+package com.fortyseven.configuration.kafka
 
-import cats.effect.unsafe.implicits.global
-import cats.effect.{IO, IOApp}
-import com.fortyseven.configuration.kafka.{KafkaConfiguration, KafkaConfigurationEffect}
-import com.fortyseven.kafkaconsumer.KafkaConsumer
-import org.typelevel.log4cats.slf4j.Slf4jLogger
+import ciris.refined.*
+import ciris.{default, ConfigValue, Effect}
+import eu.timepit.refined.types.string.NonEmptyString
 
-object Program:
+private[kafka] final case class Broker(brokerAddress: NonEmptyString)
 
-  val run: IO[Unit] = for
-    logger   <- Slf4jLogger.create[IO]
-    config   <- new KafkaConfigurationEffect[IO].configuration
-    _        <- logger.info(config.toString)
-    consumer <- new KafkaConsumer[IO].consume()
-  yield consumer
+private[kafka] object Broker:
+
+  val config: ConfigValue[Effect, Broker] = default("localhost:9092").as[NonEmptyString].map(Broker.apply)

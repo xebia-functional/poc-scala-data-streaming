@@ -16,16 +16,16 @@
 
 package com.fortyseven.datagenerator
 
-import io.confluent.kafka.schemaregistry.SchemaProvider
-
 import scala.jdk.CollectionConverters.*
 import scala.util.Try
 import scala.util.control.NoStackTrace
 
+import org.apache.kafka.common.serialization.{Deserializer, Serde, Serdes, Serializer}
+
+import io.confluent.kafka.schemaregistry.SchemaProvider
 import io.confluent.kafka.schemaregistry.avro.AvroSchema
 import io.confluent.kafka.schemaregistry.client.{MockSchemaRegistryClient, SchemaRegistryClient}
 import io.confluent.kafka.serializers.{KafkaAvroDeserializer, KafkaAvroSerializer}
-import org.apache.kafka.common.serialization.{Deserializer, Serde, Serdes, Serializer}
 import vulcan.{Avro, AvroError, Codec}
 
 object VulcanSerdes:

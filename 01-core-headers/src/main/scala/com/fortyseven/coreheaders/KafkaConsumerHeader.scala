@@ -16,8 +16,6 @@
 
 package com.fortyseven.coreheaders
 
-import cats.effect.IO
-
 trait KafkaConsumerHeader[F[_]]:
 
   def consume(): F[Unit]
