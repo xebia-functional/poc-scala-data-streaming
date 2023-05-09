@@ -26,8 +26,7 @@ ThisBuild / scalacOptions ++=
     "-language:implicitConversions",
     "-unchecked",
     "-Xfatal-warnings",
-    "-Ykind-projector",
-    "-Ysafe-init"       // experimental (I've seen it cause issues with circe)
+    "-Ykind-projector"
   ) ++ Seq("-rewrite", "-indent") ++ Seq("-source", "future-migration")
 
 lazy val `poc-scala-data-streaming`: Project =

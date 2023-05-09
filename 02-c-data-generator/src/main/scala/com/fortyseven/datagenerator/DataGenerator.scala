@@ -17,6 +17,7 @@
 package com.fortyseven.datagenerator
 
 import scala.concurrent.duration.*
+
 import cats.effect.kernel.Async
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
@@ -33,6 +34,7 @@ object DataGenerator extends IOApp.Simple:
 
   val run: IO[Unit] = new DataGenerator[IO].generateAll
 
+final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
 class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
 
   override def generateAll: F[Unit] = for

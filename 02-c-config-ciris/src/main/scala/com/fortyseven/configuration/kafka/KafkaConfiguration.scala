@@ -27,8 +27,7 @@ final case class KafkaConfiguration(
     brokerConfiguration: Broker,
     consumerConfiguration: Consumer,
     producerConfiguration: Producer,
-    streamConfiguration: Stream,
-    topicConfiguration: Topic
+    streamConfiguration: Stream
   )
 
 object KafkaConfiguration:
@@ -37,8 +36,7 @@ object KafkaConfiguration:
     Broker.config,
     Consumer.config,
     Producer.config,
-    Stream.config,
-    Topic.config
+    Stream.config
   ).parMapN(KafkaConfiguration.apply)
 
 final class KafkaConfigurationEffect[F[_]: Async] extends ConfigurationHeader[F, KafkaConfiguration]:
