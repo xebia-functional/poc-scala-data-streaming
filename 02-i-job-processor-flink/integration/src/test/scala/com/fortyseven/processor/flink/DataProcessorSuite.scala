@@ -43,10 +43,13 @@ class DataProcessorSuite extends CatsEffectSuite with TestContainersForAll:
     val kafkaContainer: KafkaContainer =
       KafkaContainer.Def(DockerImageName.parse(KafkaContainer.defaultDockerImageName)).createContainer()
 
-    kafkaContainer.container.withNetwork(network).withNetworkAliases(hostName).withReuse(false)
+    kafkaContainer.container.withNetwork(network).withNetworkAliases(hostName)
     kafkaContainer.start()
 
-    val schemaRegistryContainer = SchemaRegistryContainer.Def(network, hostName, KafkaContainer.defaultTag).start()
+    val schemaRegistryContainer: SchemaRegistryContainer =
+      SchemaRegistryContainer.Def(network, hostName, KafkaContainer.defaultTag).createContainer()
+
+    schemaRegistryContainer.start()
 
     kafkaContainer `and` schemaRegistryContainer
 
@@ -70,8 +73,8 @@ class DataProcessorSuite extends CatsEffectSuite with TestContainersForAll:
         process = DataProcessor.runLocal(s"localhost:$kafkaExternalPort", sourceTopic, sinkTopic)
         fiber  <- IO.blocking(process).background.use { _.start }
         _      <- fiber.join
-        _      <- logger.warn("Wait 30 seconds for Flink to process")
-        _      <- IO.sleep(30.seconds)
+        _      <- logger.warn("Wait 20 seconds for Flink to process")
+        _      <- IO.sleep(20.seconds)
         _      <- logger.debug("Consume data")
         result <- KafkaUtils.consumerStream[IO](bootstrapServers, sinkTopic).take(3).compile.toList.timeout(15.seconds)
         _      <- fiber.cancel
