@@ -17,10 +17,10 @@
 package com.fortyseven.datagenerator
 
 import scala.concurrent.duration.*
+
 import cats.effect.kernel.Async
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
-import com.fortyseven.configuration.dataGenerator.{DataGeneratorConfiguration, DataGeneratorConfigurationEffect}
 import com.fortyseven.coreheaders.DataGeneratorHeader
 import com.fortyseven.coreheaders.codecs.Codecs
 import com.fortyseven.coreheaders.model.app.model.*
@@ -37,8 +37,8 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
 
   override def run: F[Unit] = for
     conf <- new DataGeneratorConfigurationEffect[F].configuration
-    runned <- run2(conf)
-  yield runned
+    _    <- run(conf)
+  yield ()
 
   import VulcanSerdes.*
 
