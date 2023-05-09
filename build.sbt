@@ -26,8 +26,7 @@ ThisBuild / scalacOptions ++=
     "-language:implicitConversions",
     "-unchecked",
     "-Xfatal-warnings",
-    "-Ykind-projector",
-    "-Ysafe-init"       // experimental (I've seen it cause issues with circe)
+    "-Ykind-projector"
   ) ++ Seq("-rewrite", "-indent") ++ Seq("-source", "future-migration")
 
 lazy val `poc-scala-data-streaming`: Project =
@@ -38,7 +37,6 @@ lazy val `poc-scala-data-streaming`: Project =
       // team red
       `core-headers`,
       // team yellow (utils/common)
-
       // layer 2
       // team blue
       configuration,
@@ -50,7 +48,6 @@ lazy val `poc-scala-data-streaming`: Project =
       `job-processor-storm`,
       // team green
       core,
-
       // layer 3
       // team red
       entryPoint
@@ -122,8 +119,13 @@ lazy val `job-processor-flink`: Project =
     .in(file("02-i-job-processor-flink"))
     .dependsOn(`core-headers` % Cctt)
     .settings(commonSettings)
+    .settings(commonDependencies)
     .settings(
-      libraryDependencies ++= Seq()
+      libraryDependencies ++= Seq(
+        Libraries.flink.clients,
+        Libraries.flink.kafka,
+        Libraries.flink.streaming
+      )
     )
 
 lazy val `job-processor-kafka`: Project =
@@ -141,7 +143,21 @@ project
     .dependsOn(`core-headers` % Cctt)
     .settings(commonSettings)
     .settings(
-libraryDependencies ++= Seq()
+      libraryDependencies ++= Seq()
+    )
+
+lazy val `job-processor-flink-integration`: Project =
+  project.in(file("02-i-job-processor-flink/integration"))
+  .dependsOn(`job-processor-flink`)
+  .settings(commonSettings)
+  .settings(commonDependencies)
+  .settings(
+    publish / skip := true,
+    // test dependencies
+    libraryDependencies ++= Seq(
+      Libraries.integrationTest.kafka,
+      Libraries.integrationTest.munit
+    ).map(_ % Test)
 )
 
 lazy val `job-processor-storm`: Project =
