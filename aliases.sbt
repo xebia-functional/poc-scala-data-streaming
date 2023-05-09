@@ -44,23 +44,29 @@ addCommandAlias(
   "clean; coverage; test; coverageReport; coverageAggregate"
 )
 
+addCommandAlias(
+  "flinkIT",
+  "project job-processor-flink-integration; test"
+)
+
 onLoadMessage +=
   s"""|
-      |╭─────────────────────────────────╮
-      |│     List of defined ${styled("aliases")}     │
-      |├─────────────┬───────────────────┤
-      |│ ${styled("l")} | ${styled("ll")} | ${styled("ls")} │ projects          │
-      |│ ${styled("cd")}          │ project           │
-      |│ ${styled("root")}        │ cd root           │
-      |│ ${styled("c")}           │ compile           │
-      |│ ${styled("ca")}          │ compile all       │
-      |│ ${styled("t")}           │ test              │
-      |│ ${styled("r")}           │ run               │
-      |│ ${styled("rs")}          │ reStart           │
-      |│ ${styled("s")}           │ reStop            │
-      |│ ${styled("star")}        │ thankYouStars     │
-      |│ ${styled("styleCheck")}  │ fmt check         │
-      |│ ${styled("styleFix")}    │ fmt               │
-      |│ ${styled("up2date")}     │ dependency updates│
-      |│ ${styled("coverage")}    │ coverage report   │
-      |╰─────────────┴───────────────────╯""".stripMargin
+      |╭─────────────┴─────────────────────────────╮
+      |│     List of defined ${styled("aliases")}               │
+      |├─────────────┴─────────────────────────────┤
+      |│ ${styled("l")} | ${styled("ll")} | ${styled("ls")} │ projects                    │
+      |│ ${styled("cd")}          │ project                     │
+      |│ ${styled("root")}        │ cd root                     │
+      |│ ${styled("c")}           │ compile                     │
+      |│ ${styled("ca")}          │ compile all                 │
+      |│ ${styled("t")}           │ test                        │
+      |│ ${styled("r")}           │ run                         │
+      |│ ${styled("rs")}          │ reStart                     │
+      |│ ${styled("s")}           │ reStop                      │
+      |│ ${styled("star")}        │ thankYouStars               │
+      |│ ${styled("styleCheck")}  │ fmt check                   │
+      |│ ${styled("styleFix")}    │ fmt                         │
+      |│ ${styled("up2date")}     │ dependency updates          │
+      |│ ${styled("coverage")}    │ coverage report             │
+      |│ ${styled("flinkIT")}     │ run flink integration tests │
+      |╰─────────────┴─────────────────────────────╯""".stripMargin
