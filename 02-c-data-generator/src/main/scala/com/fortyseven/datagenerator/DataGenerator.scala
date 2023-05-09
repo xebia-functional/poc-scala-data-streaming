@@ -17,10 +17,10 @@
 package com.fortyseven.datagenerator
 
 import scala.concurrent.duration.*
-
 import cats.effect.kernel.Async
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
+import com.fortyseven.configuration.dataGenerator.{DataGeneratorConfigurationEffect, DataGeneratorConfiguration}
 import com.fortyseven.coreheaders.DataGeneratorHeader
 import com.fortyseven.coreheaders.codecs.Codecs
 import com.fortyseven.coreheaders.model.app.model.*
@@ -37,14 +37,14 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
 
   override def run: F[Unit] = for
     conf <- new DataGeneratorConfigurationEffect[F].configuration
-    _    <- run(conf)
+    _    <- runWithConfig(conf)
   yield ()
 
   import VulcanSerdes.*
 
   private val sourceTopic = "data-generator"
 
-  def run2(dg: DataGeneratorConfiguration): F[Unit] =
+  private def runWithConfig(dg: DataGeneratorConfiguration): F[Unit] =
     val producerSettings = ProducerSettings[F, String, Array[Byte]]
       .withBootstrapServers(dg.kafkaProducer.bootstrapServers.toString)
       .withProperty(dg.kafkaProducer.propertyKey.toString, dg.kafkaProducer.propertyValue.toString)

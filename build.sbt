@@ -52,7 +52,7 @@ lazy val `poc-scala-data-streaming`: Project =
 
       // layer 3
       // team red
-      entryPoint
+      `entry-point`
     )
 
 // layer 1
