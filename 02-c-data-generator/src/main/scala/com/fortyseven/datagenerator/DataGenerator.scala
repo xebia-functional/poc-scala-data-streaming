@@ -33,7 +33,7 @@ object DataGenerator extends IOApp.Simple:
 
   val run: IO[Unit] = new DataGenerator[IO].run
 
-protected class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
+final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
 
   import VulcanSerdes.*
 

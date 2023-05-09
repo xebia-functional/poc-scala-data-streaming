@@ -18,6 +18,8 @@ package com.fortyseven.kafkaconsumer
 
 import scala.concurrent.duration.*
 
+import org.apache.kafka.clients.producer.ProducerConfig
+
 import cats.*
 import cats.effect.kernel.{Async, Sync}
 import cats.effect.unsafe.implicits.global
@@ -28,12 +30,12 @@ import com.fortyseven.configuration.kafka.{KafkaConfiguration, KafkaConfiguratio
 import com.fortyseven.coreheaders.KafkaConsumerHeader
 import fs2.kafka.*
 
-class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
+final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
 
   override def consume(): F[Unit] = for
-    conf   <- new KafkaConfigurationEffect[F].configuration
-    runned <- run(conf)
-  yield runned
+    conf <- new KafkaConfigurationEffect[F].configuration
+    _    <- run(conf)
+  yield ()
 
   def run(kc: KafkaConfiguration): F[Unit] =
     def processRecord(record: ConsumerRecord[String, String]): F[(String, String)] =
@@ -42,11 +44,13 @@ class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
     val consumerSettings =
       ConsumerSettings[F, String, String]
         .withAutoOffsetReset(kc.consumerConfiguration.autoOffsetReset)
-        .withBootstrapServers(kc.consumerConfiguration.bootstrapServers.toString)
+        .withBootstrapServers(kc.brokerConfiguration.brokerAddress.toString)
         .withGroupId(kc.consumerConfiguration.groupId.toString)
 
     val producerSettings =
-      ProducerSettings[F, String, String].withBootstrapServers(kc.producerConfiguration.bootstrapServers.toString)
+      ProducerSettings[F, String, String]
+        .withBootstrapServers(kc.brokerConfiguration.brokerAddress.toString)
+        .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, kc.producerConfiguration.compressionType.name)
 
     val stream =
       fs2.kafka.KafkaConsumer

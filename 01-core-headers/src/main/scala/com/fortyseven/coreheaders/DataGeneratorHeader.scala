@@ -21,6 +21,8 @@ import com.fortyseven.coreheaders.model.iot.model.*
 
 trait DataGeneratorHeader[F[_]]:
 
+  def run: F[Unit]
+
   def generateBatteryCharge: fs2.Stream[F, BateryCharge]
 
   def generateBreaksUsage: fs2.Stream[F, BreaksUsage]

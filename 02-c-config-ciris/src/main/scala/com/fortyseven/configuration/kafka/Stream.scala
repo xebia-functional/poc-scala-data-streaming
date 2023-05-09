@@ -36,8 +36,8 @@ private[kafka] object Stream:
 
   val config: ConfigValue[Effect, Stream] =
     (
+      default("data-generator").as[NonEmptyString],
       default("input-topic").as[NonEmptyString],
-      default("output-topic").as[NonEmptyString],
       default(25).as[PosInt],
       default(500).as[PosInt],
       default(15.seconds).as[FiniteDuration]
