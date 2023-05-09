@@ -17,12 +17,13 @@
 package com.fortyseven.configuration.dataGenerator
 
 import ciris.refined.*
-import ciris.{ConfigValue, Effect, default}
+import ciris.{default, ConfigValue, Effect}
 import eu.timepit.refined.types.numeric.PosDouble
 
-private [dataGenerator] final case class PneumaticPressure (
+private[dataGenerator] final case class PneumaticPressure(
     pValue: PosDouble
-)
+  )
 
-private [dataGenerator] object PneumaticPressure:
+private[dataGenerator] object PneumaticPressure:
+
   val config: ConfigValue[Effect, PneumaticPressure] = default(2.0).as[PosDouble].map(PneumaticPressure.apply)

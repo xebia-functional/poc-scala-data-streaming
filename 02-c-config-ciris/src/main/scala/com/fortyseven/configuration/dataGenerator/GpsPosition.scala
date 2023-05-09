@@ -18,15 +18,16 @@ package com.fortyseven.configuration.dataGenerator
 
 import cats.syntax.all.*
 import ciris.refined.*
-import ciris.{ConfigValue, Effect, default}
+import ciris.{default, ConfigValue, Effect}
 import eu.timepit.refined.types.numeric.PosDouble
 
-private [dataGenerator] final case class GpsPosition (
-  latitudeValue: PosDouble,
-  longitudeValue: PosDouble
-)
+private[dataGenerator] final case class GpsPosition(
+    latitudeValue: PosDouble,
+    longitudeValue: PosDouble
+  )
 
-private [dataGenerator] object GpsPosition:
+private[dataGenerator] object GpsPosition:
+
   val config: ConfigValue[Effect, GpsPosition] =
     (
       default(2.0).as[PosDouble],

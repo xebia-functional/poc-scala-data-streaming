@@ -20,8 +20,6 @@ import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
 
 trait DataGeneratorHeader[F[_]]:
-  
-  def generateAll: F[Unit]
 
   def run: F[Unit]
 

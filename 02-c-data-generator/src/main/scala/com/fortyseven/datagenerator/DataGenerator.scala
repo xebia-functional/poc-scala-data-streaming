@@ -17,6 +17,7 @@
 package com.fortyseven.datagenerator
 
 import scala.concurrent.duration.*
+
 import cats.effect.kernel.Async
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
@@ -31,14 +32,14 @@ import io.confluent.kafka.serializers.KafkaAvroSerializer
 
 object DataGenerator extends IOApp.Simple:
 
-  val run: IO[Unit] = new DataGenerator[IO].generateAll
+  val run: IO[Unit] = new DataGenerator[IO].run
 
 final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
 
-  override def generateAll: F[Unit] = for
+  override def run: F[Unit] = for
     conf <- new DataGeneratorConfigurationEffect[F].configuration
-    runned <- run(conf)
-  yield runned
+    _    <- run(conf)
+  yield ()
 
   import VulcanSerdes.*
 
@@ -49,8 +50,10 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
       .withBootstrapServers(dg.producer.bootstrapServers.toString)
       .withProperty(dg.producer.propertyKey.toString, dg.producer.propertyValue.toString)
 
-    val pneumaticPressureSerializer = avroSerializer(Config(dg.producer.schemaRegistryUrl.toString),
-      includeKey = dg.producer.includeKey)(using Codecs.pneumaticPressureCodec)
+    val pneumaticPressureSerializer = avroSerializer(
+      Config(dg.producer.schemaRegistryUrl.toString),
+      includeKey = dg.producer.includeKey
+    )(using Codecs.pneumaticPressureCodec)
 
     KafkaProducer
       .stream(producerSettings)

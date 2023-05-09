@@ -18,23 +18,23 @@ package com.fortyseven.configuration.dataGenerator
 
 import cats.syntax.all.*
 import ciris.refined.*
-import ciris.{ConfigValue, Effect, default}
+import ciris.{default, ConfigValue, Effect}
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.types.numeric.PosInt
 import eu.timepit.refined.types.string.NonEmptyString
 
+private[dataGenerator] final case class Producer(
+    bootstrapServers: NonEmptyString,
+    propertyKey: NonEmptyString,
+    propertyValue: NonEmptyString,
+    schemaRegistryUrl: NonEmptyString,
+    includeKey: Boolean,
+    chunkSize: PosInt,
+    timeOut: PosInt
+  )
 
-private [dataGenerator] final case class Producer (
-  bootstrapServers: NonEmptyString,
-  propertyKey: NonEmptyString,
-  propertyValue: NonEmptyString,
-  schemaRegistryUrl: NonEmptyString,
-  includeKey: Boolean,
-  chunkSize: PosInt,
-  timeOut: PosInt
-)
+private[dataGenerator] object Producer:
 
-private [dataGenerator] object Producer:
   val config: ConfigValue[Effect, Producer] =
     (
       default("localhost:9092").as[NonEmptyString],
