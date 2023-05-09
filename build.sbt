@@ -52,7 +52,7 @@ lazy val `poc-scala-data-streaming`: Project =
 
       // layer 3
       // team red
-      entryPoint
+      `entry-point`
     )
 
 // layer 1
@@ -66,10 +66,12 @@ lazy val `core-headers`: Project =
       name := "core-headers",
       libraryDependencies ++= Seq(
         Libraries.kafka.fs2Kafka,
-        Libraries.codec.fs2KafkaVulcan,
+        Libraries.codec.fs2KafkaVulcan
+      ),
+      libraryDependencies ++= Seq(
         Libraries.test.munitScalacheck,
         Libraries.test.scalatest
-      )
+      ).map(_ % Test)
     )
 
 // layer 2
@@ -77,22 +79,19 @@ lazy val `core-headers`: Project =
 // team yellow (c=common)
 lazy val configuration: Project = (project in file("02-c-config-ciris"))
   .dependsOn(`core-headers`)
+  .settings(commonSettings)
+  .settings(commonDependencies)
   .settings(
     name := "configuration",
     libraryDependencies ++= Libraries.config.all
   )
-  .settings(commonSettings)
-  .settings(commonDependencies)
-
 
 lazy val `data-generator`: Project = (project in file("02-c-data-generator"))
   .dependsOn(`core-headers`)
-  .settings(
-    name := "data-generator"
-  )
   .settings(commonSettings)
   .settings(commonDependencies)
   .settings(
+    name := "data-generator",
     libraryDependencies ++= Seq(
       Libraries.kafka.fs2Kafka,
       Libraries.codec.fs2KafkaVulcan
@@ -109,10 +108,11 @@ lazy val `kafka-consumer`: Project =
   project
     .in(file("02-i-kafka-consumer"))
     .dependsOn(`kafka-util` % Cctt)
-    .dependsOn(configuration % Cctt) // does not depend in core-headers because it depends on kafka-utils (transitive)
+    .dependsOn(configuration % Cctt)
     .settings(commonSettings)
     .settings(commonDependencies)
     .settings(
+      name := "kafka-consumer",
       libraryDependencies ++= Seq(Libraries.kafka.fs2Kafka)
     )
 
@@ -121,7 +121,9 @@ lazy val `job-processor-flink`: Project =
     .in(file("02-i-job-processor-flink"))
     .dependsOn(`core-headers` % Cctt)
     .settings(commonSettings)
+    .settings(commonDependencies)
     .settings(
+      name := "flink",
       libraryDependencies ++= Seq()
     )
 
@@ -130,7 +132,9 @@ lazy val `job-processor-kafka`: Project =
     .in(file("02-i-job-processor-kafka"))
     .dependsOn(`core-headers` % Cctt)
     .settings(commonSettings)
+    .settings(commonDependencies)
     .settings(
+      name := "kafka-streams",
       libraryDependencies ++= Seq()
     )
 
@@ -139,16 +143,20 @@ project
     .in(file("02-i-job-processor-spark"))
     .dependsOn(`core-headers` % Cctt)
     .settings(commonSettings)
+    .settings(commonDependencies)
     .settings(
-libraryDependencies ++= Seq()
-)
+      name := "spark-streaming",
+      libraryDependencies ++= Seq()
+    )
 
 lazy val `job-processor-storm`: Project =
   project
     .in(file("02-i-job-processor-storm"))
     .dependsOn(`core-headers` % Cctt)
     .settings(commonSettings)
+    .settings(commonDependencies)
     .settings(
+      name := "storm",
       libraryDependencies ++= Seq()
     )
 
@@ -165,9 +173,9 @@ lazy val core: Project =
 
 // layer 3
 // team red
-lazy val entryPoint: Project =
+lazy val `entry-point`: Project =
   project
-    .in(file("03-entryPoint"))
+    .in(file("03-entry-point"))
     // the dependency on `core-headers` is added transitively
     // the dependencies on team yellow are added transitively
     // team blue
@@ -181,7 +189,7 @@ lazy val entryPoint: Project =
     .dependsOn(core % Cctt)
     .settings(commonSettings)
     .settings(
-      name := "entryPoint",
+      name := "entry-point",
       libraryDependencies ++= Seq(
         // the less the better (usually zero)
       )
