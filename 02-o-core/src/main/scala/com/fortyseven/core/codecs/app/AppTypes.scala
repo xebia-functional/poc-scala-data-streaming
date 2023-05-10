@@ -22,4 +22,4 @@ import vulcan.Codec
 
 object AppTypes extends AppTypes[Codec]:
 
-  given MetersCodec: Codec[Meters] = ???
+  given metersCodec: Codec[Meters] = ???

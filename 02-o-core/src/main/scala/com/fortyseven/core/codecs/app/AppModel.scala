@@ -22,10 +22,10 @@ import vulcan.Codec
 
 object AppModel extends AppModel[Codec]:
 
-  given TotalDistanceByTripCodec: Codec[TotalDistanceByTrip] = ???
+  given totalDistanceByTripCodec: Codec[TotalDistanceByTrip] = ???
 
-  given TotalDistanceByUserCodec: Codec[TotalDistanceByUser] = ???
+  given totalDistanceByUserCodec: Codec[TotalDistanceByUser] = ???
 
-  given CurrentSpeedCodec: Codec[CurrentSpeed] = ???
+  given currentSpeedCodec: Codec[CurrentSpeed] = ???
 
-  given TotalRangeCodec: Codec[TotalRange] = ???
+  given totalRangeCodec: Codec[TotalRange] = ???
