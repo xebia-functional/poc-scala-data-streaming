@@ -29,6 +29,7 @@ object Program:
   val run: IO[Unit] = for
     logger      <- Slf4jLogger.create[IO]
     dataGenConf <- DataGeneratorConfiguration.config.load[IO]
+    _           <- logger.info(dataGenConf.toString)
     kafkaConf   <- KafkaConfiguration.config.load[IO]
     _           <- logger.info(kafkaConf.toString)
     _           <- logger.info("Start data generator")
