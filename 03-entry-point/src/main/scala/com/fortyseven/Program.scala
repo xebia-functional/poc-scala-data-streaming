@@ -33,7 +33,7 @@ object Program:
     kafkaConf <- new KafkaConfigurationEffect[IO].configuration
     _         <- logger.info(kafkaConf.toString)
     _         <- logger.info("Start data generator")
-    _         <- new DataGenerator[IO].run.background.use { f => f.start }
+    _         <- new DataGenerator[IO].run.background.use { _.start }
     _         <- logger.info("Start kafka consumer")
     _         <- new KafkaConsumer[IO].consume()
   yield ()
