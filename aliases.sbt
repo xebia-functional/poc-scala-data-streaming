@@ -49,6 +49,11 @@ addCommandAlias(
   "project job-processor-flink-integration; test"
 )
 
+addCommandAlias(
+  "runMain",
+  "project entry-point; run"
+)
+
 onLoadMessage +=
   s"""|
       |╭─────────────┴─────────────────────────────╮
@@ -69,4 +74,5 @@ onLoadMessage +=
       |│ ${styled("up2date")}     │ dependency updates          │
       |│ ${styled("coverage")}    │ coverage report             │
       |│ ${styled("flinkIT")}     │ run flink integration tests │
+      |│ ${styled("runMain")}     │ run main (entry-point)      │
       |╰─────────────┴─────────────────────────────╯""".stripMargin
