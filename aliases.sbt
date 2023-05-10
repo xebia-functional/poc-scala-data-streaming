@@ -51,7 +51,7 @@ addCommandAlias(
 
 addCommandAlias(
   "runMain",
-  "project entry-point; run"
+  "entry-point / run"
 )
 
 onLoadMessage +=

@@ -17,11 +17,9 @@
 package com.fortyseven.core.codecs.app
 
 import com.fortyseven.coreheaders.codecs.app.AppTypes
-import com.fortyseven.coreheaders.model.app.types.{Kilometers, Meters}
+import com.fortyseven.coreheaders.model.app.types.Meters
 import vulcan.Codec
 
 object AppTypes extends AppTypes[Codec]:
 
   given MetersCodec: Codec[Meters] = ???
-
-  given KilometersCodec: Codec[Kilometers] = ???

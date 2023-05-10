@@ -22,8 +22,6 @@ object types:
 
   opaque type Meters <: Int = Int
 
-  opaque type Kilometers <: Double = Double
-
   object Meters:
 
     def apply(meters: Int): Meters = meters
@@ -32,10 +30,3 @@ object types:
 
       def value: Int = meters
 
-      def toKilometers: Kilometers = meters.toDouble / 1000
-
-  object Kilometers:
-
-    def apply(kilometers: Double): Kilometers = kilometers
-
-    extension (kilometers: Kilometers) def value: Double = kilometers

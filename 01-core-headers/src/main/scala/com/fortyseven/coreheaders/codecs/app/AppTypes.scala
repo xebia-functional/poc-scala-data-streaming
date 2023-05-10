@@ -16,10 +16,8 @@
 
 package com.fortyseven.coreheaders.codecs.app
 
-import com.fortyseven.coreheaders.model.app.types.{Kilometers, Meters}
+import com.fortyseven.coreheaders.model.app.types.Meters
 
-trait AppTypes [Codec[_]]:
-  
-  given MetersCodec: Codec[Meters]
+trait AppTypes[Codec[_]]:
 
-  given KilometersCodec: Codec[Kilometers]
+  given metersCodec: Codec[Meters]
