@@ -17,13 +17,15 @@
 package com.fortyseven.datagenerator
 
 import scala.concurrent.duration.*
+
 import org.apache.kafka.clients.producer.ProducerConfig
+
 import cats.effect.kernel.Async
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
 import com.fortyseven.configuration.dataGenerator.{DataGeneratorConfiguration, DataGeneratorConfigurationEffect}
-import com.fortyseven.coreheaders.DataGeneratorHeader
 import com.fortyseven.core.codecs.iot.IotModel.pneumaticPressureCodec
+import com.fortyseven.coreheaders.DataGeneratorHeader
 import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
 import com.fortyseven.coreheaders.model.iot.types.*
