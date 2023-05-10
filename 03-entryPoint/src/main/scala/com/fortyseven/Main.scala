@@ -16,19 +16,8 @@
 
 package com.fortyseven
 
-import cats.effect.unsafe.implicits.global
-import cats.effect.{IO, IOApp}
-import com.fortyseven.configuration.kafka.{KafkaConfiguration, KafkaConfigurationEffect}
-import com.fortyseven.datagenerator.DataGenerator
-import com.fortyseven.kafkaconsumer.KafkaConsumer
-import org.typelevel.log4cats.slf4j.Slf4jLogger
+import cats.effect.*
 
-object Program:
+object Main extends IOApp.Simple:
 
-  val run: IO[Unit] = for
-    logger <- Slf4jLogger.create[IO]
-    config <- new KafkaConfigurationEffect[IO].configuration
-    _      <- logger.info(config.toString)
-    _      <- new DataGenerator[IO].run.background.use { f => f.start }
-    _      <- new KafkaConsumer[IO].consume()
-  yield ()
+  override def run: IO[Unit] = Program.run

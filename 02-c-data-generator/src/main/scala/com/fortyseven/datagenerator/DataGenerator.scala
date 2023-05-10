@@ -21,6 +21,7 @@ import scala.concurrent.duration.*
 import cats.effect.kernel.Async
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
+import com.fortyseven.configuration.dataGenerator.{DataGeneratorConfiguration, DataGeneratorConfigurationEffect}
 import com.fortyseven.coreheaders.DataGeneratorHeader
 import com.fortyseven.coreheaders.codecs.Codecs
 import com.fortyseven.coreheaders.model.app.model.*
@@ -35,18 +36,24 @@ object DataGenerator extends IOApp.Simple:
 
 final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
 
+  override def run: F[Unit] = for
+    conf <- new DataGeneratorConfigurationEffect[F].configuration
+    _    <- runWithConfig(conf)
+  yield ()
+
   import VulcanSerdes.*
 
   private val sourceTopic = "data-generator"
 
-  val run: F[Unit] =
+  private def runWithConfig(dg: DataGeneratorConfiguration): F[Unit] =
     val producerSettings = ProducerSettings[F, String, Array[Byte]]
-      .withBootstrapServers("localhost:9092")
-      .withProperty("value.serializer", "io.confluent.kafka.serializers.KafkaAvroSerializer")
+      .withBootstrapServers(dg.kafkaProducer.bootstrapServers.toString)
+      .withProperty(dg.kafkaProducer.propertyKey.toString, dg.kafkaProducer.propertyValue.toString)
 
-    val pneumaticPressureSerializer = avroSerializer(Config("http://localhost:8081"), includeKey = false)(
-      using Codecs.pneumaticPressureCodec
-    )
+    val pneumaticPressureSerializer = avroSerializer(
+      Config(dg.kafkaProducer.schemaRegistryUrl.toString),
+      includeKey = dg.kafkaProducer.includeKey
+    )(using Codecs.pneumaticPressureCodec)
 
     KafkaProducer
       .stream(producerSettings)
@@ -58,7 +65,10 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
             ProducerRecords.one(ProducerRecord(sourceTopic, key, value))
           }
           .evalMap(producer.produce)
-          .groupWithin(1, 15.seconds)
+          .groupWithin(
+            dg.kafkaProducer.commitBatchWithinSize.toString.toInt,
+            dg.kafkaProducer.commitBatchWithinTime.toString.toInt.seconds
+          )
           .evalMap(_.sequence)
       }
       .compile
