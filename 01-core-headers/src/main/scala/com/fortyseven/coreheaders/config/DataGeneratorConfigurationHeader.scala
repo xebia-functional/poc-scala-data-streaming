@@ -17,14 +17,23 @@
 package com.fortyseven.coreheaders.config
 
 trait DataGeneratorConfigurationHeader:
+
   val kafkaProducer: KafkaProducerHeader
+
 end DataGeneratorConfigurationHeader
 
 trait KafkaProducerHeader:
+
   val bootstrapServers: String
+
   val valueSerializerClass: String
+
   val schemaRegistryUrl: String
+
   val includeKey: Boolean
+
   val commitBatchWithinSize: Int
+
   val commitBatchWithinTime: Int
+
 end KafkaProducerHeader

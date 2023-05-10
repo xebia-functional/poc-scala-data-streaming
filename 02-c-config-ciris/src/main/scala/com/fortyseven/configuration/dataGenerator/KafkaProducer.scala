@@ -33,15 +33,15 @@ private[dataGenerator] final case class KafkaProducer(
     _commitBatchWithinTime: PosInt
   ) extends KafkaProducerHeader:
 
-  override val bootstrapServers: String     = _bootstrapServers.toString
+  override val bootstrapServers: String = _bootstrapServers.toString
 
   override val valueSerializerClass: String = _valueSerializerClass.toString
 
-  override val schemaRegistryUrl: String    = _schemaRegistryUrl.toString
+  override val schemaRegistryUrl: String = _schemaRegistryUrl.toString
 
-  override val commitBatchWithinSize: Int   = _commitBatchWithinSize.toString.toInt
+  override val commitBatchWithinSize: Int = _commitBatchWithinSize.toString.toInt
 
-  override val commitBatchWithinTime: Int   = _commitBatchWithinTime.toString.toInt
+  override val commitBatchWithinTime: Int = _commitBatchWithinTime.toString.toInt
 
 private[dataGenerator] object KafkaProducer:
 
