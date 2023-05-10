@@ -44,9 +44,9 @@ lazy val `poc-scala-data-streaming`: Project =
       `data-generator`,
       `kafka-consumer`,
       `job-processor-flink`,
-      `job-processor-kafka`,
-      `job-processor-spark`,
-      `job-processor-storm`,
+      //`job-processor-kafka`,
+      //`job-processor-spark`,
+      //`job-processor-storm`,
       // team green
       core,
 
@@ -67,11 +67,7 @@ lazy val `core-headers`: Project =
       libraryDependencies ++= Seq(
         Libraries.kafka.fs2Kafka,
         Libraries.codec.fs2KafkaVulcan
-      ),
-      libraryDependencies ++= Seq(
-        Libraries.test.munitScalacheck,
-        Libraries.test.scalatest
-      ).map(_ % Test)
+      )
     )
 
 // layer 2
@@ -144,38 +140,38 @@ lazy val `job-processor-flink-integration`: Project =
       ).map(_ % Test)
     )
 
-lazy val `job-processor-kafka`: Project =
-  project
-    .in(file("02-i-job-processor-kafka"))
-    .dependsOn(`core-headers` % Cctt)
-    .settings(commonSettings)
-    .settings(commonDependencies)
-    .settings(
-      name := "kafka-streams",
-      libraryDependencies ++= Seq()
-    )
-
-lazy val `job-processor-spark`: Project =
-project
-    .in(file("02-i-job-processor-spark"))
-    .dependsOn(`core-headers` % Cctt)
-    .settings(commonSettings)
-    .settings(commonDependencies)
-    .settings(
-      name := "spark-streaming",
-      libraryDependencies ++= Seq()
-    )
-
-lazy val `job-processor-storm`: Project =
-  project
-    .in(file("02-i-job-processor-storm"))
-    .dependsOn(`core-headers` % Cctt)
-    .settings(commonSettings)
-    .settings(commonDependencies)
-    .settings(
-      name := "storm",
-      libraryDependencies ++= Seq()
-    )
+//lazy val `job-processor-kafka`: Project =
+//  project
+//    .in(file("02-i-job-processor-kafka"))
+//    .dependsOn(`core-headers` % Cctt)
+//    .settings(commonSettings)
+//    .settings(commonDependencies)
+//    .settings(
+//      name := "kafka-streams",
+//      libraryDependencies ++= Seq()
+//    )
+//
+//lazy val `job-processor-spark`: Project =
+//project
+//    .in(file("02-i-job-processor-spark"))
+//    .dependsOn(`core-headers` % Cctt)
+//    .settings(commonSettings)
+//    .settings(commonDependencies)
+//    .settings(
+//      name := "spark-streaming",
+//      libraryDependencies ++= Seq()
+//    )
+//
+//lazy val `job-processor-storm`: Project =
+//  project
+//    .in(file("02-i-job-processor-storm"))
+//    .dependsOn(`core-headers` % Cctt)
+//    .settings(commonSettings)
+//    .settings(commonDependencies)
+//    .settings(
+//      name := "storm",
+//      libraryDependencies ++= Seq()
+//    )
 
 // team green (o=output) from here
 lazy val core: Project =
@@ -185,7 +181,11 @@ lazy val core: Project =
     .settings(commonSettings)
     .settings(
       name := "core",
-      libraryDependencies ++= Seq()
+      libraryDependencies ++= Seq(),
+      libraryDependencies ++= Seq(
+        Libraries.test.munitScalacheck,
+        Libraries.test.scalatest
+      ).map(_ % Test)
     )
 
 // layer 3
@@ -199,9 +199,9 @@ lazy val `entry-point`: Project =
     .dependsOn(`kafka-consumer` % Cctt)
     .dependsOn(`data-generator` % Cctt)
     .dependsOn(`job-processor-flink` % Cctt)
-    .dependsOn(`job-processor-kafka` % Cctt)
-    .dependsOn(`job-processor-spark` % Cctt)
-    .dependsOn(`job-processor-storm` % Cctt)
+    //.dependsOn(`job-processor-kafka` % Cctt)
+    //.dependsOn(`job-processor-spark` % Cctt)
+    //.dependsOn(`job-processor-storm` % Cctt)
     // team green
     .dependsOn(core % Cctt)
     .settings(commonSettings)

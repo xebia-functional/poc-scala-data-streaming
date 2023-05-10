@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.model.iot
+package com.fortyseven.core
 
 import com.fortyseven.coreheaders.model.iot.errors.OutOfBoundsError
 import com.fortyseven.coreheaders.model.iot.types.*
@@ -23,7 +23,7 @@ import org.scalacheck.Gen
 import org.scalacheck.Prop.forAll
 import org.scalatest.matchers.must.Matchers
 
-class TypesSuite extends ScalaCheckSuite:
+class ModelIotTest extends ScalaCheckSuite:
 
   property("Latitude") {
     forAll(Gen.choose(-360.0, 360.0)) { (coordinate: Double) =>
