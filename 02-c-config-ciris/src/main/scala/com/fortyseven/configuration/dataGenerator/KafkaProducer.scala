@@ -25,8 +25,7 @@ import eu.timepit.refined.types.string.NonEmptyString
 
 private[dataGenerator] final case class KafkaProducer(
     bootstrapServers: NonEmptyString,
-    propertyKey: NonEmptyString,
-    propertyValue: NonEmptyString,
+    valueSerializerClass: NonEmptyString,
     schemaRegistryUrl: NonEmptyString,
     includeKey: Boolean,
     commitBatchWithinSize: PosInt,
@@ -38,7 +37,6 @@ private[dataGenerator] object KafkaProducer:
   val config: ConfigValue[Effect, KafkaProducer] =
     (
       default("localhost:9092").as[NonEmptyString],
-      default("value.serializer").as[NonEmptyString],
       default("io.confluent.kafka.serializers.KafkaAvroSerializer").as[NonEmptyString],
       default("http://localhost:8081").as[NonEmptyString],
       default(false).as[Boolean],

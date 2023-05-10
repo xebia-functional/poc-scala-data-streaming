@@ -18,6 +18,8 @@ package com.fortyseven.datagenerator
 
 import scala.concurrent.duration.*
 
+import org.apache.kafka.clients.producer.ProducerConfig
+
 import cats.effect.kernel.Async
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
@@ -48,7 +50,7 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
   private def runWithConfig(dg: DataGeneratorConfiguration): F[Unit] =
     val producerSettings = ProducerSettings[F, String, Array[Byte]]
       .withBootstrapServers(dg.kafkaProducer.bootstrapServers.toString)
-      .withProperty(dg.kafkaProducer.propertyKey.toString, dg.kafkaProducer.propertyValue.toString)
+      .withProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, dg.kafkaProducer.valueSerializerClass.toString)
 
     val pneumaticPressureSerializer = avroSerializer(
       Config(dg.kafkaProducer.schemaRegistryUrl.toString),
