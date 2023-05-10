@@ -64,10 +64,7 @@ lazy val `core-headers`: Project =
     .settings(commonSettings)
     .settings(
       name := "core-headers",
-      libraryDependencies ++= Seq(
-        Libraries.kafka.fs2Kafka,
-        Libraries.codec.fs2KafkaVulcan
-      )
+      libraryDependencies ++= Seq(Libraries.kafka.fs2KafkaVulcan)
     )
 
 // layer 2
@@ -78,19 +75,17 @@ lazy val configuration: Project = (project in file("02-c-config-ciris"))
   .settings(commonSettings)
   .settings(
     name := "configuration",
-    libraryDependencies ++= Libraries.config.all
+    libraryDependencies ++= Seq(Libraries.config.cirisRefined)
   )
 
 lazy val `data-generator`: Project = (project in file("02-c-data-generator"))
-  .dependsOn(configuration % Cctt) // does not depend in core-headers because it depends on configuration (transitive)
   .dependsOn(core % Cctt)
   .settings(commonSettings)
-  .settings(commonDependencies)
   .settings(
     name := "data-generator",
     libraryDependencies ++= Seq(
-      Libraries.kafka.fs2Kafka,
-      Libraries.codec.fs2KafkaVulcan
+      Libraries.test.munitCatsEffect,
+      Libraries.logging.log4catsSlf4j % Test
     )
   )
 
@@ -106,24 +101,21 @@ lazy val `kafka-consumer`: Project =
     .dependsOn(`kafka-util` % Cctt)
     .dependsOn(configuration % Cctt)
     .settings(commonSettings)
-    .settings(commonDependencies)
     .settings(
       name := "kafka-consumer",
-      libraryDependencies ++= Seq(Libraries.kafka.fs2Kafka)
+      libraryDependencies ++= Seq()
     )
 
 lazy val `job-processor-flink`: Project =
   project
     .in(file("02-i-job-processor-flink"))
-    .dependsOn(`core-headers` % Cctt)
+    .dependsOn(configuration % Cctt)
     .settings(commonSettings)
-    .settings(commonDependencies)
     .settings(
         name := "flink",
         libraryDependencies ++= Seq(
           Libraries.flink.clients,
-          Libraries.flink.kafka,
-          Libraries.flink.streaming
+          Libraries.flink.kafka
         )
     )
 
@@ -131,13 +123,15 @@ lazy val `job-processor-flink-integration`: Project =
   project.in(file("02-i-job-processor-flink/integration"))
     .dependsOn(`job-processor-flink`)
     .settings(commonSettings)
-    .settings(commonDependencies)
     .settings(
       publish / skip := true,
       libraryDependencies ++= Seq(
         Libraries.integrationTest.kafka,
-        Libraries.integrationTest.munit
-      ).map(_ % Test)
+        Libraries.integrationTest.munit,
+        Libraries.test.munitCatsEffect,
+        Libraries.logging.log4catsSlf4j % Test,
+        Libraries.cats.catsEffect % Test
+      )
     )
 
 //lazy val `job-processor-kafka`: Project =
@@ -177,15 +171,14 @@ lazy val `job-processor-flink-integration`: Project =
 lazy val core: Project =
   project
     .in(file("02-o-core"))
-    .dependsOn(`core-headers` % Cctt)
+    .dependsOn(configuration % Cctt)
     .settings(commonSettings)
     .settings(
       name := "core",
-      libraryDependencies ++= Seq(),
       libraryDependencies ++= Seq(
         Libraries.test.munitScalacheck,
         Libraries.test.scalatest
-      ).map(_ % Test)
+      )
     )
 
 // layer 3
@@ -203,11 +196,12 @@ lazy val `entry-point`: Project =
     //.dependsOn(`job-processor-spark` % Cctt)
     //.dependsOn(`job-processor-storm` % Cctt)
     // team green
-    .dependsOn(core % Cctt)
+    //.dependsOn(core % Cctt)
     .settings(commonSettings)
     .settings(
       name := "entry-point",
       libraryDependencies ++= Seq(
+        Libraries.logging.log4catsSlf4j // For now it is only used in testing, so it is not transitive
         // the less the better (usually zero)
       )
     )
@@ -222,19 +216,6 @@ lazy val commonScalacOptions = Seq(
     "-Wunused:_",
     "-Xfatal-warnings"
   ),
-  Test / console / scalacOptions :=
-    (Compile / console / scalacOptions).value
+  Test / console / scalacOptions := (Compile / console / scalacOptions).value
 )
 
-lazy val commonDependencies = Seq(
-  libraryDependencies ++= Seq(
-    Libraries.cats.catsEffect,
-    Libraries.logging.log4catsSlf4j,
-    Libraries.logging.logback
-  ),
-  libraryDependencies ++= Seq(
-    Libraries.test.munitCatsEffect,
-    Libraries.test.munitScalacheck,
-    Libraries.test.scalatest,
-  ).map(_ % Test)
-)

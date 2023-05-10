@@ -17,7 +17,6 @@
 package com.fortyseven.coreheaders.codecs.iot
 
 import com.fortyseven.coreheaders.model.iot.types.*
-import vulcan.Codec
 
 trait IotTypes[Codec[_]]:
 

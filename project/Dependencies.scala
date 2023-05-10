@@ -30,14 +30,12 @@ object Dependencies {
       val catsEffect = "org.typelevel" %% "cats-effect" % Versions.catsEffect
     }
 
-    object codec {
+    object kafka {
       val fs2KafkaVulcan = "com.github.fd4s" %% "fs2-kafka-vulcan" % Versions.fs2Kafka
     }
 
     object config {
-      private val ciris = "is.cir" %% "ciris" % Versions.ciris
-      private val cirisRefined = "is.cir" %% "ciris-refined" % Versions.ciris
-      val all: Seq[ModuleID] = Seq(ciris, cirisRefined)
+      val cirisRefined = "is.cir" %% "ciris-refined" % Versions.ciris
     }
 
     object flink {
@@ -47,12 +45,8 @@ object Dependencies {
     }
 
     object integrationTest {
-      val kafka = "com.dimafeng" %% "testcontainers-scala-kafka" % Versions.testContainers
-      val munit = "com.dimafeng" %% "testcontainers-scala-munit" % Versions.testContainers
-    }
-
-    object kafka {
-      val fs2Kafka = "com.github.fd4s" %% "fs2-kafka" % Versions.fs2Kafka
+      val kafka = "com.dimafeng" %% "testcontainers-scala-kafka" % Versions.testContainers % Test
+      val munit = "com.dimafeng" %% "testcontainers-scala-munit" % Versions.testContainers % Test
     }
 
     object logging {
@@ -61,9 +55,9 @@ object Dependencies {
     }
 
     object test {
-      val munitCatsEffect = "org.typelevel" %% "munit-cats-effect-3" % Versions.munitCatsEffect
-      val munitScalacheck = "org.typelevel" %% "scalacheck-effect-munit" % Versions.munitScalacheck
-      val scalatest = "org.scalatest" %% "scalatest" % Versions.scalatest
+      val munitCatsEffect = "org.typelevel" %% "munit-cats-effect-3" % Versions.munitCatsEffect % Test
+      val munitScalacheck = "org.typelevel" %% "scalacheck-effect-munit" % Versions.munitScalacheck % Test
+      val scalatest = "org.scalatest" %% "scalatest" % Versions.scalatest % Test
     }
   }
 }
