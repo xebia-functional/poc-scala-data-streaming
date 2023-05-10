@@ -16,7 +16,6 @@
 
 package com.fortyseven.configuration.dataGenerator
 
-import cats.syntax.all.*
 import ciris.refined.*
 import ciris.{default, ConfigValue, Effect}
 import com.fortyseven.coreheaders.config.KafkaProducerHeader
@@ -46,11 +45,18 @@ private[dataGenerator] final case class KafkaProducer(
 private[dataGenerator] object KafkaProducer:
 
   val config: ConfigValue[Effect, KafkaProducer] =
-    (
-      default("localhost:9092").as[NonEmptyString],
-      default("io.confluent.kafka.serializers.KafkaAvroSerializer").as[NonEmptyString],
-      default("http://localhost:8081").as[NonEmptyString],
-      default(false).as[Boolean],
-      default(1).as[PosInt],
-      default(15).as[PosInt]
-    ).parMapN(KafkaProducer.apply)
+    for
+      _bootstrapServers      <- default("localhost:9092").as[NonEmptyString]
+      _valueSerializerClass  <- default("io.confluent.kafka.serializers.KafkaAvroSerializer").as[NonEmptyString]
+      _schemaRegistryUrl     <- default("http://localhost:8081").as[NonEmptyString]
+      includeKey             <- default(false).as[Boolean]
+      _commitBatchWithinSize <- default(1).as[PosInt]
+      _commitBatchWithinTime <- default(15).as[PosInt]
+    yield KafkaProducer.apply(
+      _bootstrapServers,
+      _valueSerializerClass,
+      _schemaRegistryUrl,
+      includeKey,
+      _commitBatchWithinSize,
+      _commitBatchWithinTime
+    )

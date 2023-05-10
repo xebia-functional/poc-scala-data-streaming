@@ -18,7 +18,6 @@ package com.fortyseven.configuration.kafka
 
 import org.apache.kafka.common.record.CompressionType
 
-import cats.syntax.all.*
 import ciris.refined.*
 import ciris.{default, ConfigValue, Effect}
 import com.fortyseven.coreheaders.config.ProducerHeader
@@ -35,4 +34,7 @@ private[kafka] final case class Producer(
 private[kafka] object Producer:
 
   val config: ConfigValue[Effect, Producer] =
-    (default(Int.MaxValue).as[PosInt], default(CompressionType.LZ4).as[CompressionType]).parMapN(Producer.apply)
+    for
+      _maxConcurrent  <- default(Int.MaxValue).as[PosInt]
+      compressionType <- default(CompressionType.LZ4).as[CompressionType]
+    yield Producer.apply(_maxConcurrent, compressionType)

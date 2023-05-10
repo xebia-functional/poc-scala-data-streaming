@@ -18,7 +18,7 @@ package com.fortyseven
 
 import cats.effect.unsafe.implicits.global
 import cats.effect.{IO, IOApp}
-import com.fortyseven.configuration.Configuration
+import com.fortyseven.configuration.dataGenerator.DataGeneratorConfiguration
 import com.fortyseven.configuration.kafka.KafkaConfiguration
 import com.fortyseven.datagenerator.DataGenerator
 import com.fortyseven.kafkaconsumer.KafkaConsumer
@@ -27,13 +27,12 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 object Program:
 
   val run: IO[Unit] = for
-    logger    <- Slf4jLogger.create[IO]
-    genConf   <- Configuration.dataGeneratorConfiguration
-    _         <- logger.info(genConf.toString)
-    kafkaConf <- Configuration.kafkaConsumerConfiguration
-    _         <- logger.info(kafkaConf.toString)
-    _         <- logger.info("Start data generator")
-    _         <- new DataGenerator[IO].run(genConf).background.use { _.start }
-    _         <- logger.info("Start kafka consumer")
-    _         <- new KafkaConsumer[IO].consume(kafkaConf)
+    logger      <- Slf4jLogger.create[IO]
+    dataGenConf <- DataGeneratorConfiguration.config.load[IO]
+    kafkaConf   <- KafkaConfiguration.config.load[IO]
+    _           <- logger.info(kafkaConf.toString)
+    _           <- logger.info("Start data generator")
+    _           <- new DataGenerator[IO].run(dataGenConf).background.use { _.start }
+    _           <- logger.info("Start kafka consumer")
+    _           <- new KafkaConsumer[IO].consume(kafkaConf)
   yield ()

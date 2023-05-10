@@ -80,7 +80,6 @@ lazy val `core-headers`: Project =
 lazy val configuration: Project = (project in file("02-c-config-ciris"))
   .dependsOn(`core-headers`)
   .settings(commonSettings)
-  .settings(commonDependencies)
   .settings(
     name := "configuration",
     libraryDependencies ++= Libraries.config.all

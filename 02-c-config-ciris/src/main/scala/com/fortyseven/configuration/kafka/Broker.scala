@@ -27,4 +27,6 @@ private[kafka] final case class Broker(_brokerAddress: NonEmptyString) extends B
 
 private[kafka] object Broker:
 
-  val config: ConfigValue[Effect, Broker] = default("localhost:9092").as[NonEmptyString].map(Broker.apply)
+  val config: ConfigValue[Effect, Broker] =
+    for _brokerAddress <- default("localhost:9092").as[NonEmptyString]
+    yield Broker.apply(_brokerAddress)

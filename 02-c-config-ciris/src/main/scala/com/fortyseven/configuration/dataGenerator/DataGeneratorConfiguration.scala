@@ -16,7 +16,6 @@
 
 package com.fortyseven.configuration.dataGenerator
 
-import cats.effect.Async
 import ciris.{ConfigValue, Effect}
 import com.fortyseven.configuration.dataGenerator.KafkaProducer
 import com.fortyseven.coreheaders.config.DataGeneratorConfigurationHeader
@@ -28,4 +27,5 @@ case class DataGeneratorConfiguration(
 object DataGeneratorConfiguration:
 
   val config: ConfigValue[Effect, DataGeneratorConfiguration] =
-    KafkaProducer.config.map(DataGeneratorConfiguration.apply)
+    for kafkaProducer <- KafkaProducer.config
+    yield DataGeneratorConfiguration.apply(kafkaProducer)

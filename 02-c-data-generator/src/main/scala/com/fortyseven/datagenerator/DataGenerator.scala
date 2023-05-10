@@ -35,7 +35,9 @@ import io.confluent.kafka.serializers.KafkaAvroSerializer
 
 final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
 
-  override def run(dgc: DataGeneratorConfigurationHeader): F[Unit] =
+  override def run(dgc: DataGeneratorConfigurationHeader): F[Unit] = runWithConfiguration(dgc)
+
+  private def runWithConfiguration(dgc: DataGeneratorConfigurationHeader): F[Unit] =
 
     import VulcanSerdes.*
 
