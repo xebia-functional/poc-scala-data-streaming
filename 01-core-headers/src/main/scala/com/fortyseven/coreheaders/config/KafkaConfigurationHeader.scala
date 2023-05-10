@@ -22,7 +22,7 @@ import org.apache.kafka.common.record.CompressionType
 
 import fs2.kafka.AutoOffsetReset
 
-trait KafkaConigurationfHeader:
+trait KafkaConfigurationHeader:
 
   val brokerConfiguration: BrokerHeader
 
@@ -32,13 +32,9 @@ trait KafkaConigurationfHeader:
 
   val streamConfiguration: StreamHeader
 
-end KafkaConigurationfHeader
-
 trait BrokerHeader:
 
   val brokerAddress: String
-
-end BrokerHeader
 
 trait ConsumerHeader:
 
@@ -46,15 +42,11 @@ trait ConsumerHeader:
 
   val groupId: String
 
-end ConsumerHeader
-
 trait ProducerHeader:
 
   val maxConcurrent: Int
 
   val compressionType: CompressionType
-
-end ProducerHeader
 
 trait StreamHeader:
 
@@ -67,5 +59,3 @@ trait StreamHeader:
   val commitBatchWithinSize: Int
 
   val commitBatchWithinTime: FiniteDuration
-
-end StreamHeader

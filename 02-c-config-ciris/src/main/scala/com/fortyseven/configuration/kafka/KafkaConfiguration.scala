@@ -21,14 +21,14 @@ import cats.effect.kernel.Async
 import cats.syntax.all.*
 import ciris.{ConfigValue, Effect}
 import com.fortyseven.configuration.kafka.*
-import com.fortyseven.coreheaders.config.{ConfigurationHeader, KafkaConigurationfHeader}
+import com.fortyseven.coreheaders.config.{ConfigurationHeader, KafkaConfigurationHeader}
 
 final case class KafkaConfiguration(
     brokerConfiguration: Broker,
     consumerConfiguration: Consumer,
     producerConfiguration: Producer,
     streamConfiguration: Stream
-  ) extends KafkaConigurationfHeader
+  ) extends KafkaConfigurationHeader
 
 object KafkaConfiguration:
 

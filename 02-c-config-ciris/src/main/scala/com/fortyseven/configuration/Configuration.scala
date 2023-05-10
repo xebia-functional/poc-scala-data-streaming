@@ -20,13 +20,13 @@ import cats.effect.IO
 import cats.effect.kernel.Async
 import com.fortyseven.configuration.dataGenerator.DataGeneratorConfiguration
 import com.fortyseven.configuration.kafka.KafkaConfiguration
-import com.fortyseven.coreheaders.config.{ConfigurationHeader, DataGeneratorConfigurationHeader, KafkaConigurationfHeader}
+import com.fortyseven.coreheaders.config.{ConfigurationHeader, DataGeneratorConfigurationHeader, KafkaConfigurationHeader}
 
 object Configuration extends ConfigurationHeader[IO]:
   
   override def dataGeneratorConfiguration: IO[DataGeneratorConfigurationHeader] =
     DataGeneratorConfiguration.config.load[IO]
 
-  override def kafkaConsumerConfiguration: IO[KafkaConigurationfHeader] =
+  override def kafkaConsumerConfiguration: IO[KafkaConfigurationHeader] =
     KafkaConfiguration.config.load[IO]
   

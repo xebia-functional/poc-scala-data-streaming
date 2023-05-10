@@ -22,4 +22,4 @@ trait ConfigurationHeader[F[_]]:
 
   def dataGeneratorConfiguration: F[DataGeneratorConfigurationHeader]
 
-  def kafkaConsumerConfiguration: F[KafkaConigurationfHeader]
+  def kafkaConsumerConfiguration: F[KafkaConfigurationHeader]

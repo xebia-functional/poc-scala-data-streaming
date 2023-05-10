@@ -33,9 +33,9 @@ import fs2.kafka.*
 
 final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
 
-  override def consume(kc: KafkaConigurationfHeader): F[Unit] = run(kc)
+  override def consume(kc: KafkaConfigurationHeader): F[Unit] = run(kc)
 
-  def run(kc: KafkaConigurationfHeader): F[Unit] =
+  def run(kc: KafkaConfigurationHeader): F[Unit] =
     def processRecord(record: ConsumerRecord[String, String]): F[(String, String)] =
       Applicative[F].pure(record.key -> record.value)
 
