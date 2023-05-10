@@ -34,8 +34,8 @@ object IotModel extends IotModel[Codec]:
 
   given batteryHealthCodec: Codec[BatteryHealth] = ???
 
-  given pneumaticPressureCodec: Codec[PneumaticPressure] = Codec
-    .record(name = "PneumaticPressure", namespace = namespace)(
+  given pneumaticPressureCodec: Codec[PneumaticPressure] =
+    Codec.record(name = "PneumaticPressure", namespace = namespace)(
       _("pressure", _.pressure).map(PneumaticPressure.apply)
     )
 

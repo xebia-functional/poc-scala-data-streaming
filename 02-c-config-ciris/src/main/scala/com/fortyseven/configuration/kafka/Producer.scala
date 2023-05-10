@@ -21,13 +21,16 @@ import org.apache.kafka.common.record.CompressionType
 import cats.syntax.all.*
 import ciris.refined.*
 import ciris.{default, ConfigValue, Effect}
+import com.fortyseven.coreheaders.config.ProducerHeader
 import eu.timepit.refined.types.numeric.PosInt
 import eu.timepit.refined.types.string.NonEmptyString
 
 private[kafka] final case class Producer(
-    maxConcurrent: PosInt,
+    _maxConcurrent: PosInt,
     compressionType: CompressionType
-  )
+  ) extends ProducerHeader:
+
+  override val maxConcurrent: Int = _maxConcurrent.toString.toInt
 
 private[kafka] object Producer:
 

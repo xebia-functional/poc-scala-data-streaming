@@ -16,6 +16,10 @@
 
 package com.fortyseven.coreheaders.config
 
-trait ConfigurationHeader[F[_], C]:
+import com.fortyseven.coreheaders.DataGeneratorHeader
 
-  def configuration: F[C]
+trait ConfigurationHeader[F[_]]:
+
+  def dataGeneratorConfiguration: F[DataGeneratorConfigurationHeader]
+
+  def kafkaConsumerConfiguration: F[KafkaConigurationfHeader]

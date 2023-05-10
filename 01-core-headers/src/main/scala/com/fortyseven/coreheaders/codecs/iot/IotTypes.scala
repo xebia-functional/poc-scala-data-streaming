@@ -23,7 +23,7 @@ trait IotTypes[Codec[_]]:
 
   given latitudeCodec: Codec[Latitude]
 
-  given longitudeCodec:Codec[Longitude]
+  given longitudeCodec: Codec[Longitude]
 
   given percentageCodec: Codec[Percentage]
 

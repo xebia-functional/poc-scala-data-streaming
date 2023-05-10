@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package com.fortyseven.configuration.kafka
+package com.fortyseven.coreheaders.config
 
-import cats.effect.IO
-import munit.{CatsEffectSuite, FunSuite}
+trait DataGeneratorConfigurationHeader:
+  val kafkaProducer: KafkaProducerHeader
+end DataGeneratorConfigurationHeader
 
-class KafkaConfigurationEffectTest extends CatsEffectSuite:
-
-  test("kafka config should load") {
-
-    val configuration = KafkaConfiguration.config.load[IO]
-
-    println(configuration.unsafeRunSync().toString)
-
-  }
-
+trait KafkaProducerHeader:
+  val bootstrapServers: String
+  val valueSerializerClass: String
+  val schemaRegistryUrl: String
+  val includeKey: Boolean
+  val commitBatchWithinSize: Int
+  val commitBatchWithinTime: Int
+end KafkaProducerHeader

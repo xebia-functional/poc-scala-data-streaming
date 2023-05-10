@@ -14,27 +14,19 @@
  * limitations under the License.
  */
 
-package com.fortyseven.configuration.kafka
+package com.fortyseven.configuration
 
 import cats.effect.IO
 import cats.effect.kernel.Async
-import cats.syntax.all.*
-import ciris.{ConfigValue, Effect}
-import com.fortyseven.configuration.kafka.*
-import com.fortyseven.coreheaders.config.{ConfigurationHeader, KafkaConigurationfHeader}
+import com.fortyseven.configuration.dataGenerator.DataGeneratorConfiguration
+import com.fortyseven.configuration.kafka.KafkaConfiguration
+import com.fortyseven.coreheaders.config.{ConfigurationHeader, DataGeneratorConfigurationHeader, KafkaConigurationfHeader}
 
-final case class KafkaConfiguration(
-    brokerConfiguration: Broker,
-    consumerConfiguration: Consumer,
-    producerConfiguration: Producer,
-    streamConfiguration: Stream
-  ) extends KafkaConigurationfHeader
+object Configuration extends ConfigurationHeader[IO]:
+  
+  override def dataGeneratorConfiguration: IO[DataGeneratorConfigurationHeader] =
+    DataGeneratorConfiguration.config.load[IO]
 
-object KafkaConfiguration:
-
-  val config: ConfigValue[Effect, KafkaConfiguration] = (
-    Broker.config,
-    Consumer.config,
-    Producer.config,
-    Stream.config
-  ).parMapN(KafkaConfiguration.apply)
+  override def kafkaConsumerConfiguration: IO[KafkaConigurationfHeader] =
+    KafkaConfiguration.config.load[IO]
+  

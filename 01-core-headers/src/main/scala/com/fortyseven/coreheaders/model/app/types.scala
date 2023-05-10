@@ -26,7 +26,4 @@ object types:
 
     def apply(meters: Int): Meters = meters
 
-    extension (meters: Meters)
-
-      def value: Int = meters
-
+    extension (meters: Meters) def value: Int = meters

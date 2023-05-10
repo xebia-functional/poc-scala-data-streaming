@@ -18,9 +18,12 @@ package com.fortyseven.configuration.kafka
 
 import ciris.refined.*
 import ciris.{default, ConfigValue, Effect}
+import com.fortyseven.coreheaders.config.BrokerHeader
 import eu.timepit.refined.types.string.NonEmptyString
 
-private[kafka] final case class Broker(brokerAddress: NonEmptyString)
+private[kafka] final case class Broker(_brokerAddress: NonEmptyString) extends BrokerHeader:
+
+  override val brokerAddress: String = _brokerAddress.toString
 
 private[kafka] object Broker:
 
