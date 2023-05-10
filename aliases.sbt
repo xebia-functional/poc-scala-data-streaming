@@ -46,7 +46,7 @@ addCommandAlias(
 
 addCommandAlias(
   "flinkIT",
-  "project job-processor-flink-integration; test"
+  "job-processor-flink-integration / test"
 )
 
 addCommandAlias(
