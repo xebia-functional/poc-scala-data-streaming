@@ -23,7 +23,7 @@ trait DataGeneratorHeader[F[_]]:
 
   def run: F[Unit]
 
-  def generateBatteryCharge: fs2.Stream[F, BateryCharge]
+  def generateBatteryCharge: fs2.Stream[F, BatteryCharge]
 
   def generateBreaksUsage: fs2.Stream[F, BreaksUsage]
 

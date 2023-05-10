@@ -17,15 +17,13 @@
 package com.fortyseven.datagenerator
 
 import scala.concurrent.duration.*
-
 import org.apache.kafka.clients.producer.ProducerConfig
-
 import cats.effect.kernel.Async
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
 import com.fortyseven.configuration.dataGenerator.{DataGeneratorConfiguration, DataGeneratorConfigurationEffect}
 import com.fortyseven.coreheaders.DataGeneratorHeader
-import com.fortyseven.coreheaders.codecs.Codecs
+import com.fortyseven.core.codecs.iot.IotModel.pneumaticPressureCodec
 import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
 import com.fortyseven.coreheaders.model.iot.types.*
@@ -55,7 +53,7 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
     val pneumaticPressureSerializer = avroSerializer(
       Config(dg.kafkaProducer.schemaRegistryUrl.toString),
       includeKey = dg.kafkaProducer.includeKey
-    )(using Codecs.pneumaticPressureCodec)
+    )(using pneumaticPressureCodec)
 
     KafkaProducer
       .stream(producerSettings)
@@ -76,7 +74,7 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
       .compile
       .drain
 
-  override def generateBatteryCharge: fs2.Stream[F, BateryCharge] = ???
+  override def generateBatteryCharge: fs2.Stream[F, BatteryCharge] = ???
 
   override def generateBreaksUsage: fs2.Stream[F, BreaksUsage] = ???
 

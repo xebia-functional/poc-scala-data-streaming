@@ -88,6 +88,7 @@ lazy val configuration: Project = (project in file("02-c-config-ciris"))
 
 lazy val `data-generator`: Project = (project in file("02-c-data-generator"))
   .dependsOn(configuration % Cctt) // does not depend in core-headers because it depends on configuration (transitive)
+  .dependsOn(core % Cctt)
   .settings(commonSettings)
   .settings(commonDependencies)
   .settings(
