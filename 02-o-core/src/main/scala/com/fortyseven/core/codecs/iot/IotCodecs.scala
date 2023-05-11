@@ -17,14 +17,13 @@
 package com.fortyseven.core.codecs.iot
 
 import cats.implicits.*
-import com.fortyseven.core.codecs.iot.IotTypes.given
-import com.fortyseven.coreheaders.codecs.iot.IotModel
 import com.fortyseven.coreheaders.model.iot.model.*
+import com.fortyseven.coreheaders.model.iot.types.*
 import vulcan.Codec
 
-object IotModel extends IotModel[Codec]:
+object IotCodecs:
 
-  private val namespace = "iot"
+  private val _namespace = "iot"
 
   given gpsPositionCodec: Codec[GPSPosition] = ???
 
@@ -35,10 +34,22 @@ object IotModel extends IotModel[Codec]:
   given batteryHealthCodec: Codec[BatteryHealth] = ???
 
   given pneumaticPressureCodec: Codec[PneumaticPressure] =
-    Codec.record(name = "PneumaticPressure", namespace = namespace)(
+    Codec.record(name = "PneumaticPressure", namespace = _namespace)(
       _("pressure", _.pressure).map(PneumaticPressure.apply)
     )
 
   given breaksUsageCodec: Codec[BreaksUsage] = ???
 
   given breaksHealthCodec: Codec[BreaksHealth] = ???
+
+  given latitudeCodec: Codec[Latitude] = ???
+
+  given longitudeCodec: Codec[Longitude] = ???
+
+  given percentageCodec: Codec[Percentage] = ???
+
+  given speedCodec: Codec[Speed] = ???
+
+  given hertzCodec: Codec[Hz] = ???
+
+  given barCodec: Codec[Bar] = ???

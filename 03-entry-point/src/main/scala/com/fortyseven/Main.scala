@@ -16,12 +16,14 @@
 
 package com.fortyseven
 
-import cats.effect.*
+import cats.effect.{IO, IOApp}
 import cats.implicits.*
-import com.fortyseven.configuration.*
+import com.fortyseven.configuration.{DataGeneratorConfiguration, KafkaConsumerConfiguration}
+import com.fortyseven.core.codecs.iot.IotCodecs
 import com.fortyseven.datagenerator.DataGenerator
 import com.fortyseven.kafkaconsumer.KafkaConsumer
 import org.typelevel.log4cats.slf4j.Slf4jLogger
+import vulcan.Codec
 
 object Main extends IOApp.Simple:
 

@@ -64,7 +64,7 @@ lazy val `core-headers`: Project =
     .settings(commonSettings)
     .settings(
       name := "core-headers",
-      libraryDependencies ++= Seq(Libraries.kafka.fs2KafkaVulcan)
+      libraryDependencies ++= Seq()
     )
 
 // layer 2
@@ -75,12 +75,15 @@ lazy val configuration: Project = (project in file("02-c-config-ciris"))
   .settings(commonSettings)
   .settings(
     name := "configuration",
-    libraryDependencies ++= Seq(Libraries.config.cirisRefined)
+    libraryDependencies ++= Seq(
+      Libraries.config.cirisRefined,
+      Libraries.kafka.fs2Kafka
+    )
   )
 
 lazy val `data-generator`: Project = (project in file("02-c-data-generator"))
   .dependsOn(`core-headers` % Cctt)
-  .dependsOn(core % Cctt)
+  .dependsOn(core % Cctt) // This should be avoided
   .settings(commonSettings)
   .settings(
     name := "data-generator",
@@ -90,21 +93,23 @@ lazy val `data-generator`: Project = (project in file("02-c-data-generator"))
     )
   )
 
-lazy val `kafka-util`: Project = (project in file("02-c-kafka-util"))
-  .settings(
-    name := "kafka-util"
-  )
+//lazy val `kafka-util`: Project = (project in file("02-c-kafka-util"))
+//  .settings(
+//    name := "kafka-util"
+//  )
 
 // team blue (i=input) from here
 lazy val `kafka-consumer`: Project =
   project
     .in(file("02-i-kafka-consumer"))
-    .dependsOn(`kafka-util` % Cctt)
+    //.dependsOn(`kafka-util` % Cctt)
     .dependsOn(`core-headers` % Cctt)
     .settings(commonSettings)
     .settings(
       name := "kafka-consumer",
-      libraryDependencies ++= Seq()
+      libraryDependencies ++= Seq(
+        Libraries.kafka.fs2KafkaVulcan
+      )
     )
 
 lazy val `job-processor-flink`: Project =
@@ -115,6 +120,7 @@ lazy val `job-processor-flink`: Project =
     .settings(
         name := "flink",
         libraryDependencies ++= Seq(
+          Libraries.cats.catsEffect,
           Libraries.flink.clients,
           Libraries.flink.kafka
         )
@@ -177,6 +183,7 @@ lazy val core: Project =
     .settings(
       name := "core",
       libraryDependencies ++= Seq(
+        Libraries.kafka.fs2KafkaVulcan,
         Libraries.test.munitScalacheck,
         Libraries.test.scalatest
       )
@@ -192,7 +199,7 @@ lazy val `entry-point`: Project =
     // team blue
     .dependsOn(`kafka-consumer` % Cctt)
     .dependsOn(`data-generator` % Cctt)
-    .dependsOn(`job-processor-flink` % Cctt)
+    //.dependsOn(`job-processor-flink` % Cctt)
     //.dependsOn(`job-processor-kafka` % Cctt)
     //.dependsOn(`job-processor-spark` % Cctt)
     //.dependsOn(`job-processor-storm` % Cctt)
@@ -203,7 +210,7 @@ lazy val `entry-point`: Project =
     .settings(
       name := "entry-point",
       libraryDependencies ++= Seq(
-        Libraries.logging.logback,
+        //Libraries.logging.logback,
         Libraries.logging.log4catsSlf4j
       )
     )

@@ -31,6 +31,7 @@ object Dependencies {
     }
 
     object kafka {
+      val fs2Kafka = "com.github.fd4s" %% "fs2-kafka" % Versions.fs2Kafka
       val fs2KafkaVulcan = "com.github.fd4s" %% "fs2-kafka-vulcan" % Versions.fs2Kafka
     }
 
