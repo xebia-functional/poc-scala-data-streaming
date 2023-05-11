@@ -16,14 +16,14 @@
 
 package com.fortyseven.datagenerator
 
-
 import org.apache.kafka.clients.producer.ProducerConfig
+
 import cats.effect.kernel.Async
 import cats.implicits.*
+import com.fortyseven.core.codecs.iot.IotCodecs.pneumaticPressureCodec
 import com.fortyseven.coreheaders.config.DataGeneratorConfig
 import com.fortyseven.coreheaders.{ConfigHeader, DataGeneratorHeader}
 import fs2.kafka.*
-import com.fortyseven.core.codecs.iot.IotCodecs.pneumaticPressureCodec
 
 final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
 

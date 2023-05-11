@@ -21,4 +21,3 @@ import com.fortyseven.coreheaders.config.JobProcessorConfig
 trait JobProcessorHeader[F[_]]:
 
   def process(config: ConfigHeader[F, JobProcessorConfig]): F[Unit]
-
