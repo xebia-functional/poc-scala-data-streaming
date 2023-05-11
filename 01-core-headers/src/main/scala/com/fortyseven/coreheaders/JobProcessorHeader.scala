@@ -16,10 +16,13 @@
 
 package com.fortyseven.coreheaders
 
+import com.fortyseven.coreheaders.config.JobProcessorConfig
 import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
 
 trait JobProcessorHeader[F[_]]:
+
+  def process(config: ConfigHeader[F, JobProcessorConfig]): F[Unit]
 
   def generateBatteryHealth: fs2.Stream[F, BatteryHealth]
 

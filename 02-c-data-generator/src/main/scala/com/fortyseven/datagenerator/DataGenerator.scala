@@ -24,29 +24,34 @@ import cats.effect.kernel.Async
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
 import com.fortyseven.core.codecs.iot.IotModel.pneumaticPressureCodec
-import com.fortyseven.coreheaders.DataGeneratorHeader
-import com.fortyseven.coreheaders.config.DataGeneratorConfigurationHeader
+import com.fortyseven.coreheaders.config.DataGeneratorConfig
 import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
 import com.fortyseven.coreheaders.model.iot.types.*
+import com.fortyseven.coreheaders.{ConfigHeader, DataGeneratorHeader}
 import fs2.kafka.*
 import io.confluent.kafka.serializers.KafkaAvroSerializer
 
 final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
 
-  override def run(dgc: DataGeneratorConfigurationHeader): F[Unit] = runWithConfiguration(dgc)
+  override def generate(conf: ConfigHeader[F, DataGeneratorConfig]): F[Unit] = for dgc <- conf.load
+  yield runWithConfiguration(dgc)
 
-  private def runWithConfiguration(dgc: DataGeneratorConfigurationHeader): F[Unit] =
+  private def runWithConfiguration(dgc: DataGeneratorConfig): F[Unit]        =
+
+    val producerConfig = dgc.kafkaConf.producer.getOrElse(
+      throw new RuntimeException("No producer config available")
+    )
 
     import VulcanSerdes.*
 
-    val sourceTopic                 = "data-generator"
     val producerSettings            = ProducerSettings[F, String, Array[Byte]]
-      .withBootstrapServers(dgc.kafkaProducer.bootstrapServers)
-      .withProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, dgc.kafkaProducer.valueSerializerClass)
+      .withBootstrapServers(dgc.kafkaConf.broker.brokerAddress)
+      .withProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, producerConfig.valueSerializerClass)
+
     val pneumaticPressureSerializer = avroSerializer(
-      Config(dgc.kafkaProducer.schemaRegistryUrl),
-      includeKey = dgc.kafkaProducer.includeKey
+      Config(dgc.schemaRegistryConf.schemaRegistryUrl),
+      includeKey = false
     )(using pneumaticPressureCodec)
     KafkaProducer
       .stream(producerSettings)
@@ -54,13 +59,13 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
         generatePneumaticPressure
           .map { committable =>
             val key   = committable.getClass.getSimpleName
-            val value = pneumaticPressureSerializer.serialize(sourceTopic, committable)
-            ProducerRecords.one(ProducerRecord(sourceTopic, key, value))
+            val value = pneumaticPressureSerializer.serialize(producerConfig.topicName, committable)
+            ProducerRecords.one(ProducerRecord(producerConfig.topicName, key, value))
           }
           .evalMap(producer.produce)
           .groupWithin(
-            dgc.kafkaProducer.commitBatchWithinSize,
-            dgc.kafkaProducer.commitBatchWithinTime.seconds
+            producerConfig.commitBatchWithinSize,
+            producerConfig.commitBatchWithinTime
           )
           .evalMap(_.sequence)
       }

@@ -16,13 +16,13 @@
 
 package com.fortyseven.coreheaders
 
-import com.fortyseven.coreheaders.config.DataGeneratorConfigurationHeader
+import com.fortyseven.coreheaders.config.DataGeneratorConfig
 import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
 
 trait DataGeneratorHeader[F[_]]:
 
-  def run(dgc: DataGeneratorConfigurationHeader): F[Unit]
+  def generate(config: ConfigHeader[F, DataGeneratorConfig]): F[Unit]
 
   def generateBatteryCharge: fs2.Stream[F, BatteryCharge]
 
