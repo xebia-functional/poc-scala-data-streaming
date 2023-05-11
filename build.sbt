@@ -79,6 +79,7 @@ lazy val configuration: Project = (project in file("02-c-config-ciris"))
   )
 
 lazy val `data-generator`: Project = (project in file("02-c-data-generator"))
+  .dependsOn(`core-headers` % Cctt)
   .dependsOn(core % Cctt)
   .settings(commonSettings)
   .settings(
@@ -99,7 +100,7 @@ lazy val `kafka-consumer`: Project =
   project
     .in(file("02-i-kafka-consumer"))
     .dependsOn(`kafka-util` % Cctt)
-    .dependsOn(configuration % Cctt)
+    .dependsOn(`core-headers` % Cctt)
     .settings(commonSettings)
     .settings(
       name := "kafka-consumer",
@@ -109,7 +110,7 @@ lazy val `kafka-consumer`: Project =
 lazy val `job-processor-flink`: Project =
   project
     .in(file("02-i-job-processor-flink"))
-    .dependsOn(configuration % Cctt)
+    .dependsOn(`core-headers` % Cctt)
     .settings(commonSettings)
     .settings(
         name := "flink",
@@ -171,7 +172,7 @@ lazy val `job-processor-flink-integration`: Project =
 lazy val core: Project =
   project
     .in(file("02-o-core"))
-    .dependsOn(configuration % Cctt)
+    .dependsOn(`core-headers` % Cctt)
     .settings(commonSettings)
     .settings(
       name := "core",
@@ -196,7 +197,8 @@ lazy val `entry-point`: Project =
     //.dependsOn(`job-processor-spark` % Cctt)
     //.dependsOn(`job-processor-storm` % Cctt)
     // team green
-    //.dependsOn(core % Cctt)
+    .dependsOn(configuration % Cctt)
+    .dependsOn(core % Cctt)
     .settings(commonSettings)
     .settings(
       name := "entry-point",
