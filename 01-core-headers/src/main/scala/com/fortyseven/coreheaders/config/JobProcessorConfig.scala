@@ -14,22 +14,8 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders
+package com.fortyseven.coreheaders.config
 
-import com.fortyseven.coreheaders.config.DataGeneratorConfig
-import com.fortyseven.coreheaders.model.app.model.*
-import com.fortyseven.coreheaders.model.iot.model.*
+import com.fortyseven.coreheaders.config.internal.KafkaConfig.KafkaConf
 
-trait DataGeneratorHeader[F[_]]:
-
-  def generate(config: ConfigHeader[F, DataGeneratorConfig]): F[Unit]
-
-  def generateBatteryCharge: fs2.Stream[F, BatteryCharge]
-
-  def generateBreaksUsage: fs2.Stream[F, BreaksUsage]
-
-  def generateGPSPosition: fs2.Stream[F, GPSPosition]
-
-  def generatePneumaticPressure: fs2.Stream[F, PneumaticPressure]
-
-  def generateWheelRotation: fs2.Stream[F, WheelRotation]
+final case class JobProcessorConfig(kafkaConf: KafkaConf)

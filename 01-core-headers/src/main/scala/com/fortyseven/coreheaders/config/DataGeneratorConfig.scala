@@ -16,24 +16,7 @@
 
 package com.fortyseven.coreheaders.config
 
-trait DataGeneratorConfigurationHeader:
+import com.fortyseven.coreheaders.config.internal.KafkaConfig.KafkaConf
+import com.fortyseven.coreheaders.config.internal.SchemaRegistryConfig.SchemaRegistryConf
 
-  val kafkaProducer: KafkaProducerHeader
-
-end DataGeneratorConfigurationHeader
-
-trait KafkaProducerHeader:
-
-  val bootstrapServers: String
-
-  val valueSerializerClass: String
-
-  val schemaRegistryUrl: String
-
-  val includeKey: Boolean
-
-  val commitBatchWithinSize: Int
-
-  val commitBatchWithinTime: Int
-
-end KafkaProducerHeader
+final case class DataGeneratorConfig(kafkaConf: KafkaConf, schemaRegistryConf: SchemaRegistryConf)

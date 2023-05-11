@@ -21,32 +21,40 @@ import scala.concurrent.duration.*
 import org.apache.kafka.clients.producer.ProducerConfig
 
 import cats.effect.kernel.Async
-import cats.effect.{IO, IOApp}
 import cats.implicits.*
 import com.fortyseven.core.codecs.iot.IotModel.pneumaticPressureCodec
-import com.fortyseven.coreheaders.DataGeneratorHeader
-import com.fortyseven.coreheaders.config.DataGeneratorConfigurationHeader
+import com.fortyseven.coreheaders.config.DataGeneratorConfig
 import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
 import com.fortyseven.coreheaders.model.iot.types.*
+import com.fortyseven.coreheaders.{ConfigHeader, DataGeneratorHeader}
 import fs2.kafka.*
 import io.confluent.kafka.serializers.KafkaAvroSerializer
 
 final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
 
-  override def run(dgc: DataGeneratorConfigurationHeader): F[Unit] = runWithConfiguration(dgc)
+  override def generate(conf: ConfigHeader[F, DataGeneratorConfig]): F[Unit] =
+    for
+      dgc <- conf.load
+      _   <- runWithConfiguration(dgc)
+    yield ()
 
-  private def runWithConfiguration(dgc: DataGeneratorConfigurationHeader): F[Unit] =
+  private def runWithConfiguration(dgc: DataGeneratorConfig): F[Unit] =
 
     import VulcanSerdes.*
 
-    val sourceTopic                 = "data-generator"
-    val producerSettings            = ProducerSettings[F, String, Array[Byte]]
-      .withBootstrapServers(dgc.kafkaProducer.bootstrapServers)
-      .withProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, dgc.kafkaProducer.valueSerializerClass)
+    val producerConfig = dgc.kafkaConf.producer.getOrElse(
+      throw new RuntimeException("No producer config available")
+    )
+
+    val producerSettings = ProducerSettings[F, String, Array[Byte]]
+      .withBootstrapServers(dgc.kafkaConf.broker.brokerAddress)
+      .withProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, producerConfig.valueSerializerClass)
+      .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, producerConfig.compressionType)
+
     val pneumaticPressureSerializer = avroSerializer(
-      Config(dgc.kafkaProducer.schemaRegistryUrl),
-      includeKey = dgc.kafkaProducer.includeKey
+      Config(dgc.schemaRegistryConf.schemaRegistryUrl),
+      includeKey = false
     )(using pneumaticPressureCodec)
     KafkaProducer
       .stream(producerSettings)
@@ -54,13 +62,13 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
         generatePneumaticPressure
           .map { committable =>
             val key   = committable.getClass.getSimpleName
-            val value = pneumaticPressureSerializer.serialize(sourceTopic, committable)
-            ProducerRecords.one(ProducerRecord(sourceTopic, key, value))
+            val value = pneumaticPressureSerializer.serialize(producerConfig.topicName, committable)
+            ProducerRecords.one(ProducerRecord(producerConfig.topicName, key, value))
           }
           .evalMap(producer.produce)
           .groupWithin(
-            dgc.kafkaProducer.commitBatchWithinSize,
-            dgc.kafkaProducer.commitBatchWithinTime.seconds
+            producerConfig.commitBatchWithinSize,
+            producerConfig.commitBatchWithinTime
           )
           .evalMap(_.sequence)
       }
@@ -77,7 +85,7 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
       (Latitude(getValue(latValue)), Longitude(getValue(lonValue))) match
         case (Right(lat), Right(lon)) => fs2.Stream.emit(GPSPosition(lat, lon)) ++ emitLoop(lat, lon)
         case _                        => emitLoop(latValue, lonValue)
-    emitLoop(latValue = 2.0, lonValue = 2.0) // ToDo: Soft-code initial coordinate values
+    emitLoop(latValue = 2.0, lonValue = 2.0)
 
   override def generatePneumaticPressure: fs2.Stream[F, PneumaticPressure] =
     def emitLoop(pValue: Double): fs2.Stream[F, PneumaticPressure] =
@@ -85,6 +93,6 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
         case Right(p) => fs2.Stream.emit(PneumaticPressure(p)) ++ emitLoop(p)
         case _        => emitLoop(pValue)
 
-    emitLoop(pValue = 2.0) // ToDo: Soft-code initial value
+    emitLoop(pValue = 2.0)
 
   override def generateWheelRotation: fs2.Stream[F, WheelRotation] = ???

@@ -14,18 +14,8 @@
  * limitations under the License.
  */
 
-package com.fortyseven.configuration.dataGenerator
+package com.fortyseven.coreheaders.config.internal
 
-import ciris.{ConfigValue, Effect}
-import com.fortyseven.configuration.dataGenerator.KafkaProducer
-import com.fortyseven.coreheaders.config.DataGeneratorConfigurationHeader
+object SchemaRegistryConfig:
 
-case class DataGeneratorConfiguration(
-    kafkaProducer: KafkaProducer
-  ) extends DataGeneratorConfigurationHeader
-
-object DataGeneratorConfiguration:
-
-  val config: ConfigValue[Effect, DataGeneratorConfiguration] =
-    for kafkaProducer <- KafkaProducer.config
-    yield DataGeneratorConfiguration.apply(kafkaProducer)
+  final case class SchemaRegistryConf(schemaRegistryUrl: String)

@@ -203,8 +203,8 @@ lazy val `entry-point`: Project =
     .settings(
       name := "entry-point",
       libraryDependencies ++= Seq(
-        Libraries.logging.log4catsSlf4j // For now it is only used in testing, so it is not transitive
-        // the less the better (usually zero)
+        Libraries.logging.logback,
+        Libraries.logging.log4catsSlf4j
       )
     )
 

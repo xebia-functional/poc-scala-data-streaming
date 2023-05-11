@@ -17,7 +17,24 @@
 package com.fortyseven
 
 import cats.effect.*
+import cats.implicits.*
+import com.fortyseven.configuration.*
+import com.fortyseven.datagenerator.DataGenerator
+import com.fortyseven.kafkaconsumer.KafkaConsumer
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 object Main extends IOApp.Simple:
 
-  override def run: IO[Unit] = Program.run
+  override def run: IO[Unit] = for
+    logger      <- Slf4jLogger.create[IO]
+    dataGenConf <- new DataGeneratorConfiguration[IO].load
+    _           <- logger.info(s"DataGeneratorConfiguration: $dataGenConf")
+    kafkaConf   <- new KafkaConsumerConfiguration[IO].load
+    _           <- logger.info(s"KafkaConsumerConfiguration: $kafkaConf")
+    _           <- logger.info("Start data generator")
+    fiber1      <- new DataGenerator[IO].generate(DataGeneratorConfiguration[IO]).start
+    _           <- logger.info("Start kafka consumer")
+    fiber2      <- new KafkaConsumer[IO].consume(KafkaConsumerConfiguration[IO]).start
+    _           <- fiber1.join
+    _           <- fiber2.join
+  yield ()

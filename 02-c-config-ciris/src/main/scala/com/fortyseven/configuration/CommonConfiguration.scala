@@ -14,22 +14,10 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders
+package com.fortyseven.configuration
 
-import com.fortyseven.coreheaders.config.DataGeneratorConfig
-import com.fortyseven.coreheaders.model.app.model.*
-import com.fortyseven.coreheaders.model.iot.model.*
+object CommonConfiguration:
 
-trait DataGeneratorHeader[F[_]]:
+  val kafkaBrokerAddress = "localhost:9092"
 
-  def generate(config: ConfigHeader[F, DataGeneratorConfig]): F[Unit]
-
-  def generateBatteryCharge: fs2.Stream[F, BatteryCharge]
-
-  def generateBreaksUsage: fs2.Stream[F, BreaksUsage]
-
-  def generateGPSPosition: fs2.Stream[F, GPSPosition]
-
-  def generatePneumaticPressure: fs2.Stream[F, PneumaticPressure]
-
-  def generateWheelRotation: fs2.Stream[F, WheelRotation]
+  val schemaRegistryUrl = "http://localhost:8081"
