@@ -17,12 +17,13 @@
 package com.fortyseven
 
 import cats.effect.unsafe.implicits.global
-import cats.effect.{IO, IOApp}
+import cats.effect.IO
 import com.fortyseven.configuration.dataGenerator.DataGeneratorConfiguration
 import com.fortyseven.configuration.kafka.KafkaConfiguration
 import com.fortyseven.datagenerator.DataGenerator
 import com.fortyseven.kafkaconsumer.KafkaConsumer
 import org.typelevel.log4cats.slf4j.Slf4jLogger
+
 
 object Program:
 

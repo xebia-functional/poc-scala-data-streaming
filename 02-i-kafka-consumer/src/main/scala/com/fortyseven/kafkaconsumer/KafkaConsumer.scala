@@ -21,14 +21,10 @@ import scala.concurrent.duration.*
 import org.apache.kafka.clients.producer.ProducerConfig
 
 import cats.*
-import cats.effect.kernel.{Async, Sync}
-import cats.effect.unsafe.implicits.global
-import cats.effect.{IO, IOApp}
+import cats.effect.kernel.Async
 import cats.implicits.*
-import ciris.{ConfigValue, Effect}
-import com.fortyseven.configuration.kafka.KafkaConfiguration
 import com.fortyseven.coreheaders.KafkaConsumerHeader
-import com.fortyseven.coreheaders.config.*
+import com.fortyseven.coreheaders.config.KafkaConfigurationHeader
 import fs2.kafka.*
 
 final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:

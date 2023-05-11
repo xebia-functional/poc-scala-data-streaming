@@ -19,7 +19,6 @@ package com.fortyseven.configuration.dataGenerator
 import ciris.refined.*
 import ciris.{default, ConfigValue, Effect}
 import com.fortyseven.coreheaders.config.KafkaProducerHeader
-import eu.timepit.refined.api.Refined
 import eu.timepit.refined.types.numeric.PosInt
 import eu.timepit.refined.types.string.NonEmptyString
 

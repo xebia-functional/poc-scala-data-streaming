@@ -23,7 +23,6 @@ import org.apache.kafka.clients.producer.ProducerConfig
 import cats.effect.kernel.Async
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
-import com.fortyseven.configuration.dataGenerator.DataGeneratorConfiguration
 import com.fortyseven.core.codecs.iot.IotModel.pneumaticPressureCodec
 import com.fortyseven.coreheaders.DataGeneratorHeader
 import com.fortyseven.coreheaders.config.DataGeneratorConfigurationHeader
