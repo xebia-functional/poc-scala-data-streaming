@@ -17,7 +17,6 @@
 package com.fortyseven.coreheaders.model
 
 import java.util.UUID
-import scala.util.Try
 
 object ids:
 

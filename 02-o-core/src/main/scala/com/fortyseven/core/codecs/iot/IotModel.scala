@@ -14,22 +14,31 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.codecs
+package com.fortyseven.core.codecs.iot
 
 import cats.implicits.*
-import com.fortyseven.coreheaders.model.iot.errors.OutOfBoundsError
-import com.fortyseven.coreheaders.model.iot.model.PneumaticPressure
-import com.fortyseven.coreheaders.model.iot.types.Bar
-import vulcan.{AvroError, Codec}
+import com.fortyseven.core.codecs.iot.IotTypes.given
+import com.fortyseven.coreheaders.codecs.iot.IotModel
+import com.fortyseven.coreheaders.model.iot.model.*
+import vulcan.Codec
 
-object Codecs:
+object IotModel extends IotModel[Codec]:
 
   private val namespace = "iot"
 
-  given barCodec: Codec[Bar] =
-    Codec.double.imapError(Bar(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
+  given gpsPositionCodec: Codec[GPSPosition] = ???
+
+  given wheelRotationCodec: Codec[WheelRotation] = ???
+
+  given batteryChargeCodec: Codec[BatteryCharge] = ???
+
+  given batteryHealthCodec: Codec[BatteryHealth] = ???
 
   given pneumaticPressureCodec: Codec[PneumaticPressure] =
     Codec.record(name = "PneumaticPressure", namespace = namespace)(
       _("pressure", _.pressure).map(PneumaticPressure.apply)
     )
+
+  given breaksUsageCodec: Codec[BreaksUsage] = ???
+
+  given breaksHealthCodec: Codec[BreaksHealth] = ???

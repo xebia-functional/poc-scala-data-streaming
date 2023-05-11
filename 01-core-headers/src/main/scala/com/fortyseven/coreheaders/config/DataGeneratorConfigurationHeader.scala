@@ -14,19 +14,26 @@
  * limitations under the License.
  */
 
-package com.fortyseven.configuration.kafka
+package com.fortyseven.coreheaders.config
 
-import ciris.refined.*
-import ciris.{default, ConfigValue, Effect}
-import com.fortyseven.coreheaders.config.BrokerHeader
-import eu.timepit.refined.types.string.NonEmptyString
+trait DataGeneratorConfigurationHeader:
 
-private[kafka] final case class Broker(_brokerAddress: NonEmptyString) extends BrokerHeader:
+  val kafkaProducer: KafkaProducerHeader
 
-  override val brokerAddress: String = _brokerAddress.toString
+end DataGeneratorConfigurationHeader
 
-private[kafka] object Broker:
+trait KafkaProducerHeader:
 
-  val config: ConfigValue[Effect, Broker] =
-    for _brokerAddress <- default("localhost:9092").as[NonEmptyString]
-    yield Broker.apply(_brokerAddress)
+  val bootstrapServers: String
+
+  val valueSerializerClass: String
+
+  val schemaRegistryUrl: String
+
+  val includeKey: Boolean
+
+  val commitBatchWithinSize: Int
+
+  val commitBatchWithinTime: Int
+
+end KafkaProducerHeader

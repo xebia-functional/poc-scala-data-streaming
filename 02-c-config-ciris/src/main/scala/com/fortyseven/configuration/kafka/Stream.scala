@@ -18,27 +18,43 @@ package com.fortyseven.configuration.kafka
 
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
 
-import cats.syntax.all.*
 import ciris.refined.*
 import ciris.{default, ConfigValue, Effect}
+import com.fortyseven.coreheaders.config.StreamHeader
 import eu.timepit.refined.types.numeric.PosInt
 import eu.timepit.refined.types.string.NonEmptyString
 
 private[kafka] final case class Stream(
-    inputTopic: NonEmptyString,
-    outputTopic: NonEmptyString,
-    maxConcurrent: PosInt,
-    commitBatchWithinSize: PosInt,
-    commitBatchWithinTime: FiniteDuration
-  )
+    _inputTopic: NonEmptyString,
+    _outputTopic: NonEmptyString,
+    _maxConcurrent: PosInt,
+    _commitBatchWithinSize: PosInt,
+    _commitBatchWithinTime: FiniteDuration
+  ) extends StreamHeader:
+
+  override val inputTopic: String = _inputTopic.toString
+
+  override val outputTopic: String = _outputTopic.toString
+
+  override val maxConcurrent: Int = _maxConcurrent.toString.toInt
+
+  override val commitBatchWithinSize: Int = _commitBatchWithinSize.toString.toInt
+
+  override val commitBatchWithinTime: FiniteDuration = _commitBatchWithinTime
 
 private[kafka] object Stream:
 
   val config: ConfigValue[Effect, Stream] =
-    (
-      default("data-generator").as[NonEmptyString],
-      default("input-topic").as[NonEmptyString],
-      default(25).as[PosInt],
-      default(500).as[PosInt],
-      default(15.seconds).as[FiniteDuration]
-    ).parMapN(Stream.apply)
+    for
+      _inputTopic            <- default("data-generator").as[NonEmptyString]
+      _outputTopic           <- default("input-topic").as[NonEmptyString]
+      _maxConcurrent         <- default(25).as[PosInt]
+      _commitBatchWithinSize <- default(500).as[PosInt]
+      _commitBatchWithinTime <- default(15.seconds).as[FiniteDuration]
+    yield Stream.apply(
+      _inputTopic,
+      _outputTopic,
+      _maxConcurrent,
+      _commitBatchWithinSize,
+      _commitBatchWithinTime
+    )

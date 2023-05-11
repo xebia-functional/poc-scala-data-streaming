@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-package com.fortyseven.configuration.kafka
+package com.fortyseven.coreheaders.codecs.iot
 
-import ciris.refined.*
-import ciris.{default, ConfigValue, Effect}
-import com.fortyseven.coreheaders.config.BrokerHeader
-import eu.timepit.refined.types.string.NonEmptyString
+import com.fortyseven.coreheaders.model.iot.model.*
 
-private[kafka] final case class Broker(_brokerAddress: NonEmptyString) extends BrokerHeader:
+trait IotModel[Codec[_]]:
 
-  override val brokerAddress: String = _brokerAddress.toString
+  given gpsPositionCodec: Codec[GPSPosition]
 
-private[kafka] object Broker:
+  given wheelRotationCodec: Codec[WheelRotation]
 
-  val config: ConfigValue[Effect, Broker] =
-    for _brokerAddress <- default("localhost:9092").as[NonEmptyString]
-    yield Broker.apply(_brokerAddress)
+  given batteryChargeCodec: Codec[BatteryCharge]
+
+  given batteryHealthCodec: Codec[BatteryHealth]
+
+  given pneumaticPressureCodec: Codec[PneumaticPressure]
+
+  given breaksUsageCodec: Codec[BreaksUsage]
+
+  given breaksHealthCodec: Codec[BreaksHealth]

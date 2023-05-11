@@ -46,12 +46,12 @@ addCommandAlias(
 
 addCommandAlias(
   "flinkIT",
-  "project job-processor-flink-integration; test"
+  "job-processor-flink-integration / test"
 )
 
 addCommandAlias(
   "runMain",
-  "project entry-point; run"
+  "entry-point / run"
 )
 
 onLoadMessage +=

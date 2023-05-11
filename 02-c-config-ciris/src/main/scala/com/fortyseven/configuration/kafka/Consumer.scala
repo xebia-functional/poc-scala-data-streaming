@@ -16,20 +16,23 @@
 
 package com.fortyseven.configuration.kafka
 
-import cats.syntax.all.*
 import ciris.refined.*
 import ciris.{default, ConfigValue, Effect}
+import com.fortyseven.coreheaders.config.ConsumerHeader
 import eu.timepit.refined.types.string.NonEmptyString
 import fs2.kafka.AutoOffsetReset
 
 private[kafka] final case class Consumer(
     autoOffsetReset: AutoOffsetReset,
-    groupId: NonEmptyString
-  )
+    _groupId: NonEmptyString
+  ) extends ConsumerHeader:
+
+  override val groupId: String = _groupId.toString
 
 private[kafka] object Consumer:
 
-  val config: ConfigValue[Effect, Consumer] = (
-    default(AutoOffsetReset.Earliest).as[AutoOffsetReset],
-    default("groupId").as[NonEmptyString]
-  ).parMapN(Consumer.apply)
+  val config: ConfigValue[Effect, Consumer] =
+    for
+      autoOffsetReset <- default(AutoOffsetReset.Earliest).as[AutoOffsetReset]
+      _groupId        <- default("groupId").as[NonEmptyString]
+    yield Consumer.apply(autoOffsetReset, _groupId)

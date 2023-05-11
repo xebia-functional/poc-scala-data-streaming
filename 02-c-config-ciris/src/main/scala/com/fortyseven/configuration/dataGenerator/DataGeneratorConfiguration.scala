@@ -16,18 +16,16 @@
 
 package com.fortyseven.configuration.dataGenerator
 
-import cats.effect.Async
-import cats.syntax.all.*
 import ciris.{ConfigValue, Effect}
-import com.fortyseven.coreheaders.config.ConfigurationHeader
+import com.fortyseven.configuration.dataGenerator.KafkaProducer
+import com.fortyseven.coreheaders.config.DataGeneratorConfigurationHeader
 
-case class DataGeneratorConfiguration(kafkaProducer: KafkaProducer)
+case class DataGeneratorConfiguration(
+    kafkaProducer: KafkaProducer
+  ) extends DataGeneratorConfigurationHeader
 
 object DataGeneratorConfiguration:
 
   val config: ConfigValue[Effect, DataGeneratorConfiguration] =
-    KafkaProducer.config.map(DataGeneratorConfiguration.apply)
-
-final class DataGeneratorConfigurationEffect[F[_]: Async] extends ConfigurationHeader[F, DataGeneratorConfiguration]:
-
-  override def configuration: F[DataGeneratorConfiguration] = DataGeneratorConfiguration.config.load[F]
+    for kafkaProducer <- KafkaProducer.config
+    yield DataGeneratorConfiguration.apply(kafkaProducer)

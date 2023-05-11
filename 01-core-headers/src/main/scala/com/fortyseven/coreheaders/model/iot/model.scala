@@ -26,7 +26,7 @@ object model:
 
   case class WheelRotation(s: Hz)
 
-  case class BateryCharge(percentage: Percentage)
+  case class BatteryCharge(percentage: Percentage)
 
   case class BatteryHealth(remaining: Percentage)
 

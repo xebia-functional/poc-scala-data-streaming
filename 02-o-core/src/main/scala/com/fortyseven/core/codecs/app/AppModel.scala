@@ -14,8 +14,18 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.config
+package com.fortyseven.core.codecs.app
 
-trait ConfigurationHeader[F[_], C]:
+import com.fortyseven.coreheaders.codecs.app.AppModel
+import com.fortyseven.coreheaders.model.app.model.*
+import vulcan.Codec
 
-  def configuration: F[C]
+object AppModel extends AppModel[Codec]:
+
+  given totalDistanceByTripCodec: Codec[TotalDistanceByTrip] = ???
+
+  given totalDistanceByUserCodec: Codec[TotalDistanceByUser] = ???
+
+  given currentSpeedCodec: Codec[CurrentSpeed] = ???
+
+  given totalRangeCodec: Codec[TotalRange] = ???

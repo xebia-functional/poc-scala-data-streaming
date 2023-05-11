@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-package com.fortyseven.configuration.kafka
+package com.fortyseven.core.codecs.iot
 
-import ciris.refined.*
-import ciris.{default, ConfigValue, Effect}
-import com.fortyseven.coreheaders.config.BrokerHeader
-import eu.timepit.refined.types.string.NonEmptyString
+import cats.implicits.*
+import com.fortyseven.coreheaders.codecs.iot.IotTypes
+import com.fortyseven.coreheaders.model.iot.types.*
+import vulcan.{AvroError, Codec}
 
-private[kafka] final case class Broker(_brokerAddress: NonEmptyString) extends BrokerHeader:
+object IotTypes extends IotTypes[Codec]:
 
-  override val brokerAddress: String = _brokerAddress.toString
+  given latitudeCodec: Codec[Latitude] = ???
 
-private[kafka] object Broker:
+  given longitudeCodec: Codec[Longitude] = ???
 
-  val config: ConfigValue[Effect, Broker] =
-    for _brokerAddress <- default("localhost:9092").as[NonEmptyString]
-    yield Broker.apply(_brokerAddress)
+  given percentageCodec: Codec[Percentage] = ???
+
+  given speedCodec: Codec[Speed] = ???
+
+  given hertzCodec: Codec[Hz] = ???
+
+  given barCodec: Codec[Bar] = Codec.double.imapError(Bar(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)

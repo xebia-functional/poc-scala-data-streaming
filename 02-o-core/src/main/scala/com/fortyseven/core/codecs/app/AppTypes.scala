@@ -14,19 +14,12 @@
  * limitations under the License.
  */
 
-package com.fortyseven.configuration.kafka
+package com.fortyseven.core.codecs.app
 
-import ciris.refined.*
-import ciris.{default, ConfigValue, Effect}
-import com.fortyseven.coreheaders.config.BrokerHeader
-import eu.timepit.refined.types.string.NonEmptyString
+import com.fortyseven.coreheaders.codecs.app.AppTypes
+import com.fortyseven.coreheaders.model.app.types.Meters
+import vulcan.Codec
 
-private[kafka] final case class Broker(_brokerAddress: NonEmptyString) extends BrokerHeader:
+object AppTypes extends AppTypes[Codec]:
 
-  override val brokerAddress: String = _brokerAddress.toString
-
-private[kafka] object Broker:
-
-  val config: ConfigValue[Effect, Broker] =
-    for _brokerAddress <- default("localhost:9092").as[NonEmptyString]
-    yield Broker.apply(_brokerAddress)
+  given metersCodec: Codec[Meters] = ???

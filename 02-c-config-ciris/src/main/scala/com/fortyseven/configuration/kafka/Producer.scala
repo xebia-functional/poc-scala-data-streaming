@@ -18,18 +18,23 @@ package com.fortyseven.configuration.kafka
 
 import org.apache.kafka.common.record.CompressionType
 
-import cats.syntax.all.*
 import ciris.refined.*
 import ciris.{default, ConfigValue, Effect}
+import com.fortyseven.coreheaders.config.ProducerHeader
 import eu.timepit.refined.types.numeric.PosInt
 import eu.timepit.refined.types.string.NonEmptyString
 
 private[kafka] final case class Producer(
-    maxConcurrent: PosInt,
+    _maxConcurrent: PosInt,
     compressionType: CompressionType
-  )
+  ) extends ProducerHeader:
+
+  override val maxConcurrent: Int = _maxConcurrent.toString.toInt
 
 private[kafka] object Producer:
 
   val config: ConfigValue[Effect, Producer] =
-    (default(Int.MaxValue).as[PosInt], default(CompressionType.LZ4).as[CompressionType]).parMapN(Producer.apply)
+    for
+      _maxConcurrent  <- default(Int.MaxValue).as[PosInt]
+      compressionType <- default(CompressionType.LZ4).as[CompressionType]
+    yield Producer.apply(_maxConcurrent, compressionType)

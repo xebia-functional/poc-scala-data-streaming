@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package com.fortyseven.configuration.kafka
+package com.fortyseven.coreheaders.codecs.iot
 
-import ciris.refined.*
-import ciris.{default, ConfigValue, Effect}
-import com.fortyseven.coreheaders.config.BrokerHeader
-import eu.timepit.refined.types.string.NonEmptyString
+import com.fortyseven.coreheaders.model.iot.types.*
 
-private[kafka] final case class Broker(_brokerAddress: NonEmptyString) extends BrokerHeader:
+trait IotTypes[Codec[_]]:
 
-  override val brokerAddress: String = _brokerAddress.toString
+  given latitudeCodec: Codec[Latitude]
 
-private[kafka] object Broker:
+  given longitudeCodec: Codec[Longitude]
 
-  val config: ConfigValue[Effect, Broker] =
-    for _brokerAddress <- default("localhost:9092").as[NonEmptyString]
-    yield Broker.apply(_brokerAddress)
+  given percentageCodec: Codec[Percentage]
+
+  given speedCodec: Codec[Speed]
+
+  given hertzCodec: Codec[Hz]
+
+  given barCodec: Codec[Bar]

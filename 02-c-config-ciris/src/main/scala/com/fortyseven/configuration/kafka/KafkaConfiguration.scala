@@ -16,29 +16,28 @@
 
 package com.fortyseven.configuration.kafka
 
-import cats.effect.IO
-import cats.effect.kernel.Async
-import cats.syntax.all.*
 import ciris.{ConfigValue, Effect}
 import com.fortyseven.configuration.kafka.*
-import com.fortyseven.coreheaders.config.ConfigurationHeader
+import com.fortyseven.coreheaders.config.KafkaConfigurationHeader
 
 final case class KafkaConfiguration(
     brokerConfiguration: Broker,
     consumerConfiguration: Consumer,
     producerConfiguration: Producer,
     streamConfiguration: Stream
-  )
+  ) extends KafkaConfigurationHeader
 
 object KafkaConfiguration:
 
-  val config: ConfigValue[Effect, KafkaConfiguration] = (
-    Broker.config,
-    Consumer.config,
-    Producer.config,
-    Stream.config
-  ).parMapN(KafkaConfiguration.apply)
-
-final class KafkaConfigurationEffect[F[_]: Async] extends ConfigurationHeader[F, KafkaConfiguration]:
-
-  override def configuration: F[KafkaConfiguration] = KafkaConfiguration.config.load[F]
+  val config: ConfigValue[Effect, KafkaConfiguration] =
+    for
+      brokerConfiguration   <- Broker.config
+      consumerConfiguration <- Consumer.config
+      producerConfiguration <- Producer.config
+      streamConfiguration   <- Stream.config
+    yield KafkaConfiguration.apply(
+      brokerConfiguration,
+      consumerConfiguration,
+      producerConfiguration,
+      streamConfiguration
+    )

@@ -16,7 +16,7 @@
 
 package com.fortyseven.datagenerator
 
-import com.fortyseven.coreheaders.codecs.Codecs
+import com.fortyseven.core.codecs.iot.IotModel.pneumaticPressureCodec
 import com.fortyseven.coreheaders.model.iot.model.PneumaticPressure
 import com.fortyseven.coreheaders.model.iot.types.Bar
 import io.confluent.kafka.schemaregistry.avro.AvroSchema
@@ -40,9 +40,7 @@ class VulcanSerdesSuite extends CatsEffectSuite:
     val mockedClient = new MockSchemaRegistryClient()
     val topic        = "test-topic"
 
-    given ppCodec: Codec[PneumaticPressure] = Codecs.pneumaticPressureCodec
-
-    ppCodec.schema match
+    pneumaticPressureCodec.schema match
       case Left(_)       => ()
       case Right(schema) => mockedClient.register(s"$topic-value", AvroSchema(schema.toString))
     val config                     = Config("useMockedClient", useMockedClient = Some(mockedClient))
