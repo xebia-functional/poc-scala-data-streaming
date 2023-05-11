@@ -37,7 +37,7 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
   override def generate(conf: ConfigHeader[F, DataGeneratorConfig]): F[Unit] = for dgc <- conf.load
   yield runWithConfiguration(dgc)
 
-  private def runWithConfiguration(dgc: DataGeneratorConfig): F[Unit]        =
+  private def runWithConfiguration(dgc: DataGeneratorConfig): F[Unit] =
 
     val producerConfig = dgc.kafkaConf.producer.getOrElse(
       throw new RuntimeException("No producer config available")
@@ -45,9 +45,10 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
 
     import VulcanSerdes.*
 
-    val producerSettings            = ProducerSettings[F, String, Array[Byte]]
+    val producerSettings = ProducerSettings[F, String, Array[Byte]]
       .withBootstrapServers(dgc.kafkaConf.broker.brokerAddress)
       .withProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, producerConfig.valueSerializerClass)
+      .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, producerConfig.compressionType)
 
     val pneumaticPressureSerializer = avroSerializer(
       Config(dgc.schemaRegistryConf.schemaRegistryUrl),

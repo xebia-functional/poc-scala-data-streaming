@@ -47,25 +47,25 @@ final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
 
     val consumerSettings =
       ConsumerSettings[F, String, String]
-        .withAutoOffsetReset(consumerConfig.autoOffsetReset match {
+        .withAutoOffsetReset(consumerConfig.autoOffsetReset match
           case "earliest" => AutoOffsetReset.Earliest
-          case "latest" => AutoOffsetReset.Latest
-          case _ => AutoOffsetReset.None
-        })
+          case "latest"   => AutoOffsetReset.Latest
+          case _          => AutoOffsetReset.None
+        )
         .withBootstrapServers(kc.kafkaConf.broker.brokerAddress)
         .withGroupId(consumerConfig.groupId)
 
     val producerSettings =
       ProducerSettings[F, String, String]
         .withBootstrapServers(kc.kafkaConf.broker.brokerAddress)
-        .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, producerConfig.compressionType.getOrElse("none"))
+        .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, producerConfig.compressionType)
 
     val stream =
       fs2.kafka.KafkaConsumer
         .stream(consumerSettings)
         .subscribeTo(consumerConfig.topicName)
         .records
-        .mapAsync(consumerConfig.maxConcurrent.getOrElse(Int.MaxValue)) { committable =>
+        .mapAsync(consumerConfig.maxConcurrent) { committable =>
           processRecord(committable.record).map { case (key, value) =>
             val record = ProducerRecord(producerConfig.topicName, key, value)
             committable.offset -> ProducerRecords.one(record)
@@ -75,7 +75,7 @@ final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
             offsetsAndProducerRecords
               .evalMap { case (offset, producerRecord) =>
                 producer.produce(producerRecord).map(_.as(offset))
-              }.parEvalMap(producerConfig.maxConcurrent.getOrElse(Int.MaxValue))(identity)
+              }.parEvalMap(producerConfig.maxConcurrent)(identity)
           }
         }.through(
           commitBatchWithin(
