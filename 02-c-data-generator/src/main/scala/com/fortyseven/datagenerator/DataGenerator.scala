@@ -21,7 +21,6 @@ import scala.concurrent.duration.*
 import org.apache.kafka.clients.producer.ProducerConfig
 
 import cats.effect.kernel.Async
-import cats.effect.{IO, IOApp}
 import cats.implicits.*
 import com.fortyseven.core.codecs.iot.IotModel.pneumaticPressureCodec
 import com.fortyseven.coreheaders.config.DataGeneratorConfig
@@ -34,16 +33,19 @@ import io.confluent.kafka.serializers.KafkaAvroSerializer
 
 final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
 
-  override def generate(conf: ConfigHeader[F, DataGeneratorConfig]): F[Unit] = for dgc <- conf.load
-  yield runWithConfiguration(dgc)
+  override def generate(conf: ConfigHeader[F, DataGeneratorConfig]): F[Unit] =
+    for
+      dgc <- conf.load
+      _   <- runWithConfiguration(dgc)
+    yield ()
 
   private def runWithConfiguration(dgc: DataGeneratorConfig): F[Unit] =
+
+    import VulcanSerdes.*
 
     val producerConfig = dgc.kafkaConf.producer.getOrElse(
       throw new RuntimeException("No producer config available")
     )
-
-    import VulcanSerdes.*
 
     val producerSettings = ProducerSettings[F, String, Array[Byte]]
       .withBootstrapServers(dgc.kafkaConf.broker.brokerAddress)
@@ -83,7 +85,7 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
       (Latitude(getValue(latValue)), Longitude(getValue(lonValue))) match
         case (Right(lat), Right(lon)) => fs2.Stream.emit(GPSPosition(lat, lon)) ++ emitLoop(lat, lon)
         case _                        => emitLoop(latValue, lonValue)
-    emitLoop(latValue = 2.0, lonValue = 2.0) // ToDo: Soft-code initial coordinate values
+    emitLoop(latValue = 2.0, lonValue = 2.0)
 
   override def generatePneumaticPressure: fs2.Stream[F, PneumaticPressure] =
     def emitLoop(pValue: Double): fs2.Stream[F, PneumaticPressure] =
@@ -91,6 +93,6 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
         case Right(p) => fs2.Stream.emit(PneumaticPressure(p)) ++ emitLoop(p)
         case _        => emitLoop(pValue)
 
-    emitLoop(pValue = 2.0) // ToDo: Soft-code initial value
+    emitLoop(pValue = 2.0)
 
   override def generateWheelRotation: fs2.Stream[F, WheelRotation] = ???

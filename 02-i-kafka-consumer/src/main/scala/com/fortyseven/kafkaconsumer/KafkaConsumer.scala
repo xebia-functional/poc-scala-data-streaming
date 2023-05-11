@@ -29,8 +29,10 @@ import fs2.kafka.*
 
 final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
 
-  override def consume(conf: ConfigHeader[F, KafkaConsumerConfig]): F[Unit] = for kc <- conf.load
-  yield runWithConfiguration(kc)
+  override def consume(conf: ConfigHeader[F, KafkaConsumerConfig]): F[Unit] = for
+    kc <- conf.load
+    _  <- runWithConfiguration(kc)
+  yield ()
 
   private def runWithConfiguration(kc: KafkaConsumerConfig): F[Unit] =
 
