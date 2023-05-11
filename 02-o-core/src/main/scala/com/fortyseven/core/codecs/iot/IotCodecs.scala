@@ -19,7 +19,7 @@ package com.fortyseven.core.codecs.iot
 import cats.implicits.*
 import com.fortyseven.coreheaders.model.iot.model.*
 import com.fortyseven.coreheaders.model.iot.types.*
-import vulcan.Codec
+import vulcan.{AvroError, Codec}
 
 object IotCodecs:
 
@@ -52,4 +52,4 @@ object IotCodecs:
 
   given hertzCodec: Codec[Hz] = ???
 
-  given barCodec: Codec[Bar] = ???
+  given barCodec: Codec[Bar] = Codec.double.imapError(Bar(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
