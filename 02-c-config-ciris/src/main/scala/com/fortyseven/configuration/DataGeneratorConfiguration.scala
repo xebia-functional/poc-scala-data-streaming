@@ -23,7 +23,8 @@ import org.apache.kafka.common.record.CompressionType
 import cats.effect.*
 import cats.implicits.*
 import ciris.refined.*
-import ciris.{ConfigValue, Effect, default}
+import ciris.{default, ConfigValue, Effect}
+import com.fortyseven.configuration.CommonConfiguration.*
 import com.fortyseven.coreheaders.ConfigHeader
 import com.fortyseven.coreheaders.config.DataGeneratorConfig
 import com.fortyseven.coreheaders.config.internal.KafkaConfig.*
@@ -38,9 +39,9 @@ final class DataGeneratorConfiguration[F[_]: Async] extends ConfigHeader[F, Data
 
   lazy val config: ConfigValue[Effect, DataGeneratorConfig] =
     for
-      brokerAddress         <- default("localhost:9092").as[NonEmptyString]
-      schemaRegistryUrl     <- default("http://localhost:8081").as[NonEmptyString]
-      topicName         <- default("data-generator").as[NonEmptyString]
+      brokerAddress         <- default(kafkaBrokerAddress).as[NonEmptyString]
+      schemaRegistryUrl     <- default(schemaRegistryUrl).as[NonEmptyString]
+      topicName             <- default("data-generator").as[NonEmptyString]
       valueSerializerClass  <- default("io.confluent.kafka.serializers.KafkaAvroSerializer").as[NonEmptyString]
       maxConcurrent         <- default(Int.MaxValue).as[PosInt]
       compressionType       <- default(CompressionType.LZ4).as[CompressionType]
@@ -48,18 +49,18 @@ final class DataGeneratorConfiguration[F[_]: Async] extends ConfigHeader[F, Data
       commitBatchWithinTime <- default(15.seconds).as[FiniteDuration]
     yield DataGeneratorConfig(
       KafkaConf(
-        broker = BrokerConf(brokerAddress.toString),
+        broker = BrokerConf(brokerAddress.value),
         consumer = none[ConsumerConf],
         producer = ProducerConf(
-          topicName = topicName.toString,
-          valueSerializerClass = valueSerializerClass.toString,
-          maxConcurrent = maxConcurrent.toString.toInt,
-          compressionType = compressionType.toString,
-          commitBatchWithinSize = commitBatchWithinSize.toString.toInt,
+          topicName = topicName.value,
+          valueSerializerClass = valueSerializerClass.value,
+          maxConcurrent = maxConcurrent.value,
+          compressionType = compressionType.name,
+          commitBatchWithinSize = commitBatchWithinSize.value,
           commitBatchWithinTime = commitBatchWithinTime
         ).some
       ),
-      SchemaRegistryConf(schemaRegistryUrl.toString)
+      SchemaRegistryConf(schemaRegistryUrl.value)
     )
 
   override def load: F[DataGeneratorConfig] = config.load[F]

@@ -47,7 +47,7 @@ final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
 
     val consumerSettings =
       ConsumerSettings[F, String, String]
-        .withAutoOffsetReset(consumerConfig.autoOffsetReset match
+        .withAutoOffsetReset(consumerConfig.autoOffsetReset.toLowerCase match
           case "earliest" => AutoOffsetReset.Earliest
           case "latest"   => AutoOffsetReset.Latest
           case _          => AutoOffsetReset.None

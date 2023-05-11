@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.config
+package com.fortyseven.configuration
 
-import com.fortyseven.coreheaders.config.internal.KafkaConfig.KafkaConf
-import com.fortyseven.coreheaders.config.internal.SchemaRegistryConfig.SchemaRegistryConf
+object CommonConfiguration:
 
-final case class DataGeneratorConfig(kafkaConf: KafkaConf, schemaRegistryConf: SchemaRegistryConf)
+  val kafkaBrokerAddress = "localhost:9092"
+
+  val schemaRegistryUrl = "http://localhost:8081"
