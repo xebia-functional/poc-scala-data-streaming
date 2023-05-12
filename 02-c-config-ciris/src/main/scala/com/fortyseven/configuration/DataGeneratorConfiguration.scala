@@ -18,10 +18,7 @@ package com.fortyseven.configuration
 
 import scala.concurrent.duration.*
 
-import org.apache.kafka.common.record.CompressionType
-
-import cats.effect.*
-import cats.implicits.*
+import cats.effect.kernel.Async
 import ciris.refined.*
 import ciris.{default, ConfigValue, Effect}
 import com.fortyseven.configuration.CommonConfiguration.*
@@ -33,7 +30,6 @@ import eu.timepit.refined.*
 import eu.timepit.refined.auto.*
 import eu.timepit.refined.types.all.*
 import eu.timepit.refined.types.string.NonEmptyString
-import fs2.kafka.AutoOffsetReset
 
 final class DataGeneratorConfiguration[F[_]: Async] extends ConfigHeader[F, DataGeneratorConfig]:
 
@@ -44,21 +40,21 @@ final class DataGeneratorConfiguration[F[_]: Async] extends ConfigHeader[F, Data
       topicName             <- default("data-generator").as[NonEmptyString]
       valueSerializerClass  <- default("io.confluent.kafka.serializers.KafkaAvroSerializer").as[NonEmptyString]
       maxConcurrent         <- default(Int.MaxValue).as[PosInt]
-      compressionType       <- default(CompressionType.LZ4).as[CompressionType]
+      compressionType       <- default(KafkaCompressionType.lz4).as[KafkaCompressionType]
       commitBatchWithinSize <- default(1).as[PosInt]
       commitBatchWithinTime <- default(15.seconds).as[FiniteDuration]
     yield DataGeneratorConfig(
       KafkaConf(
         broker = BrokerConf(brokerAddress.value),
-        consumer = none[ConsumerConf],
-        producer = ProducerConf(
+        consumer = None,
+        producer = Some(ProducerConf(
           topicName = topicName.value,
           valueSerializerClass = valueSerializerClass.value,
           maxConcurrent = maxConcurrent.value,
-          compressionType = compressionType.name,
+          compressionType = compressionType.toString,
           commitBatchWithinSize = commitBatchWithinSize.value,
           commitBatchWithinTime = commitBatchWithinTime
-        ).some
+        ))
       ),
       SchemaRegistryConf(schemaRegistryUrl.value)
     )

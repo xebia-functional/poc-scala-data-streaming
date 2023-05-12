@@ -76,8 +76,7 @@ lazy val configuration: Project = (project in file("02-c-config-ciris"))
   .settings(
     name := "configuration",
     libraryDependencies ++= Seq(
-      Libraries.config.cirisRefined,
-      Libraries.kafka.fs2Kafka
+      Libraries.config.cirisRefined
     )
   )
 
