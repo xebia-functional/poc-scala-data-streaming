@@ -47,14 +47,16 @@ final class DataGeneratorConfiguration[F[_]: Async] extends ConfigHeader[F, Data
       KafkaConf(
         broker = BrokerConf(brokerAddress.value),
         consumer = None,
-        producer = Some(ProducerConf(
-          topicName = topicName.value,
-          valueSerializerClass = valueSerializerClass.value,
-          maxConcurrent = maxConcurrent.value,
-          compressionType = compressionType.toString,
-          commitBatchWithinSize = commitBatchWithinSize.value,
-          commitBatchWithinTime = commitBatchWithinTime
-        ))
+        producer = Some(
+          ProducerConf(
+            topicName = topicName.value,
+            valueSerializerClass = valueSerializerClass.value,
+            maxConcurrent = maxConcurrent.value,
+            compressionType = compressionType.toString,
+            commitBatchWithinSize = commitBatchWithinSize.value,
+            commitBatchWithinTime = commitBatchWithinTime
+          )
+        )
       ),
       SchemaRegistryConf(schemaRegistryUrl.value)
     )

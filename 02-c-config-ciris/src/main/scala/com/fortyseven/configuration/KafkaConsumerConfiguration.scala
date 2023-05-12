@@ -31,7 +31,6 @@ import eu.timepit.refined.types.string.NonEmptyString
 
 final class KafkaConsumerConfiguration[F[_]: Async] extends ConfigHeader[F, KafkaConsumerConfig]:
 
-
   lazy val config: ConfigValue[Effect, KafkaConsumerConfig] =
     for
       brokerAddress         <- default(kafkaBrokerAddress).as[NonEmptyString]
@@ -48,20 +47,24 @@ final class KafkaConsumerConfiguration[F[_]: Async] extends ConfigHeader[F, Kafk
     yield KafkaConsumerConfig(
       KafkaConf(
         broker = BrokerConf(brokerAddress.value),
-        consumer = Some(ConsumerConf(
-          topicName = sourceTopicName.value,
-          autoOffsetReset = autoOffsetReset.toString,
-          groupId = groupId.value,
-          maxConcurrent = consumerMaxConcurrent.value
-        )),
-        producer = Some(ProducerConf(
-          topicName = sinkTopicName.value,
-          valueSerializerClass = valueSerializerClass.value,
-          maxConcurrent = producerMaxConcurrent.value,
-          compressionType = compressionType.toString,
-          commitBatchWithinSize = commitBatchWithinSize.value,
-          commitBatchWithinTime = commitBatchWithinTime
-        ))
+        consumer = Some(
+          ConsumerConf(
+            topicName = sourceTopicName.value,
+            autoOffsetReset = autoOffsetReset.toString,
+            groupId = groupId.value,
+            maxConcurrent = consumerMaxConcurrent.value
+          )
+        ),
+        producer = Some(
+          ProducerConf(
+            topicName = sinkTopicName.value,
+            valueSerializerClass = valueSerializerClass.value,
+            maxConcurrent = producerMaxConcurrent.value,
+            compressionType = compressionType.toString,
+            commitBatchWithinSize = commitBatchWithinSize.value,
+            commitBatchWithinTime = commitBatchWithinTime
+          )
+        )
       )
     )
 
