@@ -17,17 +17,22 @@
 package com.fortyseven.kafkaconsumer
 
 import scala.concurrent.duration.*
-
 import org.apache.kafka.clients.producer.ProducerConfig
-
 import cats.*
 import cats.effect.kernel.Async
 import cats.implicits.*
 import com.fortyseven.coreheaders.config.KafkaConsumerConfig
+import com.fortyseven.coreheaders.config.internal.KafkaConfig.ConsumerConf
 import com.fortyseven.coreheaders.{ConfigHeader, KafkaConsumerHeader}
 import fs2.kafka.*
 
 final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
+
+  extension (cc: ConsumerConf)
+    def autoOffsetResetAsKafka: AutoOffsetReset = cc.autoOffsetReset match
+      case "Earliest" => AutoOffsetReset.Earliest
+      case "Latest" => AutoOffsetReset.Latest
+      case "None" => AutoOffsetReset.None
 
   override def consume(conf: ConfigHeader[F, KafkaConsumerConfig]): F[Unit] = for
     kc <- conf.load
@@ -49,11 +54,7 @@ final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
 
     val consumerSettings =
       ConsumerSettings[F, String, String]
-        .withAutoOffsetReset(consumerConfig.autoOffsetReset.toLowerCase match
-          case "earliest" => AutoOffsetReset.Earliest
-          case "latest"   => AutoOffsetReset.Latest
-          case _          => AutoOffsetReset.None
-        )
+        .withAutoOffsetReset(consumerConfig.autoOffsetResetAsKafka)
         .withBootstrapServers(kc.kafkaConf.broker.brokerAddress)
         .withGroupId(consumerConfig.groupId)
 
