@@ -20,7 +20,6 @@ import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
 import com.fortyseven.coreheaders.model.iot.types.*
 import fs2.Stream
-import fs2.kafka.{KafkaSerializer, ProducerRecord, ProducerRecords}
 
 class ModelGenerators[F[_]]:
 
