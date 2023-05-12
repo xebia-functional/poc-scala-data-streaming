@@ -25,7 +25,13 @@ object IotCodecs:
 
   private val _namespace = "iot"
 
-  given gpsPositionCodec: Codec[GPSPosition] = ???
+  given gpsPositionCodec: Codec[GPSPosition] =
+    Codec.record(name = "GPSPosition", namespace = _namespace) { field =>
+      (
+        field("latitude", _.latitude),
+        field("longitude", _.longitude)
+      ).mapN(GPSPosition.apply)
+    }
 
   given wheelRotationCodec: Codec[WheelRotation] = ???
 
@@ -42,9 +48,11 @@ object IotCodecs:
 
   given breaksHealthCodec: Codec[BreaksHealth] = ???
 
-  given latitudeCodec: Codec[Latitude] = ???
+  given latitudeCodec: Codec[Latitude] =
+    Codec.double.imapError(Latitude(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
 
-  given longitudeCodec: Codec[Longitude] = ???
+  given longitudeCodec: Codec[Longitude] =
+    Codec.double.imapError(Longitude(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
 
   given percentageCodec: Codec[Percentage] = ???
 

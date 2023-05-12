@@ -22,7 +22,7 @@ import cats.effect.kernel.Async
 import cats.implicits.*
 import com.fortyseven.core.codecs.iot.IotCodecs.given
 import com.fortyseven.coreheaders.config.DataGeneratorConfig
-import com.fortyseven.coreheaders.model.iot.model.PneumaticPressure
+import com.fortyseven.coreheaders.model.iot.model.{GPSPosition, PneumaticPressure}
 import com.fortyseven.coreheaders.{ConfigHeader, DataGeneratorHeader}
 import fs2.kafka.*
 
@@ -54,15 +54,16 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
       includeKey = false
     )
 
+    val gpsPositionSerializer = avroSerializer[GPSPosition](
+      Config(dgc.schemaRegistryConf.schemaRegistryUrl),
+      includeKey = false
+    )
+
     KafkaProducer
       .stream(producerSettings)
       .flatMap { producer =>
-        generators.generatePneumaticPressure
-          .map { committable =>
-            val key   = committable.getClass.getSimpleName
-            val value = pneumaticPressureSerializer.serialize(producerConfig.topicName, committable)
-            ProducerRecords.one(ProducerRecord(producerConfig.topicName, key, value))
-          }
+        (generators.generateGPSPosition.mapRecords(producerConfig.topicName)(using gpsPositionSerializer) ++
+          generators.generatePneumaticPressure.mapRecords(producerConfig.topicName)(using pneumaticPressureSerializer))
           .evalMap(producer.produce)
           .groupWithin(
             producerConfig.commitBatchWithinSize,
@@ -72,3 +73,14 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
       }
       .compile
       .drain
+
+  extension [T](inputStream: fs2.Stream[F, T])
+
+    private def mapRecords(
+        sourceTopic: String
+      )(using serializer: KafkaSerializer[T]): fs2.Stream[F, ProducerRecords[String, Array[Byte]]] =
+      inputStream.map { committable =>
+        val key   = committable.getClass.getSimpleName
+        val value = serializer.serialize(sourceTopic, committable)
+        ProducerRecords.one(ProducerRecord(sourceTopic, key, value))
+      }
