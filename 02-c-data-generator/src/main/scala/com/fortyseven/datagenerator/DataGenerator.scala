@@ -17,6 +17,7 @@
 package com.fortyseven.datagenerator
 
 import org.apache.kafka.clients.producer.ProducerConfig
+
 import cats.effect.kernel.Async
 import cats.implicits.*
 import com.fortyseven.core.codecs.iot.IotCodecs.given

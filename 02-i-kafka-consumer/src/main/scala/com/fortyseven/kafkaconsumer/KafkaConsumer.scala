@@ -17,7 +17,9 @@
 package com.fortyseven.kafkaconsumer
 
 import scala.concurrent.duration.*
+
 import org.apache.kafka.clients.producer.ProducerConfig
+
 import cats.*
 import cats.effect.kernel.Async
 import cats.implicits.*
@@ -29,9 +31,10 @@ import fs2.kafka.*
 final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
 
   extension (cc: ConsumerConf)
+
     def autoOffsetResetAsKafka: AutoOffsetReset = cc.autoOffsetReset match
       case "Earliest" => AutoOffsetReset.Earliest
-      case "Latest" => AutoOffsetReset.Latest
+      case "Latest"   => AutoOffsetReset.Latest
       case "None" | _ => AutoOffsetReset.None
 
   override def consume(conf: ConfigHeader[F, KafkaConsumerConfig]): F[Unit] = for
