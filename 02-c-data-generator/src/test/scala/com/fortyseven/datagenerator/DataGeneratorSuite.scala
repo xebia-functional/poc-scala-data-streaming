@@ -26,7 +26,7 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 class DataGeneratorSuite extends CatsEffectSuite with ScalaCheckEffectSuite:
 
-  private val dataGenerator = new DataGenerator[IO]
+  private val dataGenerator = new ModelGenerators[IO]
 
   test("generateGPSPosition") {
     PropF.forAllF(Gen.choose(1, 20)) { (sampleSize: Int) =>

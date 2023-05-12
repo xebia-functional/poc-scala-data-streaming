@@ -16,7 +16,7 @@
 
 package com.fortyseven.datagenerator
 
-import com.fortyseven.core.codecs.iot.IotModel.pneumaticPressureCodec
+import com.fortyseven.core.codecs.iot.IotCodecs.pneumaticPressureCodec
 import com.fortyseven.coreheaders.model.iot.model.PneumaticPressure
 import com.fortyseven.coreheaders.model.iot.types.Bar
 import io.confluent.kafka.schemaregistry.avro.AvroSchema

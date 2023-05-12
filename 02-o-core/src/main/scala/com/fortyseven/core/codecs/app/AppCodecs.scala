@@ -16,11 +16,11 @@
 
 package com.fortyseven.core.codecs.app
 
-import com.fortyseven.coreheaders.codecs.app.AppModel
 import com.fortyseven.coreheaders.model.app.model.*
+import com.fortyseven.coreheaders.model.app.types.Meters
 import vulcan.Codec
 
-object AppModel extends AppModel[Codec]:
+object AppCodecs:
 
   given totalDistanceByTripCodec: Codec[TotalDistanceByTrip] = ???
 
@@ -29,3 +29,5 @@ object AppModel extends AppModel[Codec]:
   given currentSpeedCodec: Codec[CurrentSpeed] = ???
 
   given totalRangeCodec: Codec[TotalRange] = ???
+
+  given metersCodec: Codec[Meters] = ???
