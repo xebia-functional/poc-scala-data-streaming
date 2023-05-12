@@ -17,11 +17,11 @@
 package com.fortyseven.datagenerator
 
 import org.apache.kafka.clients.producer.ProducerConfig
-
 import cats.effect.kernel.Async
 import cats.implicits.*
-import com.fortyseven.core.codecs.iot.IotCodecs.pneumaticPressureCodec
+import com.fortyseven.core.codecs.iot.IotCodecs.given
 import com.fortyseven.coreheaders.config.DataGeneratorConfig
+import com.fortyseven.coreheaders.model.iot.model.PneumaticPressure
 import com.fortyseven.coreheaders.{ConfigHeader, DataGeneratorHeader}
 import fs2.kafka.*
 
@@ -48,10 +48,11 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
       .withProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, producerConfig.valueSerializerClass)
       .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, producerConfig.compressionType)
 
-    val pneumaticPressureSerializer = avroSerializer(
+    val pneumaticPressureSerializer = avroSerializer[PneumaticPressure](
       Config(dgc.schemaRegistryConf.schemaRegistryUrl),
       includeKey = false
-    )(using pneumaticPressureCodec)
+    )
+
     KafkaProducer
       .stream(producerSettings)
       .flatMap { producer =>
