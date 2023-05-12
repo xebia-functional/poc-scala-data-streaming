@@ -46,7 +46,9 @@ For example, the configuration module is named as `02-c-configuration-ciris` and
 
 For more information, see [specification](https://docs.google.com/document/d/1f6vxfJrBA8dylbEGMHsJIcjHEztaYu5BHjoTB-XHvw8).
 
+The actual state of the Poc is: 
 
+![PoC Architecture](project/doc/Diagram.png)
 
 
 ### Pre-requisites
