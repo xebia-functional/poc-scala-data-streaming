@@ -33,7 +33,7 @@ lazy val `poc-scala-data-streaming`: Project =
   project
     .in(file("."))
     .aggregate(
-      // Layer 01
+      // Layer 1
       `core-headers`,
       // Layer 2
       // Common and Utils
@@ -48,11 +48,11 @@ lazy val `poc-scala-data-streaming`: Project =
       main
     )
 
-// Layer 01
+// Layer 1
 
 lazy val `core-headers`: Project =
   project
-    .in(file("01-c-core_headers"))
+    .in(file("01-c-core"))
     .settings(commonSettings)
     .settings(
       name := "core-headers",
@@ -62,7 +62,7 @@ lazy val `core-headers`: Project =
 // Layer 2
 
 // Common and Utils
-lazy val configuration: Project = (project in file("02-c-config-ciris"))
+lazy val configuration: Project = (project in file("02-c-config"))
   .dependsOn(`core-headers`)
   .settings(commonSettings)
   .settings(
@@ -86,7 +86,8 @@ lazy val core: Project =
       )
     )
 
-lazy val `data-generator`: Project = (project in file("02-c-data_generator-fs2"))
+// Input
+lazy val `data-generator`: Project = (project in file("02-i-data-generator"))
   .dependsOn(`core-headers` % Cctt)
   .dependsOn(core % Cctt) // This should be avoided
   .settings(commonSettings)
@@ -98,7 +99,6 @@ lazy val `data-generator`: Project = (project in file("02-c-data_generator-fs2")
     )
   )
 
-// Input
 lazy val `consumer-kafka`: Project =
   project
     .in(file("02-i-consumer-kafka"))
@@ -132,7 +132,7 @@ lazy val `processor-flink-integration`: Project =
     .dependsOn(`processor-flink`)
     .settings(commonSettings)
     .settings(
-      name := "integration-test",
+      name := "flink-integration-test",
       publish / skip := true,
       libraryDependencies ++= Seq(
         Libraries.integrationTest.kafka,
@@ -144,7 +144,6 @@ lazy val `processor-flink-integration`: Project =
     )
 
 // Layer 3
-
 lazy val main: Project =
   project
     .in(file("03-c-main"))

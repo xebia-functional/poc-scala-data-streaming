@@ -12,7 +12,7 @@ addCommandAlias("root", "cd poc-scala-data-streaming")
 
 addCommandAlias("c", "compile")
 
-addCommandAlias("ca", "Test / compile")
+addCommandAlias("ct", "Test / compile")
 
 addCommandAlias("t", "test")
 
@@ -22,11 +22,9 @@ addCommandAlias("rs", "reStart")
 
 addCommandAlias("s", "reStop")
 
-addCommandAlias("star", "thankYouStars")
-
 addCommandAlias(
   "styleCheck",
-  "scalafmtSbtCheck; scalafmtCheckAll"
+  "styleCheck, scalafmtSbtCheck; scalafmtCheckAll"
 )
 
 addCommandAlias(
@@ -36,7 +34,7 @@ addCommandAlias(
 
 addCommandAlias(
   "up2date",
-  "reload plugins; dependencyUpdates; reload return; dependencyUpdates"
+  "reload plugins; reload return; dependencyUpdates"
 )
 
 addCommandAlias(
@@ -46,12 +44,12 @@ addCommandAlias(
 
 addCommandAlias(
   "flinkIT",
-  "job-processor-flink-integration / test"
+  "processor-flink-integration / test"
 )
 
 addCommandAlias(
   "runMain",
-  "entry-point / run"
+  "main / run"
 )
 
 onLoadMessage +=
@@ -63,14 +61,13 @@ onLoadMessage +=
       |│ ${styled("cd")}          │ project                     │
       |│ ${styled("root")}        │ cd root                     │
       |│ ${styled("c")}           │ compile                     │
-      |│ ${styled("ca")}          │ compile all                 │
+      |│ ${styled("ct")}          │ compile test                │
       |│ ${styled("t")}           │ test                        │
       |│ ${styled("r")}           │ run                         │
       |│ ${styled("rs")}          │ reStart                     │
       |│ ${styled("s")}           │ reStop                      │
-      |│ ${styled("star")}        │ thankYouStars               │
-      |│ ${styled("styleCheck")}  │ fmt check                   │
-      |│ ${styled("styleFix")}    │ fmt                         │
+      |│ ${styled("styleCheck")}  │ scala fix & fmt check       │
+      |│ ${styled("styleFix")}    │ scala fix & fmt             │
       |│ ${styled("up2date")}     │ dependency updates          │
       |│ ${styled("coverage")}    │ coverage report             │
       |│ ${styled("flinkIT")}     │ run flink integration tests │
