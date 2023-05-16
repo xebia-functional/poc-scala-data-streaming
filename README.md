@@ -35,7 +35,7 @@ The function of the modules will vary based on the project's needs. In this PoC 
 * dataGenerator: generates dummy data (replaces upstream sources)
 * processor: applies the business logic to the data and sends it to the external sinks
 
-Finally, the las tag, libraries, refer to the main library of the given module.
+Finally, the last tag, libraries, refers to the main library of the given module.
 
 For example, the configuration module is named as `02-c-configuration-ciris` and the flink processor as
 `02-o-processor-flink`.
