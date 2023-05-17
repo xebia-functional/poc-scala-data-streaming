@@ -30,4 +30,4 @@ object AppCodecs:
 
   given totalRangeCodec: Codec[TotalRange] = ???
 
-  given metersCodec: Codec[Meters] = ??? 
+  given metersCodec: Codec[Meters] = ???

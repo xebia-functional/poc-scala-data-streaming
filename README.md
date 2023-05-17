@@ -16,8 +16,8 @@ data processing strategy.
 
 The modules in this project follow the diamond architecture nomenclature: `<level>-<type>-<function>-<library>`
 
-There can be as many leves as needed, but the recommendation is not less than three and not more than five. There are 
-three leves in this project:
+There can be as many levels as needed, but the recommendation is not less than three and not more than five. There are 
+three levels in this project:
 * 01: Interfaces
 * 02: Implementations
 * 03: Composition of interfaces to run the project
@@ -35,10 +35,10 @@ The function of the modules will vary based on the project's needs. In this PoC 
 * dataGenerator: generates dummy data (replaces upstream sources)
 * processor: applies the business logic to the data and sends it to the external sinks
 
-Finally, the last tag, libraries, refers to the main library of the given module.
+Finally, the last tag, libraries, refers to the main library of the given module (when applicable).
 
-For example, the configuration module is named as `02-c-configuration-ciris` and the flink processor as
-`02-o-processor-flink`.
+For example, the configuration module is simply named as `02-c-config` and the flink processor is
+`02-o-processor-flink` because we have multiple libraries used for processing.
 
 ## Kappa Architecture
 

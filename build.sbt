@@ -118,7 +118,7 @@ lazy val `processor-flink`: Project =
     .dependsOn(`core-headers` % Cctt)
     .settings(commonSettings)
     .settings(
-      name := "flink-processor",
+      name := "processor-flink",
       libraryDependencies ++= Seq(
         Libraries.cats.catsEffect,
         Libraries.flink.clients,
