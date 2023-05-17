@@ -33,44 +33,36 @@ lazy val `poc-scala-data-streaming`: Project =
   project
     .in(file("."))
     .aggregate(
-      // layer 1
-      // team red
+      // Layer 1
       `core-headers`,
-      // team yellow (utils/common)
-
-      // layer 2
-      // team blue
+      // Layer 2
+      // Common and Utils
       configuration,
-      `data-generator`,
-      `kafka-consumer`,
-      `job-processor-flink`,
-      //`job-processor-kafka`,
-      //`job-processor-spark`,
-      //`job-processor-storm`,
-      // team green
       core,
-
-      // layer 3
-      // team red
-      `entry-point`
+      `data-generator`,
+      // Input
+      `consumer-kafka`,
+      // Output
+      `processor-flink`,
+      // Layer 3
+      main
     )
 
-// layer 1
+// Layer 1
 
-// team red
 lazy val `core-headers`: Project =
   project
-    .in(file("01-core-headers"))
+    .in(file("01-c-core"))
     .settings(commonSettings)
     .settings(
       name := "core-headers",
       libraryDependencies ++= Seq()
     )
 
-// layer 2
+// Layer 2
 
-// team yellow (c=common)
-lazy val configuration: Project = (project in file("02-c-config-ciris"))
+// Common and Utils
+lazy val configuration: Project = (project in file("02-c-config"))
   .dependsOn(`core-headers`)
   .settings(commonSettings)
   .settings(
@@ -80,103 +72,9 @@ lazy val configuration: Project = (project in file("02-c-config-ciris"))
     )
   )
 
-lazy val `data-generator`: Project = (project in file("02-c-data-generator"))
-  .dependsOn(`core-headers` % Cctt)
-  .dependsOn(core % Cctt) // This should be avoided
-  .settings(commonSettings)
-  .settings(
-    name := "data-generator",
-    libraryDependencies ++= Seq(
-      Libraries.test.munitCatsEffect,
-      Libraries.logging.log4catsSlf4j % Test
-    )
-  )
-
-//lazy val `kafka-util`: Project = (project in file("02-c-kafka-util"))
-//  .settings(
-//    name := "kafka-util"
-//  )
-
-// team blue (i=input) from here
-lazy val `kafka-consumer`: Project =
-  project
-    .in(file("02-i-kafka-consumer"))
-    //.dependsOn(`kafka-util` % Cctt)
-    .dependsOn(`core-headers` % Cctt)
-    .settings(commonSettings)
-    .settings(
-      name := "kafka-consumer",
-      libraryDependencies ++= Seq(
-        Libraries.kafka.fs2KafkaVulcan
-      )
-    )
-
-lazy val `job-processor-flink`: Project =
-  project
-    .in(file("02-i-job-processor-flink"))
-    .dependsOn(`core-headers` % Cctt)
-    .settings(commonSettings)
-    .settings(
-        name := "flink",
-        libraryDependencies ++= Seq(
-          Libraries.cats.catsEffect,
-          Libraries.flink.clients,
-          Libraries.flink.kafka
-        )
-    )
-
-lazy val `job-processor-flink-integration`: Project =
-  project.in(file("02-i-job-processor-flink/integration"))
-    .dependsOn(`job-processor-flink`)
-    .settings(commonSettings)
-    .settings(
-      publish / skip := true,
-      libraryDependencies ++= Seq(
-        Libraries.integrationTest.kafka,
-        Libraries.integrationTest.munit,
-        Libraries.test.munitCatsEffect,
-        Libraries.logging.log4catsSlf4j % Test,
-        Libraries.cats.catsEffect % Test
-      )
-    )
-
-//lazy val `job-processor-kafka`: Project =
-//  project
-//    .in(file("02-i-job-processor-kafka"))
-//    .dependsOn(`core-headers` % Cctt)
-//    .settings(commonSettings)
-//    .settings(commonDependencies)
-//    .settings(
-//      name := "kafka-streams",
-//      libraryDependencies ++= Seq()
-//    )
-//
-//lazy val `job-processor-spark`: Project =
-//project
-//    .in(file("02-i-job-processor-spark"))
-//    .dependsOn(`core-headers` % Cctt)
-//    .settings(commonSettings)
-//    .settings(commonDependencies)
-//    .settings(
-//      name := "spark-streaming",
-//      libraryDependencies ++= Seq()
-//    )
-//
-//lazy val `job-processor-storm`: Project =
-//  project
-//    .in(file("02-i-job-processor-storm"))
-//    .dependsOn(`core-headers` % Cctt)
-//    .settings(commonSettings)
-//    .settings(commonDependencies)
-//    .settings(
-//      name := "storm",
-//      libraryDependencies ++= Seq()
-//    )
-
-// team green (o=output) from here
 lazy val core: Project =
   project
-    .in(file("02-o-core"))
+    .in(file("02-c-core"))
     .dependsOn(`core-headers` % Cctt)
     .settings(commonSettings)
     .settings(
@@ -188,26 +86,75 @@ lazy val core: Project =
       )
     )
 
-// layer 3
-// team red
-lazy val `entry-point`: Project =
+// Input
+lazy val `data-generator`: Project = (project in file("02-i-data-generator"))
+  .dependsOn(`core-headers` % Cctt)
+  .dependsOn(core % Cctt) // This should be avoided
+  .settings(commonSettings)
+  .settings(
+    name := "data-generator",
+    libraryDependencies ++= Seq(
+      Libraries.test.munitCatsEffect,
+      Libraries.logging.log4catsSlf4j % Test
+    )
+  )
+
+lazy val `consumer-kafka`: Project =
   project
-    .in(file("03-entry-point"))
-    // the dependency on `core-headers` is added transitively
-    // the dependencies on team yellow are added transitively
-    // team blue
-    .dependsOn(`kafka-consumer` % Cctt)
-    .dependsOn(`data-generator` % Cctt)
-    //.dependsOn(`job-processor-flink` % Cctt)
-    //.dependsOn(`job-processor-kafka` % Cctt)
-    //.dependsOn(`job-processor-spark` % Cctt)
-    //.dependsOn(`job-processor-storm` % Cctt)
-    // team green
-    .dependsOn(configuration % Cctt)
-    .dependsOn(core % Cctt)
+    .in(file("02-i-consumer-kafka"))
+    .dependsOn(`core-headers` % Cctt)
     .settings(commonSettings)
     .settings(
-      name := "entry-point",
+      name := "kafka-consumer",
+      libraryDependencies ++= Seq(
+        Libraries.kafka.fs2KafkaVulcan
+      )
+    )
+
+// Output
+lazy val `processor-flink`: Project =
+  project
+    .in(file("02-o-processor-flink"))
+    .dependsOn(`core-headers` % Cctt)
+    .settings(commonSettings)
+    .settings(
+      name := "processor-flink",
+      libraryDependencies ++= Seq(
+        Libraries.cats.catsEffect,
+        Libraries.flink.clients,
+        Libraries.flink.kafka,
+        Libraries.kafka.fs2KafkaVulcan
+      )
+    )
+
+lazy val `processor-flink-integration`: Project =
+  project.in(file("02-o-processor-flink/integration"))
+    .dependsOn(`processor-flink`)
+    .settings(commonSettings)
+    .settings(
+      name := "flink-integration-test",
+      publish / skip := true,
+      libraryDependencies ++= Seq(
+        Libraries.integrationTest.kafka,
+        Libraries.integrationTest.munit,
+        Libraries.test.munitCatsEffect,
+        Libraries.logging.log4catsSlf4j % Test,
+        Libraries.cats.catsEffect % Test
+      )
+    )
+
+// Layer 3
+lazy val main: Project =
+  project
+    .in(file("03-c-main"))
+    .dependsOn(configuration % Cctt)
+    .dependsOn(core % Cctt)
+    .dependsOn(`consumer-kafka` % Cctt)
+    .dependsOn(`data-generator` % Cctt)
+    .dependsOn(`processor-flink` % Cctt)
+    .settings(commonSettings)
+    .settings(
+      name := "main",
       libraryDependencies ++= Seq(
         Libraries.logging.logback,
         Libraries.logging.log4catsSlf4j
