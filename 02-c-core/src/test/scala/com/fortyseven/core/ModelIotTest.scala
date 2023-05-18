@@ -21,7 +21,6 @@ import com.fortyseven.coreheaders.model.iot.types.*
 import munit.{FunSuite, ScalaCheckSuite}
 import org.scalacheck.Gen
 import org.scalacheck.Prop.forAll
-import org.scalatest.matchers.must.Matchers
 
 class ModelIotTest extends ScalaCheckSuite:
 
