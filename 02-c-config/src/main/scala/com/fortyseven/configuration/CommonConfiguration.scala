@@ -16,6 +16,8 @@
 
 package com.fortyseven.configuration
 
+import ciris.ConfigDecoder
+
 object CommonConfiguration:
 
   val kafkaBrokerAddress = "localhost:9092"
@@ -26,6 +28,28 @@ object CommonConfiguration:
 
     case none, gzip, snappy, lz4, zstd
 
+  object KafkaCompressionType:
+
+    def apply(s: String): KafkaCompressionType = s match
+      case "lz4"      => lz4
+      case "zstd"     => zstd
+      case "gzip"     => gzip
+      case "snappy"   => snappy
+      case "none" | _ => none
+
+    given ConfigDecoder[String, KafkaCompressionType] =
+      ConfigDecoder[String, String].map(KafkaCompressionType.apply)
+
   enum KafkaAutoOffsetReset:
 
     case Earliest, Latest, None
+
+  object KafkaAutoOffsetReset:
+
+    def apply(s: String): KafkaAutoOffsetReset = s match
+      case "Earliest" => Earliest
+      case "Latest"   => Latest
+      case "None" | _ => None
+
+    given ConfigDecoder[String, KafkaAutoOffsetReset] =
+      ConfigDecoder[String, String].map(KafkaAutoOffsetReset.apply)

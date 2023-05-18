@@ -40,10 +40,11 @@ object Dependencies {
 
     }
 
-    object ciris {
-      private val version: String = "3.1.0"
-      val ciris: ModuleID = "is.cir" %% "ciris" % version
-      val cirisRefined: ModuleID = "is.cir" %% "ciris-refined" % version
+    object config {
+      private val cirisVersion: String = "3.1.0"
+      val ciris: ModuleID = "is.cir" %% "ciris" % cirisVersion
+      val cirisRefined: ModuleID = "is.cir" %% "ciris-refined" % cirisVersion
+      val cirisHocon: ModuleID = "lt.dvim.ciris-hocon" %% "ciris-hocon" % "1.1.0"
     }
 
     object refined {

@@ -21,19 +21,50 @@ import cats.effect.IO
 import com.fortyseven.coreheaders.config.KafkaConsumerConfig
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
-class KafkaConsumerConfigurationTest extends CatsEffectSuite {
-
+class KafkaConsumerConfigurationTest extends CatsEffectSuite:
 
   val configuration: KafkaConsumerConfiguration[IO] = new KafkaConsumerConfiguration[IO]
 
   test("config must load and be equal") {
-    for {
+    for
       logger <- Slf4jLogger.create[IO]
-      conf1 <- configuration.load
-      _ <- logger.info(conf1.toString)
-      conf2 <- configuration.config.load[IO]
-      _ <- logger.info(conf2.toString)
-    } yield assertEquals(conf1, conf2)
+      conf1  <- configuration.load
+      _      <- logger.info(conf1.toString)
+      conf2  <- configuration.config("kafka/kafkaConsumer.conf").load[IO]
+      _      <- logger.info(conf2.toString)
+    yield assertEquals(conf1, conf2)
 
   }
-}
+
+  test("config must load and be different") {
+    for
+      logger <- Slf4jLogger.create[IO]
+      conf1  <- configuration.load
+      _      <- logger.info(conf1.toString)
+      conf2  <- configuration.config("kafka/kafkaConsumer2.conf").load[IO]
+      _      <- logger.info(conf2.toString)
+    yield assertNotEquals(conf1, conf2)
+
+  }
+
+  test("config must not load because of negative int") {
+
+    val maybeNot: IO[Either[Throwable, KafkaConsumerConfig]] = for
+      logger <- Slf4jLogger.create[IO]
+      conf   <- configuration.config("kafka/kafkaConsumerPosInt.conf").load[IO].attempt
+      _      <- logger.info(conf.toString)
+    yield conf
+    assertIOBoolean(maybeNot.map(_.isLeft))
+
+  }
+
+  test("config must not load because of empty string") {
+
+    val maybeNot: IO[Either[Throwable, KafkaConsumerConfig]] = for
+      logger <- Slf4jLogger.create[IO]
+      conf   <- configuration.config("kafka/kafkaConsumerEmptyString.conf").load[IO].attempt
+      _      <- logger.info(conf.toString)
+    yield conf
+    assertIOBoolean(maybeNot.map(_.isLeft))
+
+  }

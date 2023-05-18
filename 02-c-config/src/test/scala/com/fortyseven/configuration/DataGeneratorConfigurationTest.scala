@@ -24,14 +24,13 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 class DataGeneratorConfigurationTest extends CatsEffectSuite:
 
   val configuration: DataGeneratorConfiguration[IO] = new DataGeneratorConfiguration[IO]
-  
-  test("config must load and be equal") {
-    for {
-      logger <- Slf4jLogger.create[IO]
-      conf1 <- configuration.load
-      _ <- logger.info(conf1.toString)
-      conf2 <- configuration.config.load[IO]
-      _ <- logger.info(conf2.toString)
-    } yield assertEquals(conf1, conf2)
-  }
 
+  test("config must load and be equal") {
+    for
+      logger <- Slf4jLogger.create[IO]
+      conf1  <- configuration.load
+      _      <- logger.info(conf1.toString)
+      conf2  <- configuration.config.load[IO]
+      _      <- logger.info(conf2.toString)
+    yield assertEquals(conf1, conf2)
+  }

@@ -68,9 +68,10 @@ lazy val configuration: Project = (project in file("02-c-config"))
   .settings(
     name := "configuration",
     libraryDependencies ++= Seq(
-      Libraries.ciris.ciris,
-      Libraries.ciris.cirisRefined,
+      Libraries.config.ciris,
+      Libraries.config.cirisRefined,
       Libraries.refined.refined,
+      Libraries.config.cirisHocon,
       Libraries.cats.core,
       Libraries.cats.effectKernel,
       Libraries.cats.effect % Test,
