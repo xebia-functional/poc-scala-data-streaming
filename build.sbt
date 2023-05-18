@@ -73,7 +73,11 @@ lazy val configuration: Project = (project in file("02-c-config"))
       Libraries.refined.refined,
       Libraries.cats.core,
       Libraries.cats.effectKernel,
-      Libraries.shapeless.shapeless
+      Libraries.cats.effect % Test,
+      Libraries.shapeless.shapeless,
+      Libraries.test.munitCatsEffect,
+      Libraries.logging.catsSlf4j % Test,
+      Libraries.logging.logback % Test
     )
   )
 
