@@ -2,62 +2,87 @@ import sbt.*
 
 object Dependencies {
 
-  object Versions {
-
-    val scala = "3.2.2"
-
-    val organizeImports = "0.6.0"
-
-    val catsEffect = "3.4.10"
-    val ciris = "3.1.0"
-    val flink = "1.17.0"
-    val fs2Kafka = "3.0.0"
-    val log4cats = "2.6.0"
-    val logback = "1.4.7"
-    val scalatest = "3.2.15"
-    val munitScalacheck = "1.0.4"
-    val munitCatsEffect = "1.0.7"
-    val testContainers  = "0.40.14" // Dependency conflict on 0.40.15
-  }
-
   object SbtPlugins {
-    val organizeImports = "com.github.liancheng" %% "organize-imports" % Versions.organizeImports
+    private val version: String = "0.6.0"
+    val organizeImports: ModuleID = "com.github.liancheng" %% "organize-imports" % version
   }
 
   object Libraries {
 
     object cats {
-      val catsEffect = "org.typelevel" %% "cats-effect" % Versions.catsEffect
+      private val coreVersion: String = "2.9.0"
+      private val effectVersion: String = "3.5.0"
+      val core: ModuleID = "org.typelevel" %% "cats-core" % coreVersion
+      val effectKernel: ModuleID = "org.typelevel" %% "cats-effect-kernel" % effectVersion
+      val effect: ModuleID = "org.typelevel" %% "cats-effect" % effectVersion
+      val free: ModuleID = "org.typelevel" %% "cats-free" % coreVersion
     }
 
     object kafka {
-      val fs2KafkaVulcan = "com.github.fd4s" %% "fs2-kafka-vulcan" % Versions.fs2Kafka
+      private val clientVersion: String = "7.4.0"
+      val kafkaClients: ModuleID = "org.apache.kafka" % "kafka-clients" % s"$clientVersion-ccs"
+      val kafkaSerializer: ModuleID = "io.confluent" % "kafka-avro-serializer" % clientVersion
+      val kafkaSchemaRegistry: ModuleID = "io.confluent" % "kafka-schema-registry-client" % clientVersion
+      val kafkaSchemaSerializer: ModuleID = "io.confluent" % "kafka-schema-serializer" % clientVersion
     }
 
-    object config {
-      val cirisRefined = "is.cir" %% "ciris-refined" % Versions.ciris
+    object fs2 {
+      private val version: String = "3.7.0"
+      private val kafkaVersion: String = "3.0.1"
+      val core: ModuleID = "co.fs2" %% "fs2-core" % version
+      val kafka: ModuleID = "com.github.fd4s" %% "fs2-kafka" % kafkaVersion
+      val kafkaVulcan: ModuleID = "com.github.fd4s" %% "fs2-kafka-vulcan" % kafkaVersion
+    }
+
+    object avro {
+      val avro: ModuleID = "org.apache.avro" % "avro" % "1.11.1"
+      val vulcan: ModuleID = "com.github.fd4s" %% "vulcan" % "1.9.0"
+
+    }
+
+    object ciris {
+      private val version: String = "3.1.0"
+      val ciris: ModuleID = "is.cir" %% "ciris" % version
+      val cirisRefined: ModuleID = "is.cir" %% "ciris-refined" % version
+    }
+
+    object refined {
+      private val refinedVersion: String = "0.10.3"
+      val refined: ModuleID = "eu.timepit" %% "refined" % refinedVersion
+    }
+
+    object shapeless {
+      private val shapelessVersion: String = "2.3.10"
+      val shapeless: ModuleID = "com.chuusai" % "shapeless_2.13" % shapelessVersion
     }
 
     object flink {
-      val clients = "org.apache.flink" % "flink-clients" % Versions.flink //% Provided
-      val kafka = "org.apache.flink" % "flink-connector-kafka" % Versions.flink //% Provided
-      val streaming = "org.apache.flink" % "flink-streaming-java" % Versions.flink //% Provided
+      private val version: String = "1.17.0"
+      val core: ModuleID = "org.apache.flink" % "flink-core" % version
+      val clients: ModuleID = "org.apache.flink" % "flink-clients" % version
+      val kafka: ModuleID = "org.apache.flink" % "flink-connector-kafka" % "3.0.0-1.17"
+      val streaming: ModuleID = "org.apache.flink" % "flink-streaming-java" % version
     }
 
-    object integrationTest {
-      val kafka = "com.dimafeng" %% "testcontainers-scala-kafka" % Versions.testContainers % Test
-      val munit = "com.dimafeng" %% "testcontainers-scala-munit" % Versions.testContainers % Test
+    object testContainers {
+      private val version: String = "0.40.14" // Dependency conflict on 0.40.15
+      val kafka: ModuleID = "com.dimafeng" %% "testcontainers-scala-kafka" % version % Test
+      val munit: ModuleID = "com.dimafeng" %% "testcontainers-scala-munit" % version % Test
     }
 
     object logging {
-      val log4catsSlf4j = "org.typelevel" %% "log4cats-slf4j" % Versions.log4cats
-      val logback = "ch.qos.logback" % "logback-classic" % Versions.logback
+      private val catsVersion: String = "2.6.0"
+      private val logbackVersion: String = "1.4.7"
+      val catsCore: ModuleID = "org.typelevel" %% "log4cats-core" % catsVersion
+      val catsSlf4j: ModuleID = "org.typelevel" %% "log4cats-slf4j" % catsVersion
+      val logback: ModuleID = "ch.qos.logback" % "logback-classic" % logbackVersion
     }
 
     object test {
-      val munitCatsEffect = "org.typelevel" %% "munit-cats-effect-3" % Versions.munitCatsEffect % Test
-      val munitScalacheck = "org.typelevel" %% "scalacheck-effect-munit" % Versions.munitScalacheck % Test
-      val scalatest = "org.scalatest" %% "scalatest" % Versions.scalatest % Test
+      private val munitScalacheckVersion: String = "2.0-9366e44"
+      private val munitCatsEffectVersion: String = "1.0.7"
+      val munitCatsEffect: ModuleID = "org.typelevel" %% "munit-cats-effect-3" % munitCatsEffectVersion % Test
+      val munitScalacheck: ModuleID = "org.typelevel" %% "scalacheck-effect-munit" % munitScalacheckVersion % Test
     }
   }
 }

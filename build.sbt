@@ -12,7 +12,7 @@ ThisBuild / scmInfo      := Some(
   )
 )
 
-ThisBuild / scalaVersion := Versions.scala
+ThisBuild / scalaVersion := "3.2.2"
 
 ThisBuild / semanticdbEnabled := true
 
@@ -68,7 +68,12 @@ lazy val configuration: Project = (project in file("02-c-config"))
   .settings(
     name := "configuration",
     libraryDependencies ++= Seq(
-      Libraries.config.cirisRefined
+      Libraries.ciris.ciris,
+      Libraries.ciris.cirisRefined,
+      Libraries.refined.refined,
+      Libraries.cats.core,
+      Libraries.cats.effectKernel,
+      Libraries.shapeless.shapeless
     )
   )
 
@@ -80,9 +85,12 @@ lazy val core: Project =
     .settings(
       name := "core",
       libraryDependencies ++= Seq(
-        Libraries.kafka.fs2KafkaVulcan,
-        Libraries.test.munitScalacheck,
-        Libraries.test.scalatest
+        Libraries.avro.vulcan,
+        Libraries.avro.avro,
+        Libraries.cats.free,
+        Libraries.cats.core,
+        Libraries.fs2.kafkaVulcan,
+        Libraries.test.munitScalacheck
       )
     )
 
@@ -94,8 +102,18 @@ lazy val `data-generator`: Project = (project in file("02-i-data-generator"))
   .settings(
     name := "data-generator",
     libraryDependencies ++= Seq(
+      Libraries.fs2.core,
+      Libraries.fs2.kafka,
+      Libraries.kafka.kafkaClients,
+      Libraries.cats.core,
+      Libraries.cats.effectKernel,
+      Libraries.avro.vulcan,
+      Libraries.avro.avro,
+      Libraries.kafka.kafkaSchemaRegistry,
+      Libraries.kafka.kafkaSchemaSerializer,
+      Libraries.kafka.kafkaSerializer,
       Libraries.test.munitCatsEffect,
-      Libraries.logging.log4catsSlf4j % Test
+      Libraries.logging.catsSlf4j % Test
     )
   )
 
@@ -107,7 +125,12 @@ lazy val `consumer-kafka`: Project =
     .settings(
       name := "kafka-consumer",
       libraryDependencies ++= Seq(
-        Libraries.kafka.fs2KafkaVulcan
+        Libraries.cats.core,
+        Libraries.cats.effectKernel,
+        Libraries.kafka.kafkaClients,
+        Libraries.fs2.kafka,
+        Libraries.fs2.core,
+        Libraries.fs2.kafkaVulcan
       )
     )
 
@@ -120,10 +143,14 @@ lazy val `processor-flink`: Project =
     .settings(
       name := "processor-flink",
       libraryDependencies ++= Seq(
-        Libraries.cats.catsEffect,
+        Libraries.cats.core,
+        Libraries.cats.effectKernel,
+        Libraries.cats.effect,
+        Libraries.flink.core,
+        Libraries.flink.streaming,
         Libraries.flink.clients,
         Libraries.flink.kafka,
-        Libraries.kafka.fs2KafkaVulcan
+        Libraries.fs2.kafkaVulcan
       )
     )
 
@@ -135,11 +162,11 @@ lazy val `processor-flink-integration`: Project =
       name := "flink-integration-test",
       publish / skip := true,
       libraryDependencies ++= Seq(
-        Libraries.integrationTest.kafka,
-        Libraries.integrationTest.munit,
+        Libraries.testContainers.kafka,
+        Libraries.testContainers.munit,
         Libraries.test.munitCatsEffect,
-        Libraries.logging.log4catsSlf4j % Test,
-        Libraries.cats.catsEffect % Test
+        Libraries.logging.catsSlf4j % Test,
+        Libraries.cats.effect % Test
       )
     )
 
@@ -156,8 +183,13 @@ lazy val main: Project =
     .settings(
       name := "main",
       libraryDependencies ++= Seq(
+        Libraries.avro.vulcan,
+        Libraries.cats.core,
+        Libraries.cats.effect,
+        Libraries.cats.effectKernel,
         Libraries.logging.logback,
-        Libraries.logging.log4catsSlf4j
+        Libraries.logging.catsSlf4j,
+        Libraries.logging.catsCore
       )
     )
 

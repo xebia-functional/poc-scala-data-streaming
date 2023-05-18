@@ -12,7 +12,7 @@ update / evictionWarningOptions := EvictionWarningOptions.empty
 
 addDependencyTreePlugin
 
-addSbtPlugin("com.github.sbt" % "sbt-git" % "2.0.0")
+addSbtPlugin("com.github.sbt" % "sbt-git" % "2.0.1")
 
 addSbtPlugin("com.mayreh" % "sbt-thank-you-stars" % "0.2")
 
@@ -25,3 +25,5 @@ addSbtPlugin("io.spray" % "sbt-revolver" % "0.9.1")
 addSbtPlugin("de.heikoseeberger" % "sbt-header" % "5.9.0")
 
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "2.0.7")
+
+addSbtPlugin("com.github.cb372" % "sbt-explicit-dependencies" % "0.2.16")
