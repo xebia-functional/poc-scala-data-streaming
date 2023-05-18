@@ -33,6 +33,11 @@ addCommandAlias(
 )
 
 addCommandAlias(
+  "explicit",
+  "undeclaredCompileDependencies; undeclaredCompileDependenciesTest"
+)
+
+addCommandAlias(
   "up2date",
   "reload plugins; reload return; dependencyUpdates"
 )
@@ -68,6 +73,7 @@ onLoadMessage +=
       |│ ${styled("s")}           │ reStop                      │
       |│ ${styled("styleCheck")}  │ scala fix & fmt check       │
       |│ ${styled("styleFix")}    │ scala fix & fmt             │
+      || ${styled("explicit")}    | transitive dependency check |
       |│ ${styled("up2date")}     │ dependency updates          │
       |│ ${styled("coverage")}    │ coverage report             │
       |│ ${styled("flinkIT")}     │ run flink integration tests │
