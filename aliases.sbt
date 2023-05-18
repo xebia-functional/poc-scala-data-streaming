@@ -34,7 +34,7 @@ addCommandAlias(
 
 addCommandAlias(
   "explicit",
-  "undeclaredCompileDependencies; undeclaredCompileDependenciesTest"
+  "undeclaredCompileDependenciesTest"
 )
 
 addCommandAlias(

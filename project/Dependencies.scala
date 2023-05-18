@@ -11,7 +11,7 @@ object Dependencies {
 
     object cats {
       private val coreVersion: String = "2.9.0"
-      private val effectVersion: String = "3.6-1f95fd7"
+      private val effectVersion: String = "3.5.0"
       val core: ModuleID = "org.typelevel" %% "cats-core" % coreVersion
       val effectKernel: ModuleID = "org.typelevel" %% "cats-effect-kernel" % effectVersion
       val effect: ModuleID = "org.typelevel" %% "cats-effect" % effectVersion
@@ -79,12 +79,10 @@ object Dependencies {
     }
 
     object test {
-      private val scalatestVersion: String = "3.2.16"
       private val munitScalacheckVersion: String = "2.0-9366e44"
       private val munitCatsEffectVersion: String = "1.0.7"
       val munitCatsEffect: ModuleID = "org.typelevel" %% "munit-cats-effect-3" % munitCatsEffectVersion % Test
       val munitScalacheck: ModuleID = "org.typelevel" %% "scalacheck-effect-munit" % munitScalacheckVersion % Test
-      val scalatest: ModuleID = "org.scalatest" %% "scalatest" % scalatestVersion % Test
     }
   }
 }

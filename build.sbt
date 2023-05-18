@@ -90,8 +90,7 @@ lazy val core: Project =
         Libraries.cats.free,
         Libraries.cats.core,
         Libraries.fs2.kafkaVulcan,
-        Libraries.test.munitScalacheck,
-        Libraries.test.scalatest
+        Libraries.test.munitScalacheck
       )
     )
 
