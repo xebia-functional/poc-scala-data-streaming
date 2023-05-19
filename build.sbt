@@ -77,6 +77,18 @@ lazy val configuration: Project = (project in file("02-c-config"))
     )
   )
 
+lazy val `configuration-typesafe`: Project = (project in file("02-c-config-typesafe"))
+  .dependsOn(`core-headers`)
+  .settings(commonSettings)
+  .settings(
+    name := "configuration",
+    libraryDependencies += "com.typesafe" % "config" % "1.4.2",
+    libraryDependencies ++= Seq(
+      Libraries.cats.effectKernel
+    )
+    )
+
+
 lazy val core: Project =
   project
     .in(file("02-c-core"))
