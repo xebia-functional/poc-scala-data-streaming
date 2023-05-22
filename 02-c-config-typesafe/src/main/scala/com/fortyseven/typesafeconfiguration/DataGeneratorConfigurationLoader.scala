@@ -16,25 +16,24 @@
 
 package com.fortyseven.typesafeconfiguration
 
-import scala.concurrent.duration.FiniteDuration
-
 import cats.effect.kernel.Async
 import com.fortyseven.coreheaders.ConfigHeader
 import com.fortyseven.typesafeconfiguration.configTypes.*
 import com.typesafe.config.{Config, ConfigFactory}
 
-private[typesafeconfiguration] final class KafkaConsumerConfigurationLoader[F[_]: Async]
-    extends ConfigHeader[F, KafkaConsumerConfiguration]:
-
-  override def load: F[KafkaConsumerConfiguration] =
-    val eitherLoad =
-      for kc <- KafkaConfigurationLoader.eitherLoad
-      yield KafkaConsumerConfiguration(kc)
+private [typesafeconfiguration] final class DataGeneratorConfigurationLoader[F[_]: Async] extends ConfigHeader[F, DataGeneratorConfiguration]:
+  
+  override def load: F[DataGeneratorConfiguration] =
+    val eitherLoad: Either[Throwable, DataGeneratorConfiguration] =
+      for
+        kc <- KafkaConfigurationLoader.eitherLoad
+        src <- SchemaRegistryConfigurationLoader.eitherLoad
+      yield DataGeneratorConfiguration(kc, src)
 
     eitherLoad match
-      case Right(value)    => Async.apply.pure(value)
+      case  Right(value) => Async.apply.pure(value)
       case Left(throwable) => Async.apply.raiseError(throwable)
 
-object KafkaConsumerConfigurationLoader:
-
-  def apply[F[_]: Async]: KafkaConsumerConfigurationLoader[F] = new KafkaConsumerConfigurationLoader[F]
+object DataGeneratorConfigurationLoader:
+  
+  def apply[F[_]: Async]: DataGeneratorConfigurationLoader[F] = new DataGeneratorConfigurationLoader[F]

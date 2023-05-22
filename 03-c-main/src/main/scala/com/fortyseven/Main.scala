@@ -35,7 +35,9 @@ object Main extends IOApp.Simple:
     kafkaConf          <- new cirisconfiguration.KafkaConsumerConfiguration[IO].load
     _                  <- logger.info(s"KafkaConsumerConfiguration: $kafkaConf")
     typelevelKafkaConf <- KafkaConsumerConfigurationLoader[IO].load
-    _                  <- logger.info(s"Typelevel Config: \n $typelevelKafkaConf")
+    _                  <- logger.info(s"Typelevel Kafka Config: \n $typelevelKafkaConf")
+    typelevelDataGenConf <- DataGeneratorConfigurationLoader[IO].load
+    _ <- logger.info(s"Typelevel DataGen Config: \n $typelevelDataGenConf")
     _                  <- logger.info("Start data generator")
     fiber1             <- new DataGenerator[IO].generate(cirisconfiguration.DataGeneratorConfiguration[IO]).start
     _                  <- logger.info("Start kafka consumer")

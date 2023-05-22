@@ -20,7 +20,7 @@ import scala.compiletime.requireConst
 import scala.concurrent.duration.FiniteDuration
 import scala.sys.error
 
-object KafkaConfig:
+object configTypes:
 
   opaque type NonEmptyString = String
 
@@ -50,9 +50,22 @@ object KafkaConfig:
 
     extension (posInt: PositiveInt)
 
-      def asInt: Int                = posInt
+      def asInt: Int = posInt
 
       def asSeconds: FiniteDuration = FiniteDuration.apply(posInt.asInt, "seconds")
+
+  final case class KafkaConsumerConfiguration(
+      kafkaConfiguration: KafkaConfiguration
+    )
+
+  final case class DataGeneratorConfiguration(
+      kafkaConfiguration: KafkaConfiguration,
+      schemaRegistryConfiguration: SchemaRegistryConfiguration
+    )
+
+  final case class SchemaRegistryConfiguration(
+      schemaRegistryURL: NonEmptyString
+    )
 
   final case class KafkaConfiguration(
       broker: BrokerConfiguration,
