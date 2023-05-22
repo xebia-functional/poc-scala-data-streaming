@@ -19,7 +19,7 @@ package com.fortyseven
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
 import com.fortyseven.cirisconfiguration
-import com.fortyseven.typesafeconfiguration
+import com.fortyseven.typesafeconfiguration.{DataGeneratorConfigurationLoader, KafkaConsumerConfigurationLoader}
 import com.fortyseven.core.codecs.iot.IotCodecs
 import com.fortyseven.datagenerator.DataGenerator
 import com.fortyseven.kafkaconsumer.KafkaConsumer
@@ -34,7 +34,7 @@ object Main extends IOApp.Simple:
     _           <- logger.info(s"DataGeneratorConfiguration: $dataGenConf")
     kafkaConf   <- new cirisconfiguration.KafkaConsumerConfiguration[IO].load
     _           <- logger.info(s"KafkaConsumerConfiguration: $kafkaConf")
-    typelevelKafkaConf <- new typesafeconfiguration.KafkaConsumerConfiguration[IO].load
+    typelevelKafkaConf <- KafkaConsumerConfigurationLoader[IO].load
     _ <- logger.info(s"Typelevel Config: \n $typelevelKafkaConf")
     _           <- logger.info("Start data generator")
     fiber1      <- new DataGenerator[IO].generate(cirisconfiguration.DataGeneratorConfiguration[IO]).start

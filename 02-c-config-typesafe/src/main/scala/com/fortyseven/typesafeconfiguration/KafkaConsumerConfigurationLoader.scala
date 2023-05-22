@@ -8,7 +8,7 @@ import com.typesafe.config.{Config, ConfigFactory}
 import cats.effect.kernel.Async
 
 
-final class KafkaConsumerConfiguration[F[_]: Async] extends ConfigHeader[F, KafkaConfiguration]:
+private[typesafeconfiguration] class KafkaConsumerConfigurationLoader[F[_]: Async] extends ConfigHeader[F, KafkaConfiguration]:
 
   private val kafkaConfiguration: Config = ConfigFactory.load("kafka.conf").getConfig("KafkaConfiguration")
 
@@ -61,3 +61,5 @@ final class KafkaConsumerConfiguration[F[_]: Async] extends ConfigHeader[F, Kafk
       case  Right(value) => Async.apply.pure(value)
       case Left(throwable) => Async.apply.raiseError(throwable)
 
+object KafkaConsumerConfigurationLoader:
+  def apply[F[_]: Async]: KafkaConsumerConfigurationLoader[F] = new KafkaConsumerConfigurationLoader[F]
