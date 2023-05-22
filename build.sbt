@@ -63,11 +63,11 @@ lazy val `core-headers`: Project =
 // Layer 2
 
 // Common and Utils
-lazy val configuration: Project = (project in file("02-c-config"))
+lazy val configuration: Project = (project in file("02-c-config-ciris"))
   .dependsOn(`core-headers`)
   .settings(commonSettings)
   .settings(
-    name := "configuration",
+    name := "configuration-ciris",
     libraryDependencies ++= Seq(
       Libraries.ciris.ciris,
       Libraries.ciris.cirisRefined,
@@ -82,7 +82,7 @@ lazy val `configuration-typesafe`: Project = (project in file("02-c-config-types
   .dependsOn(`core-headers`)
   .settings(commonSettings)
   .settings(
-    name := "configuration",
+    name := "configuration-typelevel",
     libraryDependencies += "com.typesafe" % "config" % "1.4.2",
     libraryDependencies ++= Seq(
       Libraries.cats.effectKernel

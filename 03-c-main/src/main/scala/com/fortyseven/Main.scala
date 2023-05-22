@@ -18,7 +18,7 @@ package com.fortyseven
 
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
-import com.fortyseven.configuration.{DataGeneratorConfiguration, KafkaConsumerConfiguration}
+import com.fortyseven.cirisconfiguration.{DataGeneratorConfiguration, KafkaConsumerConfiguration}
 import com.fortyseven.core.codecs.iot.IotCodecs
 import com.fortyseven.datagenerator.DataGenerator
 import com.fortyseven.kafkaconsumer.KafkaConsumer
@@ -30,9 +30,9 @@ object Main extends IOApp.Simple:
   override def run: IO[Unit] = for
     logger      <- Slf4jLogger.create[IO]
     dataGenConf <- new DataGeneratorConfiguration[IO].load
-    _           <- logger.info(s"DataGeneratorConfiguration: $dataGenConf")
+    _           <- logger.info(s"com.fortyseven.configuration.DataGeneratorConfiguration: $dataGenConf")
     kafkaConf   <- new KafkaConsumerConfiguration[IO].load
-    _           <- logger.info(s"KafkaConsumerConfiguration: $kafkaConf")
+    _           <- logger.info(s"com.fortyseven.configuration.KafkaConsumerConfiguration: $kafkaConf")
     typelevelKafkaConf <- new com.fortyseven.typesafeconfiguration.KafkaConsumerConfigurationT[IO].load
     _ <- logger.info(s"Typelevel Config: \n $typelevelKafkaConf")
     _           <- logger.info("Start data generator")
