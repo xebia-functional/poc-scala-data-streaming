@@ -1,5 +1,3 @@
-package com.fortyseven.cirisconfiguration
-
 /*
  * Copyright 2023 Xebia Functional
  *
@@ -16,6 +14,10 @@ package com.fortyseven.cirisconfiguration
  * limitations under the License.
  */
 
+package com.fortyseven.cirisconfiguration
+
+import scala.concurrent.duration.*
+
 import cats.effect.kernel.Async
 import ciris.*
 import ciris.refined.*
@@ -26,8 +28,6 @@ import com.fortyseven.coreheaders.config.internal.KafkaConfig.*
 import com.fortyseven.coreheaders.config.internal.SchemaRegistryConfig.*
 import eu.timepit.refined.types.all.*
 import eu.timepit.refined.types.string.NonEmptyString
-
-import scala.concurrent.duration.*
 
 final class KafkaConsumerConfiguration[F[_]: Async] extends ConfigHeader[F, KafkaConsumerConfig]:
 

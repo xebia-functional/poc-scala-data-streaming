@@ -1,5 +1,3 @@
-package com.fortyseven.cirisconfiguration
-
 /*
  * Copyright 2023 Xebia Functional
  *
@@ -16,6 +14,10 @@ package com.fortyseven.cirisconfiguration
  * limitations under the License.
  */
 
+package com.fortyseven.cirisconfiguration
+
+import scala.concurrent.duration.*
+
 import cats.effect.kernel.Async
 import ciris.*
 import ciris.refined.*
@@ -28,8 +30,6 @@ import eu.timepit.refined.*
 import eu.timepit.refined.auto.*
 import eu.timepit.refined.types.all.*
 import eu.timepit.refined.types.string.NonEmptyString
-
-import scala.concurrent.duration.*
 
 final class DataGeneratorConfiguration[F[_]: Async] extends ConfigHeader[F, DataGeneratorConfig]:
 
