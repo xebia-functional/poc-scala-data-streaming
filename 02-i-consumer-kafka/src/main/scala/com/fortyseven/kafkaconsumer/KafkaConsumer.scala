@@ -17,6 +17,7 @@
 package com.fortyseven.kafkaconsumer
 
 import scala.concurrent.duration.*
+import scala.util.matching.Regex
 
 import org.apache.kafka.clients.producer.ProducerConfig
 
@@ -69,7 +70,7 @@ final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
     val stream =
       fs2.kafka.KafkaConsumer
         .stream(consumerSettings)
-        .subscribeTo(consumerConfig.topicName)
+        .subscribe(new Regex(s"${consumerConfig.topicName}-(.*)"))
         .records
         .mapAsync(consumerConfig.maxConcurrent) { committable =>
           processRecord(committable.record).map { case (key, value) =>

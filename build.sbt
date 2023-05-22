@@ -106,6 +106,7 @@ lazy val `data-generator`: Project = (project in file("02-i-data-generator"))
       Libraries.fs2.kafka,
       Libraries.kafka.kafkaClients,
       Libraries.cats.core,
+      Libraries.cats.effect,
       Libraries.cats.effectKernel,
       Libraries.avro.vulcan,
       Libraries.avro.avro,
