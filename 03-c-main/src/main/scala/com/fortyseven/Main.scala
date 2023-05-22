@@ -33,6 +33,8 @@ object Main extends IOApp.Simple:
     _           <- logger.info(s"DataGeneratorConfiguration: $dataGenConf")
     kafkaConf   <- new KafkaConsumerConfiguration[IO].load
     _           <- logger.info(s"KafkaConsumerConfiguration: $kafkaConf")
+    typelevelKafkaConf <- new com.fortyseven.typesafeconfiguration.KafkaConsumerConfigurationT[IO].load
+    _ <- logger.info(s"Typelevel Config: \n $typelevelKafkaConf")
     _           <- logger.info("Start data generator")
     fiber1      <- new DataGenerator[IO].generate(DataGeneratorConfiguration[IO]).start
     _           <- logger.info("Start kafka consumer")

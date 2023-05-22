@@ -38,6 +38,7 @@ lazy val `poc-scala-data-streaming`: Project =
       // Layer 2
       // Common and Utils
       configuration,
+      `configuration-typesafe`,
       core,
       `data-generator`,
       // Input
@@ -187,6 +188,7 @@ lazy val main: Project =
   project
     .in(file("03-c-main"))
     .dependsOn(configuration % Cctt)
+    .dependsOn(`configuration-typesafe` % Cctt)
     .dependsOn(core % Cctt)
     .dependsOn(`consumer-kafka` % Cctt)
     .dependsOn(`data-generator` % Cctt)

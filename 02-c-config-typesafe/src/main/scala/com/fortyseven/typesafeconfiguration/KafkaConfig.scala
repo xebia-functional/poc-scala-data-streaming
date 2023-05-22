@@ -31,24 +31,24 @@ object KafkaConfig:
 
   
   
-  final case class KafkaConf(
-    broker: BrokerConf,
-    consumer: Option[ConsumerConf],
-    producer: Option[ProducerConf]
+  final case class KafkaConfiguration(
+    broker: BrokerConfiguration,
+    consumer: ConsumerConfiguration,
+    producer: ProducerConfiguration
   )
 
-  final case class BrokerConf(
+  final case class BrokerConfiguration(
     brokerAddress: NonEmptyString
   )
 
-  final case class ConsumerConf(
+  final case class ConsumerConfiguration(
     topicName: NonEmptyString,
     autoOffsetReset: NonEmptyString,
     groupId: NonEmptyString,
     maxConcurrent: PositiveInt
   )
 
-  final case class ProducerConf(
+  final case class ProducerConfiguration(
     topicName: NonEmptyString,
     valueSerializerClass: NonEmptyString,
     maxConcurrent: PositiveInt,
