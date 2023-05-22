@@ -46,8 +46,8 @@ final class DataGenerator[F[_]: Async] extends DataGeneratorHeader[F]:
 
     val producerSettings = ProducerSettings[F, String, Array[Byte]]
       .withBootstrapServers(dgc.kafkaConf.broker.brokerAddress)
-      .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, producerConfig.compressionType)
       .withProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, producerConfig.valueSerializerClass)
+      .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, producerConfig.compressionType)
 
     val pneumaticPressureSerializer = avroSerializer[PneumaticPressure](
       Config(dgc.schemaRegistryConf.schemaRegistryUrl),
