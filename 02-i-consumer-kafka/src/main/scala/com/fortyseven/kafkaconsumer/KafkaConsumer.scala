@@ -32,7 +32,7 @@ final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
 
   extension (cc: ConsumerConf)
 
-    def autoOffsetResetAsKafka: AutoOffsetReset = cc.autoOffsetReset match
+    private def autoOffsetResetAsKafka: AutoOffsetReset = cc.autoOffsetReset match
       case "Earliest" => AutoOffsetReset.Earliest
       case "Latest"   => AutoOffsetReset.Latest
       case "None" | _ => AutoOffsetReset.None
@@ -52,19 +52,20 @@ final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
       throw new RuntimeException("No consumer config available")
     )
 
-    def processRecord(record: ConsumerRecord[String, String]): F[(String, String)] =
+    def processRecord(record: ConsumerRecord[String, Array[Byte]]): F[(String, Array[Byte])] =
       Applicative[F].pure(record.key -> record.value)
 
     val consumerSettings =
-      ConsumerSettings[F, String, String]
+      ConsumerSettings[F, String, Array[Byte]]
         .withAutoOffsetReset(consumerConfig.autoOffsetResetAsKafka)
         .withBootstrapServers(kc.kafkaConf.broker.brokerAddress)
         .withGroupId(consumerConfig.groupId)
 
     val producerSettings =
-      ProducerSettings[F, String, String]
+      ProducerSettings[F, String, Array[Byte]]
         .withBootstrapServers(kc.kafkaConf.broker.brokerAddress)
         .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, producerConfig.compressionType)
+        .withProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, producerConfig.valueSerializerClass)
 
     val stream =
       fs2.kafka.KafkaConsumer
