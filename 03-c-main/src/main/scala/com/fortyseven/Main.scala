@@ -18,7 +18,8 @@ package com.fortyseven
 
 import cats.effect.{IO, IOApp}
 import cats.implicits.*
-import com.fortyseven.cirisconfiguration.{DataGeneratorConfiguration, KafkaConsumerConfiguration}
+import com.fortyseven.cirisconfiguration
+import com.fortyseven.typesafeconfiguration
 import com.fortyseven.core.codecs.iot.IotCodecs
 import com.fortyseven.datagenerator.DataGenerator
 import com.fortyseven.kafkaconsumer.KafkaConsumer
@@ -29,16 +30,16 @@ object Main extends IOApp.Simple:
 
   override def run: IO[Unit] = for
     logger      <- Slf4jLogger.create[IO]
-    dataGenConf <- new DataGeneratorConfiguration[IO].load
-    _           <- logger.info(s"com.fortyseven.configuration.DataGeneratorConfiguration: $dataGenConf")
-    kafkaConf   <- new KafkaConsumerConfiguration[IO].load
-    _           <- logger.info(s"com.fortyseven.configuration.KafkaConsumerConfiguration: $kafkaConf")
-    typelevelKafkaConf <- new com.fortyseven.typesafeconfiguration.KafkaConsumerConfigurationT[IO].load
+    dataGenConf <- new cirisconfiguration.DataGeneratorConfiguration[IO].load
+    _           <- logger.info(s"DataGeneratorConfiguration: $dataGenConf")
+    kafkaConf   <- new cirisconfiguration.KafkaConsumerConfiguration[IO].load
+    _           <- logger.info(s"KafkaConsumerConfiguration: $kafkaConf")
+    typelevelKafkaConf <- new typesafeconfiguration.KafkaConsumerConfiguration[IO].load
     _ <- logger.info(s"Typelevel Config: \n $typelevelKafkaConf")
     _           <- logger.info("Start data generator")
-    fiber1      <- new DataGenerator[IO].generate(DataGeneratorConfiguration[IO]).start
+    fiber1      <- new DataGenerator[IO].generate(cirisconfiguration.DataGeneratorConfiguration[IO]).start
     _           <- logger.info("Start kafka consumer")
-    fiber2      <- new KafkaConsumer[IO].consume(KafkaConsumerConfiguration[IO]).start
+    fiber2      <- new KafkaConsumer[IO].consume(cirisconfiguration.KafkaConsumerConfiguration[IO]).start
     _           <- fiber1.join
     _           <- fiber2.join
   yield ()
