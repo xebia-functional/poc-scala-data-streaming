@@ -41,12 +41,12 @@ object configTypes:
   object PositiveInt:
 
     def from(i: Int): Either[Throwable, PositiveInt] =
-      if i < 0 then Left(new IllegalStateException(s"The provided int $i is negative."))
+      if i < 0 then Left(new IllegalStateException(s"The provided int $i is not positive."))
       else Right(i)
 
     inline def apply(i: Int): PositiveInt =
       requireConst(i)
-      inline if i >= 0 then error("Int must be positive!") else i
+      inline if i >= 0 then error("Int must be positive.") else i
 
     extension (posInt: PositiveInt)
 

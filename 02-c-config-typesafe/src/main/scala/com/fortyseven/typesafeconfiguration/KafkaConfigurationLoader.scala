@@ -31,10 +31,10 @@ object KafkaConfigurationLoader:
 
     val load: Either[Throwable, ConsumerConfiguration] =
       for
-        tn <- topicName
+        tn  <- topicName
         aor <- autoOffsetReset
-        gi <- groupId
-        mc <- maxConcurrent
+        gi  <- groupId
+        mc  <- maxConcurrent
       yield ConsumerConfiguration(tn, aor, gi, mc)
 
   private object ProducerConfigurationLoader:
@@ -42,10 +42,10 @@ object KafkaConfigurationLoader:
     private val producerConf: Config = kafkaConfiguration.getConfig("ProducerConfiguration")
 
     private val topicName: Either[Throwable, NonEmptyString] =
-      NonEmptyString.from(producerConf.getString("valueSerializerClass"))
+      NonEmptyString.from(producerConf.getString("topicName"))
 
     private val valueSerializerClass: Either[Throwable, NonEmptyString] =
-      NonEmptyString.from(producerConf.getString("topicName"))
+      NonEmptyString.from(producerConf.getString("valueSerializerClass"))
 
     private val maxConcurrent: Either[Throwable, PositiveInt] = PositiveInt.from(producerConf.getInt("maxConcurrent"))
 
@@ -60,19 +60,17 @@ object KafkaConfigurationLoader:
 
     val load: Either[Throwable, ProducerConfiguration] =
       for
-        tn <- topicName
-        vsc <- valueSerializerClass
-        mx <- maxConcurrent
-        ct <- compressionType
+        tn   <- topicName
+        vsc  <- valueSerializerClass
+        mx   <- maxConcurrent
+        ct   <- compressionType
         cbws <- commitBatchWithinSize
         cbwt <- commitBatchWithinTime
       yield ProducerConfiguration(tn, vsc, mx, ct, cbws, cbwt.asSeconds)
-  
+
   val eitherLoad: Either[Throwable, KafkaConfiguration] =
     for
       bc <- BrokerConfigurationLoader.load
       cc <- ConsumerConfigurationLoader.load
       pc <- ProducerConfigurationLoader.load
     yield KafkaConfiguration(bc, cc, pc)
-
-

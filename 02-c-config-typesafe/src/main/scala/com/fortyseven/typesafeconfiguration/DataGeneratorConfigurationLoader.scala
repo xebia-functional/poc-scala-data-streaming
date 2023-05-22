@@ -21,19 +21,20 @@ import com.fortyseven.coreheaders.ConfigHeader
 import com.fortyseven.typesafeconfiguration.configTypes.*
 import com.typesafe.config.{Config, ConfigFactory}
 
-private [typesafeconfiguration] final class DataGeneratorConfigurationLoader[F[_]: Async] extends ConfigHeader[F, DataGeneratorConfiguration]:
-  
+private[typesafeconfiguration] final class DataGeneratorConfigurationLoader[F[_]: Async]
+    extends ConfigHeader[F, DataGeneratorConfiguration]:
+
   override def load: F[DataGeneratorConfiguration] =
     val eitherLoad: Either[Throwable, DataGeneratorConfiguration] =
       for
-        kc <- KafkaConfigurationLoader.eitherLoad
+        kc  <- KafkaConfigurationLoader.eitherLoad
         src <- SchemaRegistryConfigurationLoader.eitherLoad
       yield DataGeneratorConfiguration(kc, src)
 
     eitherLoad match
-      case  Right(value) => Async.apply.pure(value)
+      case Right(value)    => Async.apply.pure(value)
       case Left(throwable) => Async.apply.raiseError(throwable)
 
 object DataGeneratorConfigurationLoader:
-  
+
   def apply[F[_]: Async]: DataGeneratorConfigurationLoader[F] = new DataGeneratorConfigurationLoader[F]

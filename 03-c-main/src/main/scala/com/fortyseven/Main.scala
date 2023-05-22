@@ -29,19 +29,19 @@ import vulcan.Codec
 object Main extends IOApp.Simple:
 
   override def run: IO[Unit] = for
-    logger             <- Slf4jLogger.create[IO]
-    dataGenConf        <- new cirisconfiguration.DataGeneratorConfiguration[IO].load
-    _                  <- logger.info(s"DataGeneratorConfiguration: $dataGenConf")
-    kafkaConf          <- new cirisconfiguration.KafkaConsumerConfiguration[IO].load
-    _                  <- logger.info(s"KafkaConsumerConfiguration: $kafkaConf")
-    typelevelKafkaConf <- KafkaConsumerConfigurationLoader[IO].load
-    _                  <- logger.info(s"Typelevel Kafka Config: \n $typelevelKafkaConf")
+    logger               <- Slf4jLogger.create[IO]
+    dataGenConf          <- new cirisconfiguration.DataGeneratorConfiguration[IO].load
+    _                    <- logger.info(s"DataGeneratorConfiguration: $dataGenConf")
+    kafkaConf            <- new cirisconfiguration.KafkaConsumerConfiguration[IO].load
+    _                    <- logger.info(s"KafkaConsumerConfiguration: $kafkaConf")
+    typelevelKafkaConf   <- KafkaConsumerConfigurationLoader[IO].load
+    _                    <- logger.info(s"Typelevel Kafka Config: \n $typelevelKafkaConf")
     typelevelDataGenConf <- DataGeneratorConfigurationLoader[IO].load
-    _ <- logger.info(s"Typelevel DataGen Config: \n $typelevelDataGenConf")
-    _                  <- logger.info("Start data generator")
-    fiber1             <- new DataGenerator[IO].generate(cirisconfiguration.DataGeneratorConfiguration[IO]).start
-    _                  <- logger.info("Start kafka consumer")
-    fiber2             <- new KafkaConsumer[IO].consume(cirisconfiguration.KafkaConsumerConfiguration[IO]).start
-    _                  <- fiber1.join
-    _                  <- fiber2.join
+    _                    <- logger.info(s"Typelevel DataGen Config: \n $typelevelDataGenConf")
+    _                    <- logger.info("Start data generator")
+    fiber1               <- new DataGenerator[IO].generate(cirisconfiguration.DataGeneratorConfiguration[IO]).start
+    _                    <- logger.info("Start kafka consumer")
+    fiber2               <- new KafkaConsumer[IO].consume(cirisconfiguration.KafkaConsumerConfiguration[IO]).start
+    _                    <- fiber1.join
+    _                    <- fiber2.join
   yield ()
