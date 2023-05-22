@@ -30,27 +30,27 @@ private[typesafeconfiguration] class KafkaConsumerConfigurationLoader[F[_]: Asyn
 
   private object BrokerConfigurationLoader:
 
-    private val brokerConf: Config                               = kafkaConfiguration.getConfig("BrokerConfiguration")
+    private val brokerConf: Config = kafkaConfiguration.getConfig("BrokerConfiguration")
 
     private val brokerAddress: Either[Throwable, NonEmptyString] =
       NonEmptyString.from(brokerConf.getString("brokerAddress"))
 
-    val load: Either[Throwable, BrokerConfiguration]             = for ba <- brokerAddress yield BrokerConfiguration(ba)
+    val load: Either[Throwable, BrokerConfiguration] = for ba <- brokerAddress yield BrokerConfiguration(ba)
 
   private object ConsumerConfigurationLoader:
 
-    private val consumerConf                                       = kafkaConfiguration.getConfig("ConsumerConfiguration")
+    private val consumerConf = kafkaConfiguration.getConfig("ConsumerConfiguration")
 
-    private val topicName: Either[Throwable, NonEmptyString]       = NonEmptyString.from(consumerConf.getString("topicName"))
+    private val topicName: Either[Throwable, NonEmptyString] = NonEmptyString.from(consumerConf.getString("topicName"))
 
     private val autoOffsetReset: Either[Throwable, NonEmptyString] =
       NonEmptyString.from(consumerConf.getString("autoOffsetReset"))
 
-    private val groupId: Either[Throwable, NonEmptyString]         = NonEmptyString.from(consumerConf.getString("groupId"))
+    private val groupId: Either[Throwable, NonEmptyString] = NonEmptyString.from(consumerConf.getString("groupId"))
 
-    private val maxConcurrent: Either[Throwable, PositiveInt]      = PositiveInt.from(consumerConf.getInt("maxConcurrent"))
+    private val maxConcurrent: Either[Throwable, PositiveInt] = PositiveInt.from(consumerConf.getInt("maxConcurrent"))
 
-    val load: Either[Throwable, ConsumerConfiguration]             =
+    val load: Either[Throwable, ConsumerConfiguration] =
       for
         tn  <- topicName
         aor <- autoOffsetReset
@@ -60,26 +60,26 @@ private[typesafeconfiguration] class KafkaConsumerConfigurationLoader[F[_]: Asyn
 
   private object ProducerConfigurationLoader:
 
-    private val producerConf: Config                                    = kafkaConfiguration.getConfig("ProducerConfiguration")
+    private val producerConf: Config = kafkaConfiguration.getConfig("ProducerConfiguration")
 
-    private val topicName: Either[Throwable, NonEmptyString]            =
+    private val topicName: Either[Throwable, NonEmptyString] =
       NonEmptyString.from(producerConf.getString("valueSerializerClass"))
 
     private val valueSerializerClass: Either[Throwable, NonEmptyString] =
       NonEmptyString.from(producerConf.getString("topicName"))
 
-    private val maxConcurrent: Either[Throwable, PositiveInt]           = PositiveInt.from(producerConf.getInt("maxConcurrent"))
+    private val maxConcurrent: Either[Throwable, PositiveInt] = PositiveInt.from(producerConf.getInt("maxConcurrent"))
 
-    private val compressionType: Either[Throwable, NonEmptyString]      =
+    private val compressionType: Either[Throwable, NonEmptyString] =
       NonEmptyString.from(producerConf.getString("compressionType"))
 
-    private val commitBatchWithinSize: Either[Throwable, PositiveInt]   =
+    private val commitBatchWithinSize: Either[Throwable, PositiveInt] =
       PositiveInt.from(producerConf.getInt("commitBatchWithinSize"))
 
-    private val commitBatchWithinTime: Either[Throwable, PositiveInt]   =
+    private val commitBatchWithinTime: Either[Throwable, PositiveInt] =
       PositiveInt.from(producerConf.getInt("commitBatchWithinTime"))
 
-    val load: Either[Throwable, ProducerConfiguration]                  =
+    val load: Either[Throwable, ProducerConfiguration] =
       for
         tn   <- topicName
         vsc  <- valueSerializerClass
@@ -87,7 +87,7 @@ private[typesafeconfiguration] class KafkaConsumerConfigurationLoader[F[_]: Asyn
         ct   <- compressionType
         cbws <- commitBatchWithinSize
         cbwt <- commitBatchWithinTime
-      yield ProducerConfiguration(tn, vsc, mx, ct, cbws, FiniteDuration.apply(cbwt.asInt, "seconds"))
+      yield ProducerConfiguration(tn, vsc, mx, ct, cbws, cbwt.asSeconds)
 
   override def load: F[KafkaConfiguration] =
     val eitherLoad: Either[Throwable, KafkaConfiguration] =

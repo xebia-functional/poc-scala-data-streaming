@@ -30,11 +30,11 @@ object KafkaConfig:
       if s.trim.isEmpty then Left(new IllegalStateException(s"The provided string $s is empty."))
       else Right(s)
 
-    inline def apply(s: String): NonEmptyString            =
+    inline def apply(s: String): NonEmptyString =
       requireConst(s)
       inline if s == "" then error("Empty String is not allowed here!") else s
 
-    extension (nes: NonEmptyString) def asString: String   = nes
+    extension (nes: NonEmptyString) def asString: String = nes
 
   opaque type PositiveInt = Int
 
@@ -44,11 +44,15 @@ object KafkaConfig:
       if i < 0 then Left(new IllegalStateException(s"The provided int $i is negative."))
       else Right(i)
 
-    inline def apply(i: Int): PositiveInt            =
+    inline def apply(i: Int): PositiveInt =
       requireConst(i)
       inline if i >= 0 then error("Int must be positive!") else i
 
-    extension (posInt: PositiveInt) def asInt: Int   = posInt
+    extension (posInt: PositiveInt)
+
+      def asInt: Int                = posInt
+
+      def asSeconds: FiniteDuration = FiniteDuration.apply(posInt.asInt, "seconds")
 
   final case class KafkaConfiguration(
       broker: BrokerConfiguration,
