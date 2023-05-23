@@ -32,7 +32,7 @@ object configTypes:
 
     inline def apply(s: String): NonEmptyString =
       requireConst(s)
-      inline if s == "" then error("Empty String is not allowed here!") else s
+      inline if s == "" then error("Empty String is not allowed here.") else s
 
     extension (nes: NonEmptyString) def asString: String = nes
 
