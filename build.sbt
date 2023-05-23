@@ -119,14 +119,17 @@ lazy val `data-generator`: Project = (project in file("02-i-data-generator"))
       Libraries.fs2.kafka,
       Libraries.kafka.kafkaClients,
       Libraries.cats.core,
+      Libraries.cats.effect,
       Libraries.cats.effectKernel,
       Libraries.avro.vulcan,
       Libraries.avro.avro,
       Libraries.kafka.kafkaSchemaRegistry,
       Libraries.kafka.kafkaSchemaSerializer,
       Libraries.kafka.kafkaSerializer,
-      Libraries.test.munitCatsEffect,
-      Libraries.logging.catsSlf4j % Test
+      Libraries.logging.catsCore,
+      Libraries.logging.catsSlf4j,
+      Libraries.logging.logback,
+      Libraries.test.munitCatsEffect
     )
   )
 
@@ -143,7 +146,10 @@ lazy val `consumer-kafka`: Project =
         Libraries.kafka.kafkaClients,
         Libraries.fs2.kafka,
         Libraries.fs2.core,
-        Libraries.fs2.kafkaVulcan
+        Libraries.fs2.kafkaVulcan,
+        Libraries.logging.catsCore,
+        Libraries.logging.catsSlf4j,
+        Libraries.logging.logback
       )
     )
 
@@ -152,18 +158,27 @@ lazy val `processor-flink`: Project =
   project
     .in(file("02-o-processor-flink"))
     .dependsOn(`core-headers` % Cctt)
+    .dependsOn(core % Cctt) // This should be avoided
     .settings(commonSettings)
     .settings(
       name := "processor-flink",
       libraryDependencies ++= Seq(
+        Libraries.avro.avro,
+        Libraries.avro.vulcan,
         Libraries.cats.core,
-        Libraries.cats.effectKernel,
         Libraries.cats.effect,
-        Libraries.flink.core,
-        Libraries.flink.streaming,
+        Libraries.cats.effectKernel,
+        Libraries.flink.avro,
+        Libraries.flink.avroConfluent,
         Libraries.flink.clients,
+        Libraries.flink.core,
         Libraries.flink.kafka,
-        Libraries.fs2.kafkaVulcan
+        Libraries.flink.streaming,
+        Libraries.fs2.kafkaVulcan,
+        Libraries.kafka.kafkaClients,
+        Libraries.logging.catsCore,
+        Libraries.logging.catsSlf4j,
+        Libraries.logging.logback
       )
     )
 
@@ -177,9 +192,10 @@ lazy val `processor-flink-integration`: Project =
       libraryDependencies ++= Seq(
         Libraries.testContainers.kafka,
         Libraries.testContainers.munit,
-        Libraries.test.munitCatsEffect,
-        Libraries.logging.catsSlf4j % Test,
-        Libraries.cats.effect % Test
+        Libraries.logging.catsCore,
+        Libraries.logging.catsSlf4j,
+        Libraries.logging.logback,
+        Libraries.test.munitCatsEffect
       )
     )
 
@@ -201,9 +217,9 @@ lazy val main: Project =
         Libraries.cats.core,
         Libraries.cats.effect,
         Libraries.cats.effectKernel,
-        Libraries.logging.logback,
+        Libraries.logging.catsCore,
         Libraries.logging.catsSlf4j,
-        Libraries.logging.catsCore
+        Libraries.logging.logback
       )
     )
 
@@ -219,4 +235,3 @@ lazy val commonScalacOptions = Seq(
   ),
   Test / console / scalacOptions := (Compile / console / scalacOptions).value
 )
-

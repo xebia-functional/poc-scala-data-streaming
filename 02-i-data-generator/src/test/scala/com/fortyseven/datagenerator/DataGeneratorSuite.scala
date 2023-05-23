@@ -16,8 +16,11 @@
 
 package com.fortyseven.datagenerator
 
-import cats.effect.IO
+import scala.concurrent.duration.*
+
+import cats.effect.{IO, Temporal}
 import cats.implicits.*
+import cats.effect.syntax.temporal.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.*
 import org.scalacheck.effect.PropF
@@ -26,7 +29,7 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 class DataGeneratorSuite extends CatsEffectSuite with ScalaCheckEffectSuite:
 
-  private val dataGenerator = new ModelGenerators[IO]
+  private val dataGenerator = new ModelGenerators[IO](1.millisecond)
 
   test("generateGPSPosition") {
     PropF.forAllF(Gen.choose(1, 20)) { (sampleSize: Int) =>

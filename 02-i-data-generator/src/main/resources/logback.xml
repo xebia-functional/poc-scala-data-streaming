@@ -6,10 +6,6 @@
         </encoder>
     </appender>
 
-    <logger name="io.confluent.kafka" level="ERROR" />
-    <logger name="org.apache.flink" level="ERROR" />
-    <logger name="org.apache.kafka" level="ERROR" />
-
     <root level="INFO">
         <appender-ref ref="stdout"/>
     </root>

@@ -75,7 +75,7 @@ onLoadMessage +=
       |│ ${styled("styleFix")}    │ scala fix & fmt             │
       || ${styled("explicit")}    | transitive dependency check |
       |│ ${styled("up2date")}     │ dependency updates          │
-      |│ ${styled("coverage")}    │ coverage report             │
+      |│ ${styled("runCoverage")} │ coverage report             │
       |│ ${styled("flinkIT")}     │ run flink integration tests │
       |│ ${styled("runMain")}     │ run main (entry-point)      │
       |╰─────────────┴─────────────────────────────╯""".stripMargin
