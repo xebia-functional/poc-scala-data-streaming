@@ -16,61 +16,25 @@
 
 package com.fortyseven.processor.flink
 
-import org.apache.flink.api.common.eventtime.WatermarkStrategy
-import org.apache.flink.api.common.serialization.SimpleStringSchema
-import org.apache.flink.connector.kafka.sink.{KafkaRecordSerializationSchema, KafkaSink}
-import org.apache.flink.connector.kafka.source.KafkaSource
-import org.apache.flink.connector.kafka.source.enumerator.initializer.OffsetsInitializer
-import org.apache.flink.core.execution.JobClient
-import org.apache.flink.streaming.api.environment.{LocalStreamEnvironment, StreamExecutionEnvironment}
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
 
-import cats.effect.*
+import cats.*
+import cats.effect.kernel.Async
 import cats.implicits.*
+import com.fortyseven.coreheaders.config.{JobProcessorConfig, KafkaConsumerConfig}
+import com.fortyseven.coreheaders.{ConfigHeader, JobProcessorHeader}
 
-object DataProcessor extends IOApp.Simple:
+class DataProcessor[F[_]: Async] extends JobProcessorHeader[F]:
 
-  override def run: IO[Unit] =
-    val env              = StreamExecutionEnvironment.getExecutionEnvironment()
-    val bootstrapServers = "localhost:9092"
-    val sourceTopic      = "input-topic"
-    val sinkTopic        = "output-topic"
-    new DataProcessor(env).run(bootstrapServers, sourceTopic, sinkTopic).void
+  override def process(conf: ConfigHeader[F, JobProcessorConfig]): F[Unit] = for
+    kc <- conf.load
+    _  <- runWithConfiguration(kc)
+  yield ()
 
-  def runLocal(bootstrapServers: String, sourceTopic: String, sinkTopic: String): IO[Unit] =
-    val env = StreamExecutionEnvironment.createLocalEnvironment()
-    new DataProcessor(env).run(bootstrapServers, sourceTopic, sinkTopic).void
-
-final private class DataProcessor(env: StreamExecutionEnvironment):
-
-  private def run(bootstrapServers: String, sourceTopic: String, sinkTopic: String): IO[JobClient] =
+  private def runWithConfiguration(jpc: JobProcessorConfig): F[Unit] =
+    val env = StreamExecutionEnvironment.getExecutionEnvironment()
 
     env.setParallelism(Runtime.getRuntime.availableProcessors())
+    env.getConfig.enableForceAvro()
 
-    val kafkaSource = KafkaSource
-      .builder()
-      .setBootstrapServers(bootstrapServers)
-      .setTopics(sourceTopic)
-      .setGroupId("group1")
-      .setStartingOffsets(OffsetsInitializer.earliest())
-      .setValueOnlyDeserializer(new SimpleStringSchema())
-      .build()
-
-    val kafkaSink = KafkaSink
-      .builder()
-      .setBootstrapServers(bootstrapServers)
-      .setRecordSerializer(
-        KafkaRecordSerializationSchema
-          .builder()
-          .setTopic(sinkTopic)
-          .setKeySerializationSchema(new SimpleStringSchema())
-          .setValueSerializationSchema(new SimpleStringSchema())
-          .build()
-      )
-      .build()
-
-    env
-      .fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "kafka-source")
-      .map(_.replace("sensorId", "id")) // Basic transformation logic for now
-      .sinkTo(kafkaSink)
-
-    env.executeAsync("Flink Streaming").pure
+    new FlinkDataProcessor(env).run(jpc).void

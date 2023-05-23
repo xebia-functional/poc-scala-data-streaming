@@ -73,8 +73,11 @@ final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
         .subscribe(new Regex(s"${consumerConfig.topicName}-(.*)"))
         .records
         .mapAsync(consumerConfig.maxConcurrent) { committable =>
+          def addTopicPrefix(sourceTopic: String, targetTopic: String): String =
+            val suffix = sourceTopic.substring(sourceTopic.lastIndexOf("-"))
+            s"$targetTopic$suffix"
           processRecord(committable.record).map { case (key, value) =>
-            val record = ProducerRecord(producerConfig.topicName, key, value)
+            val record = ProducerRecord(addTopicPrefix(committable.record.topic, producerConfig.topicName), key, value)
             committable.offset -> ProducerRecords.one(record)
           }
         }.through { offsetsAndProducerRecords =>

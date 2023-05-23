@@ -17,5 +17,6 @@
 package com.fortyseven.coreheaders.config
 
 import com.fortyseven.coreheaders.config.internal.KafkaConfig.KafkaConf
+import com.fortyseven.coreheaders.config.internal.SchemaRegistryConfig.SchemaRegistryConf
 
-final case class JobProcessorConfig(kafkaConf: KafkaConf)
+final case class JobProcessorConfig(kafkaConf: KafkaConf, schemaRegistryConf: SchemaRegistryConf)

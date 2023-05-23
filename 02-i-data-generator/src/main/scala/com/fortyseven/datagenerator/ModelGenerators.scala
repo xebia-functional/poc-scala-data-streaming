@@ -24,7 +24,7 @@ import com.fortyseven.coreheaders.model.iot.model.*
 import com.fortyseven.coreheaders.model.iot.types.*
 import fs2.Stream
 
-class ModelGenerators[F[_]: Temporal]:
+class ModelGenerators[F[_]: Temporal](meteredInterval: FiniteDuration):
 
   def generateBatteryCharge: fs2.Stream[F, BatteryCharge] = ???
 
@@ -36,7 +36,7 @@ class ModelGenerators[F[_]: Temporal]:
 
       (Latitude(getValue(latValue)), Longitude(getValue(lonValue))) match
         case (Right(lat), Right(lon)) =>
-          fs2.Stream.emit(GPSPosition(lat, lon)).metered(100.milliseconds) ++ emitLoop(lat, lon)
+          fs2.Stream.emit(GPSPosition(lat, lon)).metered(meteredInterval) ++ emitLoop(lat, lon)
         case _                        => emitLoop(latValue, lonValue)
 
     emitLoop(latValue = 2.0, lonValue = 2.0)
@@ -45,7 +45,7 @@ class ModelGenerators[F[_]: Temporal]:
 
     def emitLoop(pValue: Double): fs2.Stream[F, PneumaticPressure] =
       Bar(pValue - math.random() * 1e-3) match
-        case Right(p) => fs2.Stream.emit(PneumaticPressure(p)).metered(100.milliseconds) ++ emitLoop(p)
+        case Right(p) => fs2.Stream.emit(PneumaticPressure(p)).metered(meteredInterval) ++ emitLoop(p)
         case _        => emitLoop(pValue)
 
     emitLoop(pValue = 2.0)
