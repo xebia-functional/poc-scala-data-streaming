@@ -70,7 +70,7 @@ class DataProcessorSuite extends CatsEffectSuite with TestContainersForAll:
         _      <- KafkaUtils.produce[IO](bootstrapServers, sourceTopic, "key2", "sensorId2")
         _      <- KafkaUtils.produce[IO](bootstrapServers, sourceTopic, "key1", "id3")
         _      <- logger.debug("Start flink in background")
-        process = DataProcessor.runLocal(s"localhost:$kafkaExternalPort", sourceTopic, sinkTopic)
+        process = DataProcessorIntegrationTest.runLocal(s"localhost:$kafkaExternalPort", sourceTopic, sinkTopic)
         fiber  <- IO.blocking(process).background.use { _.start }
         _      <- fiber.join
         _      <- logger.warn("Wait 20 seconds for Flink to process")

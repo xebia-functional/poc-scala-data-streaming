@@ -16,6 +16,8 @@
 
 package com.fortyseven.datagenerator
 
+import scala.concurrent.duration.*
+
 import org.apache.kafka.clients.producer.ProducerConfig
 
 import cats.Parallel
@@ -39,7 +41,7 @@ final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorHeader[F]:
 
     import VulcanSerdes.*
 
-    val generators = new ModelGenerators[F]
+    val generators = new ModelGenerators[F](100.milliseconds)
 
     val producerConfig = dgc.kafkaConf.producer.getOrElse(
       throw new RuntimeException("No producer config available")

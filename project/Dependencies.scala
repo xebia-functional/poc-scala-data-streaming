@@ -58,6 +58,8 @@ object Dependencies {
 
     object flink {
       private val version: String = "1.17.0"
+      val avro: ModuleID = "org.apache.flink" % "flink-avro" % version
+      val avroConfluent: ModuleID = "org.apache.flink" % "flink-avro-confluent-registry" % version
       val core: ModuleID = "org.apache.flink" % "flink-core" % version
       val clients: ModuleID = "org.apache.flink" % "flink-clients" % version
       val kafka: ModuleID = "org.apache.flink" % "flink-connector-kafka" % "3.0.0-1.17"
@@ -75,7 +77,7 @@ object Dependencies {
       private val logbackVersion: String = "1.4.7"
       val catsCore: ModuleID = "org.typelevel" %% "log4cats-core" % catsVersion
       val catsSlf4j: ModuleID = "org.typelevel" %% "log4cats-slf4j" % catsVersion
-      val logback: ModuleID = "ch.qos.logback" % "logback-classic" % logbackVersion
+      val logback: ModuleID = "ch.qos.logback" % "logback-classic" % logbackVersion % Runtime
     }
 
     object test {
