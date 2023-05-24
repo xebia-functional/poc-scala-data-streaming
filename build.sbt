@@ -45,6 +45,7 @@ lazy val `poc-scala-data-streaming`: Project =
       `consumer-kafka`,
       // Output
       `processor-flink`,
+      `processor-spark`,
       // Layer 3
       main
     )
@@ -196,12 +197,17 @@ lazy val `processor-spark`: Project = project.in(file("02-o-processor-spark"))
   .settings(
     name := "processor-spark",
     libraryDependencies ++= Seq(
+      Libraries.spark.catalyst,
       Libraries.spark.core,
       Libraries.spark.sql,
-      Libraries.spark.streaming,
-      Libraries.logging.logback,
-      Libraries.logging.catsSlf4j
-    )
+      Libraries.spark.streaming
+    ).map(_.cross(CrossVersion.for3Use2_13)),
+    Compile / run := Defaults.runTask(
+      Compile / fullClasspath,
+      Compile / run / mainClass,
+      Compile / run / runner
+    ).evaluated,
+    javacOptions ++= Seq("-source", "17", "-target", "17")
   )
 
 // Layer 3
@@ -214,6 +220,7 @@ lazy val main: Project =
     .dependsOn(`consumer-kafka` % Cctt)
     .dependsOn(`data-generator` % Cctt)
     .dependsOn(`processor-flink` % Cctt)
+    .dependsOn(`processor-spark` % Cctt)
     .settings(commonSettings)
     .settings(
       name := "main",
