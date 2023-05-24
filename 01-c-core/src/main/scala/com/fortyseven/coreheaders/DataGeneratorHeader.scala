@@ -16,10 +16,10 @@
 
 package com.fortyseven.coreheaders
 
-import com.fortyseven.coreheaders.config.DataGeneratorConfig
+import com.fortyseven.coreheaders.configuration.DataGeneratorConfiguration
 import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
 
 trait DataGeneratorHeader[F[_]]:
 
-  def generate(config: ConfigHeader[F, DataGeneratorConfig]): F[Unit]
+  def generate(config: ConfigurationLoaderHeader[F, DataGeneratorConfiguration]): F[Unit]

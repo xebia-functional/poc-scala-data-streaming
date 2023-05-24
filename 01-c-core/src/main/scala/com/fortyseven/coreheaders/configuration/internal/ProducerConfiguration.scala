@@ -14,23 +14,17 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.config.internal
+package com.fortyseven.coreheaders.configuration.internal
 
 import scala.concurrent.duration.FiniteDuration
 
-object KafkaConfig:
+import com.fortyseven.coreheaders.configuration.internal.types.*
 
-  final case class KafkaConf(broker: BrokerConf, consumer: Option[ConsumerConf], producer: Option[ProducerConf])
-
-  final case class BrokerConf(brokerAddress: String)
-
-  final case class ConsumerConf(topicName: String, autoOffsetReset: String, groupId: String, maxConcurrent: Int)
-
-  final case class ProducerConf(
-      topicName: String,
-      valueSerializerClass: String,
-      maxConcurrent: Int,
-      compressionType: String,
-      commitBatchWithinSize: Int,
-      commitBatchWithinTime: FiniteDuration
-    )
+final case class ProducerConfiguration(
+    topicName: NonEmptyString,
+    valueSerializerClass: NonEmptyString,
+    maxConcurrent: PositiveInt,
+    compressionType: KafkaCompressionType,
+    commitBatchWithinSize: PositiveInt,
+    commitBatchWithinTime: FiniteDuration
+  )

@@ -24,32 +24,32 @@ import org.apache.kafka.clients.producer.ProducerConfig
 import cats.*
 import cats.effect.kernel.Async
 import cats.implicits.*
-import com.fortyseven.coreheaders.config.KafkaConsumerConfig
-import com.fortyseven.coreheaders.config.internal.KafkaConfig.ConsumerConf
-import com.fortyseven.coreheaders.{ConfigHeader, KafkaConsumerHeader}
+import com.fortyseven.coreheaders.configuration.KafkaConsumerConfiguration
+import com.fortyseven.coreheaders.configuration.internal.types.{KafkaAutoOffsetReset, KafkaCompressionType}
+import com.fortyseven.coreheaders.{ConfigurationLoaderHeader, KafkaConsumerHeader}
 import fs2.kafka.*
 
 final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
 
-  extension (cc: ConsumerConf)
+  extension (kaor: KafkaAutoOffsetReset)
 
-    private def autoOffsetResetAsKafka: AutoOffsetReset = cc.autoOffsetReset match
-      case "Earliest" => AutoOffsetReset.Earliest
-      case "Latest"   => AutoOffsetReset.Latest
-      case "None" | _ => AutoOffsetReset.None
+    def asKafka: AutoOffsetReset = kaor match
+      case KafkaAutoOffsetReset.Earliest => AutoOffsetReset.Earliest
+      case KafkaAutoOffsetReset.Latest   => AutoOffsetReset.Latest
+      case KafkaAutoOffsetReset.None     => AutoOffsetReset.None
 
-  override def consume(conf: ConfigHeader[F, KafkaConsumerConfig]): F[Unit] = for
-    kc <- conf.load
+  override def consume(conf: ConfigurationLoaderHeader[F, KafkaConsumerConfiguration]): F[Unit] = for
+    kc <- conf.load()
     _  <- runWithConfiguration(kc)
   yield ()
 
-  private def runWithConfiguration(kc: KafkaConsumerConfig): F[Unit] =
+  private def runWithConfiguration(kc: KafkaConsumerConfiguration): F[Unit] =
 
-    val producerConfig = kc.kafkaConf.producer.getOrElse(
+    val producerConfig = kc.kafkaConfiguration.producer.getOrElse(
       throw new RuntimeException("No producer config available")
     )
 
-    val consumerConfig = kc.kafkaConf.consumer.getOrElse(
+    val consumerConfig = kc.kafkaConfiguration.consumer.getOrElse(
       throw new RuntimeException("No consumer config available")
     )
 
@@ -58,26 +58,27 @@ final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
 
     val consumerSettings =
       ConsumerSettings[F, String, Array[Byte]]
-        .withAutoOffsetReset(consumerConfig.autoOffsetResetAsKafka)
-        .withBootstrapServers(kc.kafkaConf.broker.brokerAddress)
-        .withGroupId(consumerConfig.groupId)
+        .withAutoOffsetReset(consumerConfig.autoOffsetReset.asKafka)
+        .withBootstrapServers(kc.kafkaConfiguration.broker.brokerAddress.asString)
+        .withGroupId(consumerConfig.groupId.asString)
 
     val producerSettings =
       ProducerSettings[F, String, Array[Byte]]
-        .withBootstrapServers(kc.kafkaConf.broker.brokerAddress)
-        .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, producerConfig.compressionType)
+        .withBootstrapServers(kc.kafkaConfiguration.broker.brokerAddress.asString)
+        .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, producerConfig.compressionType.toString)
 
     val stream =
       fs2.kafka.KafkaConsumer
         .stream(consumerSettings)
         .subscribe(new Regex(s"${consumerConfig.topicName}-(.*)"))
         .records
-        .mapAsync(consumerConfig.maxConcurrent) { committable =>
+        .mapAsync(consumerConfig.maxConcurrent.asInt) { committable =>
           def addTopicPrefix(sourceTopic: String, targetTopic: String): String =
             val suffix = sourceTopic.substring(sourceTopic.lastIndexOf("-"))
             s"$targetTopic$suffix"
           processRecord(committable.record).map { case (key, value) =>
-            val record = ProducerRecord(addTopicPrefix(committable.record.topic, producerConfig.topicName), key, value)
+            val record =
+              ProducerRecord(addTopicPrefix(committable.record.topic, producerConfig.topicName.asString), key, value)
             committable.offset -> ProducerRecords.one(record)
           }
         }.through { offsetsAndProducerRecords =>
@@ -85,11 +86,11 @@ final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
             offsetsAndProducerRecords
               .evalMap { case (offset, producerRecord) =>
                 producer.produce(producerRecord).map(_.as(offset))
-              }.parEvalMap(producerConfig.maxConcurrent)(identity)
+              }.parEvalMap(producerConfig.maxConcurrent.asInt)(identity)
           }
         }.through(
           commitBatchWithin(
-            producerConfig.commitBatchWithinSize,
+            producerConfig.commitBatchWithinSize.asInt,
             producerConfig.commitBatchWithinTime
           )
         )

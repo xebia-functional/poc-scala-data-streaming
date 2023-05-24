@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders
+package com.fortyseven.coreheaders.configuration.internal
 
-import com.fortyseven.coreheaders.configuration.JobProcessorConfiguration
-
-trait JobProcessorHeader[F[_]]:
-
-  def process(config: ConfigurationLoaderHeader[F, JobProcessorConfiguration]): F[Unit]
+case class KafkaConfiguration(
+    broker: BrokerConfiguration,
+    consumer: Option[ConsumerConfiguration],
+    producer: Option[ProducerConfiguration]
+  )

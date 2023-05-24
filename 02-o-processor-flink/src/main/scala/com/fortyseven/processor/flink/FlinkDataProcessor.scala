@@ -37,7 +37,7 @@ import cats.Applicative
 import cats.effect.*
 import cats.implicits.*
 import com.fortyseven.core.codecs.iot.IotCodecs.given
-import com.fortyseven.coreheaders.config.JobProcessorConfig
+import com.fortyseven.coreheaders.configuration.JobProcessorConfiguration
 import com.fortyseven.coreheaders.model.iot.model.{GPSPosition, PneumaticPressure}
 import com.fortyseven.coreheaders.model.iot.types.Bar
 import org.apache.avro.Schema
@@ -46,27 +46,30 @@ import org.apache.avro.specific.SpecificRecord
 
 final class FlinkDataProcessor[F[_]: Applicative](env: StreamExecutionEnvironment):
 
-  def run(jpc: JobProcessorConfig): F[JobClient] =
+  def run(jpc: JobProcessorConfiguration): F[JobClient] =
 
-    val consumerConfig = jpc.kafkaConf.consumer.getOrElse(
+    val consumerConfig = jpc.kafkaConfiguration.consumer.getOrElse(
       throw new RuntimeException("No consumer config available")
     )
 
-    val producerConfig = jpc.kafkaConf.producer.getOrElse(
+    val producerConfig = jpc.kafkaConfiguration.producer.getOrElse(
       throw new RuntimeException("No producer config available")
     )
 
     val deserializationSchema = pneumaticPressureCodec.schema match
       case Right(s) =>
-        ConfluentRegistryAvroDeserializationSchema.forGeneric(s, jpc.schemaRegistryConf.schemaRegistryUrl)
+        ConfluentRegistryAvroDeserializationSchema.forGeneric(
+          s,
+          jpc.schemaRegistryConfiguration.schemaRegistryURL.asString
+        )
       case Left(e)  => throw new RuntimeException("No pneumaticPressureCodec schema available")
 
     val kafkaSource = KafkaSource
       .builder()
-      .setBootstrapServers(jpc.kafkaConf.broker.brokerAddress)
-      .setTopics(consumerConfig.topicName)
-      .setGroupId(consumerConfig.groupId)
-      .setStartingOffsets(consumerConfig.autoOffsetReset.toLowerCase match
+      .setBootstrapServers(jpc.kafkaConfiguration.broker.brokerAddress.asString)
+      .setTopics(consumerConfig.topicName.asString)
+      .setGroupId(consumerConfig.groupId.asString)
+      .setStartingOffsets(consumerConfig.autoOffsetReset.toString.toLowerCase match
         case "earliest" => OffsetsInitializer.earliest()
         case _          => OffsetsInitializer.latest()
       )
@@ -75,11 +78,11 @@ final class FlinkDataProcessor[F[_]: Applicative](env: StreamExecutionEnvironmen
 
     val kafkaSink = KafkaSink
       .builder()
-      .setBootstrapServers(jpc.kafkaConf.broker.brokerAddress)
+      .setBootstrapServers(jpc.kafkaConfiguration.broker.brokerAddress.asString)
       .setRecordSerializer(
         KafkaRecordSerializationSchema
           .builder()
-          .setTopic(producerConfig.topicName)
+          .setTopic(producerConfig.topicName.asString)
           .setKeySerializationSchema(new SimpleStringSchema())
           .setValueSerializationSchema(new SimpleStringSchema())
           .build()

@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.config
+package com.fortyseven.coreheaders
 
-import com.fortyseven.coreheaders.config.internal.KafkaConfig.KafkaConf
-import com.fortyseven.coreheaders.config.internal.SchemaRegistryConfig.SchemaRegistryConf
+trait ConfigurationLoaderHeader[Effect[_], ConfigurationLoader]:
 
-final case class JobProcessorConfig(kafkaConf: KafkaConf, schemaRegistryConf: SchemaRegistryConf)
+  def load(configurationPath: Option[String] = None): Effect[ConfigurationLoader]

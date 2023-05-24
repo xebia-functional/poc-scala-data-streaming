@@ -37,7 +37,8 @@ lazy val `poc-scala-data-streaming`: Project =
       `core-headers`,
       // Layer 2
       // Common and Utils
-      configuration,
+      `configuration-ciris`,
+      `configuration-typesafe`,
       core,
       `data-generator`,
       // Input
@@ -62,20 +63,28 @@ lazy val `core-headers`: Project =
 // Layer 2
 
 // Common and Utils
-lazy val configuration: Project = (project in file("02-c-config"))
+lazy val `configuration-ciris`: Project = (project in file("02-c-config-ciris"))
   .dependsOn(`core-headers`)
   .settings(commonSettings)
   .settings(
-    name := "configuration",
+    name := "configuration-ciris",
     libraryDependencies ++= Seq(
-      Libraries.ciris.ciris,
-      Libraries.ciris.cirisRefined,
-      Libraries.refined.refined,
-      Libraries.cats.core,
-      Libraries.cats.effectKernel,
-      Libraries.shapeless.shapeless
+      Libraries.config.ciris,
+      Libraries.cats.effectKernel
     )
   )
+
+lazy val `configuration-typesafe`: Project = (project in file("02-c-config-typesafe"))
+  .dependsOn(`core-headers`)
+  .settings(commonSettings)
+  .settings(
+    name := "configuration-typesafe",
+    libraryDependencies ++= Seq(
+      Libraries.config.typeconfig,
+      Libraries.cats.effectKernel,
+      Libraries.cats.core
+      )
+    )
 
 lazy val core: Project =
   project
@@ -89,7 +98,6 @@ lazy val core: Project =
         Libraries.avro.avro,
         Libraries.cats.free,
         Libraries.cats.core,
-        Libraries.fs2.kafkaVulcan,
         Libraries.test.munitScalacheck
       )
     )
@@ -113,8 +121,7 @@ lazy val `data-generator`: Project = (project in file("02-i-data-generator"))
       Libraries.kafka.kafkaSchemaRegistry,
       Libraries.kafka.kafkaSchemaSerializer,
       Libraries.kafka.kafkaSerializer,
-      Libraries.logging.catsCore,
-      Libraries.logging.catsSlf4j,
+      Libraries.logging.catsSlf4j % Test,
       Libraries.logging.logback,
       Libraries.test.munitCatsEffect
     )
@@ -132,11 +139,7 @@ lazy val `consumer-kafka`: Project =
         Libraries.cats.effectKernel,
         Libraries.kafka.kafkaClients,
         Libraries.fs2.kafka,
-        Libraries.fs2.core,
-        Libraries.fs2.kafkaVulcan,
-        Libraries.logging.catsCore,
-        Libraries.logging.catsSlf4j,
-        Libraries.logging.logback
+        Libraries.fs2.core
       )
     )
 
@@ -183,14 +186,16 @@ lazy val `processor-flink-integration`: Project =
         Libraries.logging.catsSlf4j,
         Libraries.logging.logback,
         Libraries.test.munitCatsEffect
-      )
+      ),
+      javacOptions ++= Seq("-source", "11", "-target", "11")
     )
 
 // Layer 3
 lazy val main: Project =
   project
     .in(file("03-c-main"))
-    .dependsOn(configuration % Cctt)
+    .dependsOn(`configuration-ciris` % Cctt)
+    .dependsOn(`configuration-typesafe` % Cctt)
     .dependsOn(core % Cctt)
     .dependsOn(`consumer-kafka` % Cctt)
     .dependsOn(`data-generator` % Cctt)

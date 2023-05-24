@@ -40,21 +40,11 @@ object Dependencies {
 
     }
 
-    object ciris {
-      private val version: String = "3.1.0"
-      val ciris: ModuleID = "is.cir" %% "ciris" % version
-      val cirisRefined: ModuleID = "is.cir" %% "ciris-refined" % version
+    object config {
+      val ciris: ModuleID = "is.cir" %% "ciris" % "3.1.0"
+      val typeconfig: ModuleID = "com.typesafe" % "config" % "1.4.2"
     }
 
-    object refined {
-      private val refinedVersion: String = "0.10.3"
-      val refined: ModuleID = "eu.timepit" %% "refined" % refinedVersion
-    }
-
-    object shapeless {
-      private val shapelessVersion: String = "2.3.10"
-      val shapeless: ModuleID = "com.chuusai" % "shapeless_2.13" % shapelessVersion
-    }
 
     object flink {
       private val version: String = "1.17.0"

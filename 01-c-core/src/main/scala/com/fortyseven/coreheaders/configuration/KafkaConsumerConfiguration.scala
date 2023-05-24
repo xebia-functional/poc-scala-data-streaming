@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders
+package com.fortyseven.coreheaders.configuration
 
-trait ConfigHeader[F[_], A]:
+import com.fortyseven.coreheaders.configuration.internal.KafkaConfiguration
 
-  def load: F[A]
+final case class KafkaConsumerConfiguration(kafkaConfiguration: KafkaConfiguration)

@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.config.internal
+package com.fortyseven.cirisconfiguration
 
-object SchemaRegistryConfig:
+object CommonConfiguration:
 
-  final case class SchemaRegistryConf(schemaRegistryUrl: String)
+  val kafkaBrokerAddress = "localhost:9092"
+
+  val schemaRegistryUrl = "http://localhost:8081"

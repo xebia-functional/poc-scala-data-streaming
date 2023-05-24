@@ -14,18 +14,8 @@
  * limitations under the License.
  */
 
-package com.fortyseven.configuration
+package com.fortyseven.coreheaders.configuration.internal
 
-object CommonConfiguration:
+import com.fortyseven.coreheaders.configuration.internal.types.NonEmptyString
 
-  val kafkaBrokerAddress = "localhost:9092"
-
-  val schemaRegistryUrl = "http://localhost:8081"
-
-  enum KafkaCompressionType:
-
-    case none, gzip, snappy, lz4, zstd
-
-  enum KafkaAutoOffsetReset:
-
-    case Earliest, Latest, None
+final case class BrokerConfiguration(brokerAddress: NonEmptyString)
