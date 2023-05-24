@@ -186,7 +186,8 @@ lazy val `processor-flink-integration`: Project =
         Libraries.logging.catsSlf4j,
         Libraries.logging.logback,
         Libraries.test.munitCatsEffect
-      )
+      ),
+      javacOptions ++= Seq("-source", "11", "-target", "11")
     )
 
 // Layer 3
