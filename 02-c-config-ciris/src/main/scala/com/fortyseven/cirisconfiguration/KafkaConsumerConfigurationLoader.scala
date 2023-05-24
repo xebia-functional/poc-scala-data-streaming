@@ -20,18 +20,17 @@ import scala.concurrent.duration.*
 
 import cats.effect.kernel.Async
 import ciris.*
-import ciris.refined.*
 import com.fortyseven.cirisconfiguration.CommonConfiguration.*
-import com.fortyseven.coreheaders.ConfigHeader
-import com.fortyseven.coreheaders.config.KafkaConsumerConfig
-import com.fortyseven.coreheaders.config.internal.KafkaConfig.*
-import com.fortyseven.coreheaders.config.internal.SchemaRegistryConfig.*
-import eu.timepit.refined.types.all.*
-import eu.timepit.refined.types.string.NonEmptyString
+import com.fortyseven.cirisconfiguration.decoders.given
+import com.fortyseven.coreheaders.ConfigurationLoaderHeader
+import com.fortyseven.coreheaders.configuration.KafkaConsumerConfiguration
+import com.fortyseven.coreheaders.configuration.internal.*
+import com.fortyseven.coreheaders.configuration.internal.types.*
 
-final class KafkaConsumerConfiguration[F[_]: Async] extends ConfigHeader[F, KafkaConsumerConfig]:
+final class KafkaConsumerConfigurationLoader[F[_]: Async]
+    extends ConfigurationLoaderHeader[F, KafkaConsumerConfiguration]:
 
-  lazy val config: ConfigValue[Effect, KafkaConsumerConfig] =
+  lazy val config: ConfigValue[Effect, KafkaConsumerConfiguration] =
     for
       brokerAddress         <- default(kafkaBrokerAddress).as[NonEmptyString]
       sourceTopicName       <- default("data-generator").as[NonEmptyString]
@@ -39,33 +38,33 @@ final class KafkaConsumerConfiguration[F[_]: Async] extends ConfigHeader[F, Kafk
       autoOffsetReset       <- default(KafkaAutoOffsetReset.Earliest).as[KafkaAutoOffsetReset]
       groupId               <- default("groupId").as[NonEmptyString]
       valueSerializerClass  <- default("io.confluent.kafka.serializers.KafkaAvroSerializer").as[NonEmptyString]
-      consumerMaxConcurrent <- default(25).as[PosInt]
-      producerMaxConcurrent <- default(Int.MaxValue).as[PosInt]
+      consumerMaxConcurrent <- default(25).as[PositiveInt]
+      producerMaxConcurrent <- default(Int.MaxValue).as[PositiveInt]
       compressionType       <- default(KafkaCompressionType.lz4).as[KafkaCompressionType]
-      commitBatchWithinSize <- default(10).as[PosInt]
+      commitBatchWithinSize <- default(10).as[PositiveInt]
       commitBatchWithinTime <- default(15.seconds).as[FiniteDuration]
-    yield KafkaConsumerConfig(
-      KafkaConf(
-        broker = BrokerConf(brokerAddress.value),
+    yield KafkaConsumerConfiguration(
+      KafkaConfiguration(
+        broker = BrokerConfiguration(brokerAddress),
         consumer = Some(
-          ConsumerConf(
-            topicName = sourceTopicName.value,
-            autoOffsetReset = autoOffsetReset.toString,
-            groupId = groupId.value,
-            maxConcurrent = consumerMaxConcurrent.value
+          ConsumerConfiguration(
+            topicName = sourceTopicName,
+            autoOffsetReset = autoOffsetReset,
+            groupId = groupId,
+            maxConcurrent = consumerMaxConcurrent
           )
         ),
         producer = Some(
-          ProducerConf(
-            topicName = sinkTopicName.value,
-            valueSerializerClass = valueSerializerClass.value,
-            maxConcurrent = producerMaxConcurrent.value,
-            compressionType = compressionType.toString,
-            commitBatchWithinSize = commitBatchWithinSize.value,
+          ProducerConfiguration(
+            topicName = sinkTopicName,
+            valueSerializerClass = valueSerializerClass,
+            maxConcurrent = producerMaxConcurrent,
+            compressionType = compressionType,
+            commitBatchWithinSize = commitBatchWithinSize,
             commitBatchWithinTime = commitBatchWithinTime
           )
         )
       )
     )
 
-  override def load: F[KafkaConsumerConfig] = config.load[F]
+  override def load(configurationPath: Option[String]): F[KafkaConsumerConfiguration] = config.load[F]

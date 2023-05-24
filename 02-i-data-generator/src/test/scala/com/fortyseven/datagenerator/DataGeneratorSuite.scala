@@ -18,13 +18,13 @@ package com.fortyseven.datagenerator
 
 import scala.concurrent.duration.*
 
+import cats.effect.syntax.temporal.*
 import cats.effect.{IO, Temporal}
 import cats.implicits.*
-import cats.effect.syntax.temporal.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
+import org.scalacheck.Prop.*
 import org.scalacheck.*
 import org.scalacheck.effect.PropF
-import org.scalacheck.Prop.*
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 class DataGeneratorSuite extends CatsEffectSuite with ScalaCheckEffectSuite:

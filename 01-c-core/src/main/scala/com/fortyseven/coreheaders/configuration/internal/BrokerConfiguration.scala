@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders
+package com.fortyseven.coreheaders.configuration.internal
 
-import com.fortyseven.coreheaders.configuration.JobProcessorConfiguration
+import com.fortyseven.coreheaders.configuration.internal.types.NonEmptyString
 
-trait JobProcessorHeader[F[_]]:
-
-  def process(config: ConfigurationLoaderHeader[F, JobProcessorConfiguration]): F[Unit]
+final case class BrokerConfiguration(brokerAddress: NonEmptyString)

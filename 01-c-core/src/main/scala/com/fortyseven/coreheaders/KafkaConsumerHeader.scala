@@ -16,8 +16,8 @@
 
 package com.fortyseven.coreheaders
 
-import com.fortyseven.coreheaders.config.KafkaConsumerConfig
+import com.fortyseven.coreheaders.configuration.KafkaConsumerConfiguration
 
 trait KafkaConsumerHeader[F[_]]:
 
-  def consume(config: ConfigHeader[F, KafkaConsumerConfig]): F[Unit]
+  def consume(config: ConfigurationLoaderHeader[F, KafkaConsumerConfiguration]): F[Unit]

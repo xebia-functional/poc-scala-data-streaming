@@ -24,26 +24,26 @@ import cats.Parallel
 import cats.effect.kernel.Async
 import cats.implicits.*
 import com.fortyseven.core.codecs.iot.IotCodecs.given
-import com.fortyseven.coreheaders.config.DataGeneratorConfig
+import com.fortyseven.coreheaders.configuration.DataGeneratorConfiguration
 import com.fortyseven.coreheaders.model.iot.model.{GPSPosition, PneumaticPressure}
-import com.fortyseven.coreheaders.{ConfigHeader, DataGeneratorHeader}
+import com.fortyseven.coreheaders.{ConfigurationLoaderHeader, DataGeneratorHeader}
 import fs2.kafka.*
 
 final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorHeader[F]:
 
-  override def generate(conf: ConfigHeader[F, DataGeneratorConfig]): F[Unit] =
+  override def generate(conf: ConfigurationLoaderHeader[F, DataGeneratorConfiguration]): F[Unit] =
     for
-      dgc <- conf.load
+      dgc <- conf.load()
       _   <- runWithConfiguration(dgc)
     yield ()
 
-  private def runWithConfiguration(dgc: DataGeneratorConfig): F[Unit] =
+  private def runWithConfiguration(dgc: DataGeneratorConfiguration): F[Unit] =
 
     import VulcanSerdes.*
 
     val generators = new ModelGenerators[F](100.milliseconds)
 
-    val producerConfig = dgc.kafkaConf.producer.getOrElse(
+    val producerConfig = dgc.kafkaConfiguration.producer.getOrElse(
       throw new RuntimeException("No producer config available")
     )
 
@@ -51,17 +51,17 @@ final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorHeader[F]:
     val pneumaticPressureTopicName = s"${producerConfig.topicName}-pp"
 
     val producerSettings = ProducerSettings[F, String, Array[Byte]]
-      .withBootstrapServers(dgc.kafkaConf.broker.brokerAddress)
-      .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, producerConfig.compressionType)
-      .withProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, producerConfig.valueSerializerClass)
+      .withBootstrapServers(dgc.kafkaConfiguration.broker.brokerAddress.asString)
+      .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, producerConfig.compressionType.toString)
+      .withProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, producerConfig.valueSerializerClass.asString)
 
     val pneumaticPressureSerializer = avroSerializer[PneumaticPressure](
-      Config(dgc.schemaRegistryConf.schemaRegistryUrl),
+      Config(dgc.schemaRegistryConfiguration.schemaRegistryURL.asString),
       includeKey = false
     )
 
     val gpsPositionSerializer = avroSerializer[GPSPosition](
-      Config(dgc.schemaRegistryConf.schemaRegistryUrl),
+      Config(dgc.schemaRegistryConfiguration.schemaRegistryURL.asString),
       includeKey = false
     )
 
@@ -77,7 +77,7 @@ final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorHeader[F]:
           .flatMap { case (s1, s2) => fs2.Stream.emit(s1) ++ fs2.Stream.emit(s2) }
           .evalMap(producer.produce)
           .groupWithin(
-            producerConfig.commitBatchWithinSize,
+            producerConfig.commitBatchWithinSize.asInt,
             producerConfig.commitBatchWithinTime
           )
           .evalMap(_.sequence)

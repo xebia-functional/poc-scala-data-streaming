@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.config
+package com.fortyseven.coreheaders.configuration
 
-import com.fortyseven.coreheaders.config.internal.KafkaConfig.KafkaConf
-import com.fortyseven.coreheaders.config.internal.SchemaRegistryConfig.SchemaRegistryConf
+import com.fortyseven.coreheaders.configuration.internal.KafkaConfiguration
 
-final case class JobProcessorConfig(kafkaConf: KafkaConf, schemaRegistryConf: SchemaRegistryConf)
+final case class KafkaConsumerConfiguration(kafkaConfiguration: KafkaConfiguration)

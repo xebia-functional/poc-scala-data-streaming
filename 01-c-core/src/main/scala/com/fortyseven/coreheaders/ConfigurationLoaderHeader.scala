@@ -16,8 +16,6 @@
 
 package com.fortyseven.coreheaders
 
-import com.fortyseven.coreheaders.configuration.JobProcessorConfiguration
+trait ConfigurationLoaderHeader[Effect[_], ConfigurationLoader]:
 
-trait JobProcessorHeader[F[_]]:
-
-  def process(config: ConfigurationLoaderHeader[F, JobProcessorConfiguration]): F[Unit]
+  def load(configurationPath: Option[String] = None): Effect[ConfigurationLoader]

@@ -14,8 +14,18 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.config.internal
+package com.fortyseven.coreheaders.configuration.internal
 
-object SchemaRegistryConfig:
+import scala.concurrent.duration.FiniteDuration
 
-  final case class SchemaRegistryConf(schemaRegistryUrl: String)
+import com.fortyseven.coreheaders.configuration.internal.types.*
+
+final case class ProducerConfiguration(
+  topicName: NonEmptyString,
+  valueSerializerClass: NonEmptyString,
+  maxConcurrent: PositiveInt,
+  compressionType: KafkaCompressionType,
+  commitBatchWithinSize: PositiveInt,
+  commitBatchWithinTime: FiniteDuration
+)
+

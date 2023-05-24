@@ -24,7 +24,7 @@ addCommandAlias("s", "reStop")
 
 addCommandAlias(
   "styleCheck",
-  "styleCheck, scalafmtSbtCheck; scalafmtCheckAll"
+  "scalafmtSbtCheck; scalafmtCheckAll"
 )
 
 addCommandAlias(

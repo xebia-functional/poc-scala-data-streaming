@@ -20,45 +20,42 @@ import scala.concurrent.duration.*
 
 import cats.effect.kernel.Async
 import ciris.*
-import ciris.refined.*
 import com.fortyseven.cirisconfiguration.CommonConfiguration.*
-import com.fortyseven.coreheaders.ConfigHeader
-import com.fortyseven.coreheaders.config.DataGeneratorConfig
-import com.fortyseven.coreheaders.config.internal.KafkaConfig.*
-import com.fortyseven.coreheaders.config.internal.SchemaRegistryConfig.*
-import eu.timepit.refined.*
-import eu.timepit.refined.auto.*
-import eu.timepit.refined.types.all.*
-import eu.timepit.refined.types.string.NonEmptyString
+import com.fortyseven.cirisconfiguration.decoders.given
+import com.fortyseven.coreheaders.ConfigurationLoaderHeader
+import com.fortyseven.coreheaders.configuration.DataGeneratorConfiguration
+import com.fortyseven.coreheaders.configuration.internal.*
+import com.fortyseven.coreheaders.configuration.internal.types.*
 
-final class DataGeneratorConfiguration[F[_]: Async] extends ConfigHeader[F, DataGeneratorConfig]:
+final class DataGeneratorConfigurationLoader[F[_]: Async]
+    extends ConfigurationLoaderHeader[F, DataGeneratorConfiguration]:
 
-  lazy val config: ConfigValue[Effect, DataGeneratorConfig] =
+  lazy val config: ConfigValue[Effect, DataGeneratorConfiguration] =
     for
       brokerAddress         <- default(kafkaBrokerAddress).as[NonEmptyString]
       schemaRegistryUrl     <- default(schemaRegistryUrl).as[NonEmptyString]
       topicName             <- default("data-generator").as[NonEmptyString]
       valueSerializerClass  <- default("io.confluent.kafka.serializers.KafkaAvroSerializer").as[NonEmptyString]
-      maxConcurrent         <- default(Int.MaxValue).as[PosInt]
+      maxConcurrent         <- default(Int.MaxValue).as[PositiveInt]
       compressionType       <- default(KafkaCompressionType.lz4).as[KafkaCompressionType]
-      commitBatchWithinSize <- default(1).as[PosInt]
+      commitBatchWithinSize <- default(1).as[PositiveInt]
       commitBatchWithinTime <- default(15.seconds).as[FiniteDuration]
-    yield DataGeneratorConfig(
-      KafkaConf(
-        broker = BrokerConf(brokerAddress.value),
+    yield DataGeneratorConfiguration(
+      KafkaConfiguration(
+        broker = BrokerConfiguration(brokerAddress),
         consumer = None,
         producer = Some(
-          ProducerConf(
-            topicName = topicName.value,
-            valueSerializerClass = valueSerializerClass.value,
-            maxConcurrent = maxConcurrent.value,
-            compressionType = compressionType.toString,
-            commitBatchWithinSize = commitBatchWithinSize.value,
+          ProducerConfiguration(
+            topicName = topicName,
+            valueSerializerClass = valueSerializerClass,
+            maxConcurrent = maxConcurrent,
+            compressionType = compressionType,
+            commitBatchWithinSize = commitBatchWithinSize,
             commitBatchWithinTime = commitBatchWithinTime
           )
         )
       ),
-      SchemaRegistryConf(schemaRegistryUrl.value)
+      SchemaRegistryConfiguration(schemaRegistryUrl)
     )
 
-  override def load: F[DataGeneratorConfig] = config.load[F]
+  override def load(configurationPath: Option[String]): F[DataGeneratorConfiguration] = config.load[F]

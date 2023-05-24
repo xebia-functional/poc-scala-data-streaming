@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders
+package com.fortyseven.coreheaders.configuration.internal
 
-trait ConfigHeader[F[_], A]:
-
-  def load: F[A]
+case class KafkaConfiguration (
+  broker: BrokerConfiguration,
+  consumer: Option[ConsumerConfiguration],
+  producer: Option[ProducerConfiguration]
+)
