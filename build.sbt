@@ -190,6 +190,20 @@ lazy val `processor-flink-integration`: Project =
       javacOptions ++= Seq("-source", "11", "-target", "11")
     )
 
+lazy val `processor-spark`: Project = project.in(file("02-o-processor-spark"))
+  .dependsOn(`core-headers`)
+  .settings(commonSettings)
+  .settings(
+    name := "processor-spark",
+    libraryDependencies ++= Seq(
+      Libraries.spark.core,
+      Libraries.spark.sql,
+      Libraries.spark.streaming,
+      Libraries.logging.logback,
+      Libraries.logging.catsSlf4j
+    )
+  )
+
 // Layer 3
 lazy val main: Project =
   project
