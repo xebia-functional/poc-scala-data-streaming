@@ -42,7 +42,7 @@ object Dependencies {
 
     object config {
       val ciris: ModuleID = "is.cir" %% "ciris" % "3.1.0"
-      val typeconfig:ModuleID = "com.typesafe" % "config" % "1.4.2"
+      val typeconfig: ModuleID = "com.typesafe" % "config" % "1.4.2"
     }
 
 

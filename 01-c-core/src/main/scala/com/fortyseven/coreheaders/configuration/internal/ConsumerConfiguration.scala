@@ -19,8 +19,8 @@ package com.fortyseven.coreheaders.configuration.internal
 import com.fortyseven.coreheaders.configuration.internal.types.*
 
 final case class ConsumerConfiguration(
-  topicName: NonEmptyString,
-  autoOffsetReset: KafkaAutoOffsetReset,
-  groupId: NonEmptyString,
-  maxConcurrent: PositiveInt
-)
+    topicName: NonEmptyString,
+    autoOffsetReset: KafkaAutoOffsetReset,
+    groupId: NonEmptyString,
+    maxConcurrent: PositiveInt
+  )

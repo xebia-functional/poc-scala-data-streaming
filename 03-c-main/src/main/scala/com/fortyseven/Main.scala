@@ -34,13 +34,10 @@ object Main extends IOApp.Simple:
 
   override def run: IO[Unit] = for
     logger         <- Slf4jLogger.create[IO]
-    // dataGenConf    <- new DataGeneratorConfigurationLoader[IO].load()
     dataGenConf    <- DataGeneratorConfigurationLoader[IO].load()
     _              <- logger.info(s"DataGeneratorConfiguration: $dataGenConf")
-    // consumerConf   <- new KafkaConsumerConfigurationLoader[IO].load()
     consumerConf   <- KafkaConsumerConfigurationLoader[IO].load()
     _              <- logger.info(s"KafkaConsumerConfiguration: $consumerConf")
-    // processorConf  <- new JobProcessorConfigurationLoader[IO].load()
     processorConf  <- JobProcessorConfigurationLoader[IO].load()
     _              <- logger.info(s"JobProcessorConfiguration: $processorConf")
     _              <- logger.info("Start data generator")

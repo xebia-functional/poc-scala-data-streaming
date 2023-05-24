@@ -16,8 +16,8 @@
 
 package com.fortyseven.coreheaders.configuration.internal
 
-case class KafkaConfiguration (
-  broker: BrokerConfiguration,
-  consumer: Option[ConsumerConfiguration],
-  producer: Option[ProducerConfiguration]
-)
+case class KafkaConfiguration(
+    broker: BrokerConfiguration,
+    consumer: Option[ConsumerConfiguration],
+    producer: Option[ProducerConfiguration]
+  )

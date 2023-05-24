@@ -21,11 +21,10 @@ import scala.concurrent.duration.FiniteDuration
 import com.fortyseven.coreheaders.configuration.internal.types.*
 
 final case class ProducerConfiguration(
-  topicName: NonEmptyString,
-  valueSerializerClass: NonEmptyString,
-  maxConcurrent: PositiveInt,
-  compressionType: KafkaCompressionType,
-  commitBatchWithinSize: PositiveInt,
-  commitBatchWithinTime: FiniteDuration
-)
-
+    topicName: NonEmptyString,
+    valueSerializerClass: NonEmptyString,
+    maxConcurrent: PositiveInt,
+    compressionType: KafkaCompressionType,
+    commitBatchWithinSize: PositiveInt,
+    commitBatchWithinTime: FiniteDuration
+  )

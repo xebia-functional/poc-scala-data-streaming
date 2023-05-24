@@ -30,19 +30,24 @@ object types:
 
     def from(s: String): Either[Throwable, KafkaCompressionType] =
       if KafkaCompressionType.values.map(_.toString).contains(s) then Right(safeApply(s))
-      else Left(new IllegalStateException((s"The provided value $s does not correspond with the valid values ${values.mkString("(", ",", ")")}")))
+      else
+        Left(
+          new IllegalStateException(
+            (s"The provided value $s does not correspond with the valid values ${values.mkString("(", ",", ")")}")
+          )
+        )
 
     private def safeApply(s: String): KafkaCompressionType =
       s match
-        case "none" => none
-        case "gzip" => gzip
+        case "none"   => none
+        case "gzip"   => gzip
         case "snappy" => snappy
-        case "lz4" => lz4
-        case "zstd" => zstd
+        case "lz4"    => lz4
+        case "zstd"   => zstd
 
     inline def apply(s: String): KafkaCompressionType =
       requireConst(s)
-      inline if KafkaCompressionType.values.map(_.toString)contains(s) then safeApply(s)
+      inline if KafkaCompressionType.values.map(_.toString) contains (s) then safeApply(s)
       else error(s"The valid values are ${values.mkString("(", ",", ")")}.")
 
   enum KafkaAutoOffsetReset:
@@ -53,13 +58,18 @@ object types:
 
     def from(s: String): Either[Throwable, KafkaAutoOffsetReset] =
       if KafkaAutoOffsetReset.values.map(_.toString).contains(s) then Right(safeApply(s))
-      else Left(new IllegalStateException(s"The provided value $s does not correspond with the valid values ${values.mkString("(", ",", ")")}"))
+      else
+        Left(
+          new IllegalStateException(
+            s"The provided value $s does not correspond with the valid values ${values.mkString("(", ",", ")")}"
+          )
+        )
 
     private def safeApply(s: String): KafkaAutoOffsetReset =
       s match
         case "Earliest" => Earliest
-        case "Latest" => Latest
-        case "None" => None
+        case "Latest"   => Latest
+        case "None"     => None
 
     inline def apply(s: String): KafkaAutoOffsetReset =
       requireConst(s)

@@ -20,20 +20,20 @@ import cats.effect.kernel.Async
 import com.fortyseven.coreheaders.ConfigurationLoaderHeader
 import com.fortyseven.coreheaders.configuration.JobProcessorConfiguration
 
-private[typesafeconfiguration] final class JobProcessorConfigurationLoader[F[_]: Async] 
-  extends ConfigurationLoaderHeader[F, JobProcessorConfiguration]:
+private[typesafeconfiguration] final class JobProcessorConfigurationLoader[F[_]: Async]
+    extends ConfigurationLoaderHeader[F, JobProcessorConfiguration]:
 
   override def load(configurationPath: Option[String]): F[JobProcessorConfiguration] =
     val eitherLoad =
-      for 
-        kc <- KafkaConfigurationLoader("JobProcessorConfiguration", configurationPath)
+      for
+        kc  <- KafkaConfigurationLoader("JobProcessorConfiguration", configurationPath)
         src <- SchemaRegistryConfigurationLoader("JobProcessorConfiguration", configurationPath)
       yield JobProcessorConfiguration(kc, src)
 
     eitherLoad match
-      case Right(value) => Async.apply.pure(value)
+      case Right(value)    => Async.apply.pure(value)
       case Left(throwable) => Async.apply.raiseError(throwable)
 
 object JobProcessorConfigurationLoader:
 
-  def apply[F[_] : Async]: JobProcessorConfigurationLoader[F] = new JobProcessorConfigurationLoader[F]
+  def apply[F[_]: Async]: JobProcessorConfigurationLoader[F] = new JobProcessorConfigurationLoader[F]
