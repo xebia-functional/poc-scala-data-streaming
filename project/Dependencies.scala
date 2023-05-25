@@ -58,10 +58,11 @@ object Dependencies {
 
     object spark {
       private val version: String = "3.4.0"
-      val catalyst: ModuleID = "org.apache.spark" % "spark-catalyst" % version % Provided
-      val core: ModuleID = "org.apache.spark" % "spark-core" % version % Provided
-      val sql: ModuleID = "org.apache.spark" % "spark-sql" % version % Provided
-      val streaming: ModuleID = "org.apache.spark" % "spark-streaming" % version % Provided
+      val catalyst: ModuleID = "org.apache.spark" % "spark-catalyst" % version
+      val core: ModuleID = "org.apache.spark" % "spark-core" % version
+      val sql: ModuleID = "org.apache.spark" % "spark-sql" % version
+      val streaming: ModuleID = "org.apache.spark" % "spark-streaming" % version
+      val `sql-kafka`: ModuleID = "org.apache.spark" % "spark-sql-kafka-0-10" % version
     }
 
     object testContainers {

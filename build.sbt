@@ -200,8 +200,12 @@ lazy val `processor-spark`: Project = project.in(file("02-o-processor-spark"))
       Libraries.spark.catalyst,
       Libraries.spark.core,
       Libraries.spark.sql,
-      Libraries.spark.streaming
+      Libraries.spark.streaming,
+      Libraries.spark.`sql-kafka`
     ).map(_.cross(CrossVersion.for3Use2_13)),
+    libraryDependencies ++= Seq(
+      Libraries.cats.effect
+    ),
     Compile / run := Defaults.runTask(
       Compile / fullClasspath,
       Compile / run / mainClass,
