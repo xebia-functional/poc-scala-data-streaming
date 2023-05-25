@@ -56,6 +56,14 @@ object Dependencies {
       val streaming: ModuleID = "org.apache.flink" % "flink-streaming-java" % version
     }
 
+    object spark {
+      private val version: String = "3.4.0"
+      val catalyst: ModuleID = "org.apache.spark" % "spark-catalyst" % version % Provided
+      val core: ModuleID = "org.apache.spark" % "spark-core" % version % Provided
+      val sql: ModuleID = "org.apache.spark" % "spark-sql" % version % Provided
+      val streaming: ModuleID = "org.apache.spark" % "spark-streaming" % version % Provided
+    }
+
     object testContainers {
       private val version: String = "0.40.14" // Dependency conflict on 0.40.15
       val kafka: ModuleID = "com.dimafeng" %% "testcontainers-scala-kafka" % version % Test
