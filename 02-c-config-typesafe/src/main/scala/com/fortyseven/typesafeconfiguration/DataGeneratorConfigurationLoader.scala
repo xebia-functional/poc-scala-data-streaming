@@ -19,22 +19,11 @@ package com.fortyseven.typesafeconfiguration
 import cats.effect.kernel.Async
 import com.fortyseven.coreheaders.ConfigurationLoaderHeader
 import com.fortyseven.coreheaders.configuration.DataGeneratorConfiguration
-import com.typesafe.config.{Config, ConfigFactory}
+import com.fortyseven.coreheaders.configuration.internal.*
+import com.fortyseven.typesafeconfiguration.instances.given
 
 private[typesafeconfiguration] final class DataGeneratorConfigurationLoader[F[_]: Async]
-    extends ConfigurationLoaderHeader[F, DataGeneratorConfiguration]:
-
-  override def load(configurationPath: Option[String]): F[DataGeneratorConfiguration] =
-
-    val eitherLoad: Either[Throwable, DataGeneratorConfiguration] =
-      for
-        kc  <- KafkaConfigurationLoader("DataGeneratorConfiguration", configurationPath)
-        src <- SchemaRegistryConfigurationLoader("DataGeneratorConfiguration", configurationPath)
-      yield DataGeneratorConfiguration(kc, src)
-
-    eitherLoad match
-      case Right(value)    => Async.apply.pure(value)
-      case Left(throwable) => Async.apply.raiseError(throwable)
+    extends TypesafeConfigurationLoader[F, DataGeneratorConfiguration]("DataGeneratorConfiguration")
 
 object DataGeneratorConfigurationLoader:
 

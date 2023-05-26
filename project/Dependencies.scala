@@ -41,8 +41,10 @@ object Dependencies {
     }
 
     object config {
+      private val pureConfigVersion = "0.17.2"
       val ciris: ModuleID = "is.cir" %% "ciris" % "3.1.0"
-      val typeconfig: ModuleID = "com.typesafe" % "config" % "1.4.2"
+      val pureConfig: ModuleID = "com.github.pureconfig" %% "pureconfig-core" % pureConfigVersion
+      val pureConfigCE: ModuleID = "com.github.pureconfig" %% "pureconfig-cats-effect" % pureConfigVersion
     }
 
 

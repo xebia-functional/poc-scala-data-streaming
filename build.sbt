@@ -81,9 +81,11 @@ lazy val `configuration-typesafe`: Project = (project in file("02-c-config-types
   .settings(
     name := "configuration-typesafe",
     libraryDependencies ++= Seq(
-      Libraries.config.typeconfig,
+      Libraries.config.pureConfig,
+      Libraries.config.pureConfigCE,
       Libraries.cats.effectKernel,
-      Libraries.cats.core
+      Libraries.cats.core,
+      Libraries.test.munitCatsEffect
       )
     )
 

@@ -16,24 +16,14 @@
 
 package com.fortyseven.typesafeconfiguration
 
-import scala.concurrent.duration.FiniteDuration
-
 import cats.effect.kernel.Async
 import com.fortyseven.coreheaders.ConfigurationLoaderHeader
 import com.fortyseven.coreheaders.configuration.KafkaConsumerConfiguration
-import com.typesafe.config.{Config, ConfigFactory}
+import com.fortyseven.coreheaders.configuration.internal.*
+import com.fortyseven.typesafeconfiguration.instances.given
 
 private[typesafeconfiguration] final class KafkaConsumerConfigurationLoader[F[_]: Async]
-    extends ConfigurationLoaderHeader[F, KafkaConsumerConfiguration]:
-
-  override def load(configurationPath: Option[String]): F[KafkaConsumerConfiguration] =
-    val eitherLoad =
-      for kc <- KafkaConfigurationLoader("KafkaConsumerConfiguration", configurationPath)
-      yield KafkaConsumerConfiguration(kc)
-
-    eitherLoad match
-      case Right(value)    => Async.apply.pure(value)
-      case Left(throwable) => Async.apply.raiseError(throwable)
+    extends TypesafeConfigurationLoader[F, KafkaConsumerConfiguration]("KafkaConsumerConfiguration")
 
 object KafkaConsumerConfigurationLoader:
 
