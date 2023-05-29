@@ -40,24 +40,24 @@ object instances:
 
   given ConfigReader[ConsumerConfiguration] =
     ConfigReader.forProduct4(
-      "TopicName",
-      "AutoOffsetReset",
-      "GroupId",
-      "MaxConcurrent"
+      "topicName",
+      "autoOffsetReset",
+      "groupId",
+      "maxConcurrent"
     )(ConsumerConfiguration.apply)
 
   given ConfigReader[ProducerConfiguration] =
     ConfigReader.forProduct6(
-      "TopicName",
-      "ValueSerializerClass",
-      "MaxConcurrent",
-      "CompressionType",
-      "CommitBatchWithinSize",
-      "CommitBatchWithinTime"
+      "topicName",
+      "valueSerializerClass",
+      "maxConcurrent",
+      "compressionType",
+      "commitBatchWithinSize",
+      "commitBatchWithinTime"
     )(ProducerConfiguration.apply)
 
   given ConfigReader[KafkaConfiguration] =
-    ConfigReader.forProduct3("BrokerConfiguration", "Consumer", "Producer")(KafkaConfiguration.apply)
+    ConfigReader.forProduct3("BrokerConfiguration", "ConsumerConfiguration", "ProducerConfiguration")(KafkaConfiguration.apply)
 
   given ConfigReader[SchemaRegistryConfiguration] =
     ConfigReader.forProduct1("schemaRegistryURL")(SchemaRegistryConfiguration.apply)
