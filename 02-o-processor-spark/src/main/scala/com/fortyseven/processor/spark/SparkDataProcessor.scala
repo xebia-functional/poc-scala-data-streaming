@@ -7,10 +7,10 @@ import cats.Applicative
 import cats.effect.IO
 import cats.effect.kernel.Async
 
-private [spark] final class SparkDataProcessor[F[_]: Async](sparkSession: SparkSession):
+private[spark] final class SparkDataProcessor[F[_]: Async](sparkSession: SparkSession):
+
   def run: F[Unit] =
-    val df: DataFrame = sparkSession
-      .read
+    val df: DataFrame = sparkSession.read
       .format("kafka")
       .option("kafka.bootstrap.servers", "localhost:9092")
       .option("subscribePattern", "data-generator-*")
@@ -19,7 +19,5 @@ private [spark] final class SparkDataProcessor[F[_]: Async](sparkSession: SparkS
       .load()
 
     Async.apply.pure(
-      df.write
-        .format("console")
-        .save()
+      df.write.format("console").save()
     )

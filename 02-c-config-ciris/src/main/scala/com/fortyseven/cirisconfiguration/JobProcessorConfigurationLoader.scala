@@ -23,13 +23,13 @@ import ciris.{default, ConfigValue, Effect}
 import com.fortyseven.cirisconfiguration.CommonConfiguration.{kafkaBrokerAddress, schemaRegistryUrl}
 import com.fortyseven.cirisconfiguration.decoders.given
 import com.fortyseven.coreheaders.ConfigurationLoaderHeader
-import com.fortyseven.coreheaders.configuration.JobProcessorConfiguration
+import com.fortyseven.coreheaders.configuration.FlinkProcessorConfiguration
 import com.fortyseven.coreheaders.configuration.internal.*
 import com.fortyseven.coreheaders.configuration.internal.types.*
 
-class JobProcessorConfigurationLoader[F[_]: Async] extends ConfigurationLoaderHeader[F, JobProcessorConfiguration]:
+class JobProcessorConfigurationLoader[F[_]: Async] extends ConfigurationLoaderHeader[F, FlinkProcessorConfiguration]:
 
-  lazy private val config: ConfigValue[Effect, JobProcessorConfiguration] =
+  lazy private val config: ConfigValue[Effect, FlinkProcessorConfiguration] =
     for
       brokerAddress          <- default(kafkaBrokerAddress).as[NonEmptyString]
       schemaRegistryUrl      <- default(schemaRegistryUrl).as[NonEmptyString]
@@ -44,7 +44,7 @@ class JobProcessorConfigurationLoader[F[_]: Async] extends ConfigurationLoaderHe
       compressionType        <- default(KafkaCompressionType.lz4).as[KafkaCompressionType]
       commitBatchWithinSize  <- default(10).as[PositiveInt]
       commitBatchWithinTime  <- default(15.seconds).as[FiniteDuration]
-    yield JobProcessorConfiguration(
+    yield FlinkProcessorConfiguration(
       KafkaConfiguration(
         broker = BrokerConfiguration(brokerAddress),
         consumer = Some(
@@ -69,4 +69,4 @@ class JobProcessorConfigurationLoader[F[_]: Async] extends ConfigurationLoaderHe
       SchemaRegistryConfiguration(schemaRegistryUrl)
     )
 
-  override def load(configurationPath: Option[String]): F[JobProcessorConfiguration] = config.load[F]
+  override def load(configurationPath: Option[String]): F[FlinkProcessorConfiguration] = config.load[F]

@@ -28,7 +28,7 @@ import cats.effect.*
 import cats.implicits.*
 
 // Temporary object to be removed once integration tests are refactored
-@deprecated
+//@deprecated
 object DataProcessorIntegrationTest extends IOApp.Simple:
 
   override def run: IO[Unit] =

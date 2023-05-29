@@ -37,7 +37,7 @@ import cats.Applicative
 import cats.effect.*
 import cats.implicits.*
 import com.fortyseven.core.codecs.iot.IotCodecs.given
-import com.fortyseven.coreheaders.configuration.JobProcessorConfiguration
+import com.fortyseven.coreheaders.configuration.FlinkProcessorConfiguration
 import com.fortyseven.coreheaders.model.iot.model.{GPSPosition, PneumaticPressure}
 import com.fortyseven.coreheaders.model.iot.types.Bar
 import org.apache.avro.Schema
@@ -46,7 +46,7 @@ import org.apache.avro.specific.SpecificRecord
 
 final class FlinkDataProcessor[F[_]: Applicative](env: StreamExecutionEnvironment):
 
-  def run(jpc: JobProcessorConfiguration): F[JobClient] =
+  def run(jpc: FlinkProcessorConfiguration): F[JobClient] =
 
     val consumerConfig = jpc.kafkaConfiguration.consumer.getOrElse(
       throw new RuntimeException("No consumer config available")

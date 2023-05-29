@@ -21,17 +21,17 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
 import cats.*
 import cats.effect.kernel.Async
 import cats.implicits.*
-import com.fortyseven.coreheaders.configuration.{JobProcessorConfiguration, KafkaConsumerConfiguration}
-import com.fortyseven.coreheaders.{ConfigurationLoaderHeader, JobProcessorHeader}
+import com.fortyseven.coreheaders.configuration.{FlinkProcessorConfiguration, KafkaConsumerConfiguration}
+import com.fortyseven.coreheaders.{ConfigurationLoaderHeader, FlinkProcessorHeader}
 
-class DataProcessor[F[_]: Async] extends JobProcessorHeader[F]:
+class DataProcessor[F[_]: Async] extends FlinkProcessorHeader[F]:
 
-  override def process(conf: ConfigurationLoaderHeader[F, JobProcessorConfiguration]): F[Unit] = for
+  override def process(conf: ConfigurationLoaderHeader[F, FlinkProcessorConfiguration]): F[Unit] = for
     kc <- conf.load()
     _  <- runWithConfiguration(kc)
   yield ()
 
-  private def runWithConfiguration(jpc: JobProcessorConfiguration): F[Unit] =
+  private def runWithConfiguration(jpc: FlinkProcessorConfiguration): F[Unit] =
     val env = StreamExecutionEnvironment.getExecutionEnvironment()
 
     env.setParallelism(Runtime.getRuntime.availableProcessors())

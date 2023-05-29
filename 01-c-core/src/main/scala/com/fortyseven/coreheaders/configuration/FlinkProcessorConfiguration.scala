@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders
+package com.fortyseven.coreheaders.configuration
 
-import com.fortyseven.coreheaders.configuration.JobProcessorConfiguration
+import com.fortyseven.coreheaders.configuration.internal.{KafkaConfiguration, SchemaRegistryConfiguration}
 
-trait JobProcessorHeader[F[_]]:
-
-  def process(config: ConfigurationLoaderHeader[F, JobProcessorConfiguration]): F[Unit]
+final case class FlinkProcessorConfiguration(
+    kafkaConfiguration: KafkaConfiguration,
+    schemaRegistryConfiguration: SchemaRegistryConfiguration
+  )
