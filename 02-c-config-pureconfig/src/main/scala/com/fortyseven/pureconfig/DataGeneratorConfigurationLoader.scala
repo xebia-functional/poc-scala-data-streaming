@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package com.fortyseven.typesafeconfiguration
+package com.fortyseven.pureconfig
 
 import cats.effect.kernel.Async
 import com.fortyseven.coreheaders.ConfigurationLoaderHeader
 import com.fortyseven.coreheaders.configuration.DataGeneratorConfiguration
 import com.fortyseven.coreheaders.configuration.internal.*
-import com.fortyseven.typesafeconfiguration.instances.given
+import com.fortyseven.pureconfig.instances.given
 
-private[typesafeconfiguration] final class DataGeneratorConfigurationLoader[F[_]: Async]
-    extends TypesafeConfigurationLoader[F, DataGeneratorConfiguration]("DataGeneratorConfiguration")
+private[pureconfig] final class DataGeneratorConfigurationLoader[F[_]: Async]
+    extends PureConfiguration[F, DataGeneratorConfiguration]("DataGeneratorConfiguration")
 
 object DataGeneratorConfigurationLoader:
 

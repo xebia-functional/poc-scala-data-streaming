@@ -41,7 +41,7 @@ object Dependencies {
     }
 
     object config {
-      private val pureConfigVersion = "0.17.2"
+      private val pureConfigVersion: String = "0.17.4"
       val ciris: ModuleID = "is.cir" %% "ciris" % "3.1.0"
       val pureConfig: ModuleID = "com.github.pureconfig" %% "pureconfig-core" % pureConfigVersion
       val pureConfigCE: ModuleID = "com.github.pureconfig" %% "pureconfig-cats-effect" % pureConfigVersion
@@ -77,7 +77,7 @@ object Dependencies {
       private val logbackVersion: String = "1.4.7"
       val catsCore: ModuleID = "org.typelevel" %% "log4cats-core" % catsVersion
       val catsSlf4j: ModuleID = "org.typelevel" %% "log4cats-slf4j" % catsVersion
-      val logback: ModuleID = "ch.qos.logback" % "logback-classic" % logbackVersion % Runtime
+      val logback: ModuleID = "ch.qos.logback" % "logback-classic" % logbackVersion //% Runtime
     }
 
     object test {

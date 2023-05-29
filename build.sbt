@@ -75,11 +75,11 @@ lazy val `configuration-ciris`: Project = (project in file("02-c-config-ciris"))
     )
   )
 
-lazy val `configuration-typesafe`: Project = (project in file("02-c-config-typesafe"))
+lazy val `configuration-typesafe`: Project = (project in file("02-c-config-pureconfig"))
   .dependsOn(`core-headers`)
   .settings(commonSettings)
   .settings(
-    name := "configuration-typesafe",
+    name := "configuration-pureconfig",
     libraryDependencies ++= Seq(
       Libraries.config.pureConfig,
       Libraries.config.pureConfigCE,

@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package com.fortyseven.typesafeconfiguration
+package com.fortyseven.pureconfig
+
+import scala.reflect.ClassTag
 
 import cats.effect.kernel.Async
 import com.fortyseven.coreheaders.ConfigurationLoaderHeader
-import com.fortyseven.coreheaders.configuration.KafkaConsumerConfiguration
-import com.fortyseven.coreheaders.configuration.internal.*
-import com.fortyseven.typesafeconfiguration.instances.given
+import com.fortyseven.coreheaders.configuration.JobProcessorConfiguration
+import pureconfig.module.catseffect.syntax.*
+import pureconfig.{ConfigReader, ConfigSource}
 
-private[typesafeconfiguration] final class KafkaConsumerConfigurationLoader[F[_]: Async]
-    extends TypesafeConfigurationLoader[F, KafkaConsumerConfiguration]("KafkaConsumerConfiguration")
+abstract class PureConfiguration[F[_]: Async, A: ConfigReader: ClassTag](path: String)
+    extends ConfigurationLoaderHeader[F, A]:
 
-object KafkaConsumerConfigurationLoader:
-
-  def apply[F[_]: Async]: KafkaConsumerConfigurationLoader[F] = new KafkaConsumerConfigurationLoader[F]
+  override def load(configurationPath: Option[String]): F[A] =
+    configurationPath.fold(ConfigSource.default)(ConfigSource.resources).at(path).loadF[F, A]()

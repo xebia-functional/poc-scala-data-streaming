@@ -22,7 +22,7 @@ import com.fortyseven.core.codecs.iot.IotCodecs
 import com.fortyseven.datagenerator.DataGenerator
 import com.fortyseven.kafkaconsumer.KafkaConsumer
 import com.fortyseven.processor.flink.DataProcessor
-import com.fortyseven.typesafeconfiguration.{
+import com.fortyseven.pureconfig.{
   DataGeneratorConfigurationLoader,
   JobProcessorConfigurationLoader,
   KafkaConsumerConfigurationLoader

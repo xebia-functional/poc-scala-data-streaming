@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package com.fortyseven.typesafeconfiguration
+package com.fortyseven.pureconfig
 
 import cats.effect.kernel.Async
 import com.fortyseven.coreheaders.ConfigurationLoaderHeader
-import com.fortyseven.coreheaders.configuration.JobProcessorConfiguration
+import com.fortyseven.coreheaders.configuration.KafkaConsumerConfiguration
 import com.fortyseven.coreheaders.configuration.internal.*
-import com.fortyseven.typesafeconfiguration.instances.given
+import com.fortyseven.pureconfig.instances.given
 
-private[typesafeconfiguration] final class JobProcessorConfigurationLoader[F[_]: Async]
-    extends TypesafeConfigurationLoader[F, JobProcessorConfiguration]("JobProcessorConfiguration")
+private[pureconfig] final class KafkaConsumerConfigurationLoader[F[_]: Async]
+    extends PureConfiguration[F, KafkaConsumerConfiguration]("KafkaConsumerConfiguration")
 
-object JobProcessorConfigurationLoader:
+object KafkaConsumerConfigurationLoader:
 
-  def apply[F[_]: Async]: JobProcessorConfigurationLoader[F] = new JobProcessorConfigurationLoader[F]
+  def apply[F[_]: Async]: KafkaConsumerConfigurationLoader[F] = new KafkaConsumerConfigurationLoader[F]
