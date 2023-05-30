@@ -24,7 +24,7 @@ import com.fortyseven.kafkaconsumer.KafkaConsumer
 import com.fortyseven.processor.flink.DataProcessor
 import com.fortyseven.pureconfig.{
   DataGeneratorConfigurationLoader,
-  JobProcessorConfigurationLoader,
+  FlinkProcessorConfigurationLoader,
   KafkaConsumerConfigurationLoader
 }
 import org.typelevel.log4cats.slf4j.Slf4jLogger
@@ -38,14 +38,14 @@ object Main extends IOApp.Simple:
     _              <- logger.info(s"DataGeneratorConfiguration: $dataGenConf")
     consumerConf   <- KafkaConsumerConfigurationLoader[IO].load()
     _              <- logger.info(s"KafkaConsumerConfiguration: $consumerConf")
-    processorConf  <- JobProcessorConfigurationLoader[IO].load()
+    processorConf  <- FlinkProcessorConfigurationLoader[IO].load()
     _              <- logger.info(s"JobProcessorConfiguration: $processorConf")
     _              <- logger.info("Start data generator")
     dataGenFiber   <- new DataGenerator[IO].generate(DataGeneratorConfigurationLoader[IO]).start
     _              <- logger.info("Start kafka consumer")
     consumerFiber  <- new KafkaConsumer[IO].consume(KafkaConsumerConfigurationLoader[IO]).start
     _              <- logger.info("Start flink processor")
-    processorFiber <- new DataProcessor[IO].process(JobProcessorConfigurationLoader[IO]).start
+    processorFiber <- new DataProcessor[IO].process(FlinkProcessorConfigurationLoader[IO]).start
     _              <- dataGenFiber.join
     _              <- consumerFiber.join
     _              <- processorFiber.join

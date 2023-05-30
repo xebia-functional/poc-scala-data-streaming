@@ -16,15 +16,13 @@
 
 package com.fortyseven.pureconfig
 
-import scala.reflect.ClassTag
-
 import cats.effect.kernel.Async
-import com.fortyseven.coreheaders.ConfigurationLoaderHeader
-import pureconfig.module.catseffect.syntax.*
-import pureconfig.{ConfigReader, ConfigSource}
+import com.fortyseven.coreheaders.configuration.SparkProcessorConfiguration
+import com.fortyseven.pureconfig.instances.given_ConfigReader_SparkProcessorConfiguration
 
-abstract class PureConfiguration[F[_]: Async, A: ConfigReader: ClassTag](path: String)
-    extends ConfigurationLoaderHeader[F, A]:
+private [pureconfig] final class SparkProcessorConfigurationLoader[F[_]: Async]
+  extends PureConfiguration[F, SparkProcessorConfiguration]("SparkProcessorConfiguration")
 
-  override def load(configurationPath: Option[String]): F[A] =
-    configurationPath.fold(ConfigSource.default)(ConfigSource.resources).at(path).loadF[F, A]()
+object SparkProcessorConfigurationLoader:
+  def apply[F[_]: Async]: SparkProcessorConfigurationLoader[F] =
+    new SparkProcessorConfigurationLoader[F]

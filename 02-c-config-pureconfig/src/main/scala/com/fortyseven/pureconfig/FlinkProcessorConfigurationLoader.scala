@@ -18,13 +18,13 @@ package com.fortyseven.pureconfig
 
 import cats.effect.kernel.Async
 import com.fortyseven.coreheaders.ConfigurationLoaderHeader
-import com.fortyseven.coreheaders.configuration.JobProcessorConfiguration
+import com.fortyseven.coreheaders.configuration.FlinkProcessorConfiguration
 import com.fortyseven.coreheaders.configuration.internal.*
 import com.fortyseven.pureconfig.instances.given
 
-private[pureconfig] final class JobProcessorConfigurationLoader[F[_]: Async]
-    extends PureConfiguration[F, JobProcessorConfiguration]("JobProcessorConfiguration")
+private[pureconfig] final class FlinkProcessorConfigurationLoader[F[_]: Async]
+    extends PureConfiguration[F, FlinkProcessorConfiguration]("FlinkProcessorConfiguration")
 
-object JobProcessorConfigurationLoader:
+object FlinkProcessorConfigurationLoader:
 
-  def apply[F[_]: Async]: JobProcessorConfigurationLoader[F] = new JobProcessorConfigurationLoader[F]
+  def apply[F[_]: Async]: FlinkProcessorConfigurationLoader[F] = new FlinkProcessorConfigurationLoader[F]

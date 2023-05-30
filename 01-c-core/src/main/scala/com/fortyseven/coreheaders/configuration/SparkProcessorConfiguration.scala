@@ -16,24 +16,31 @@
 
 package com.fortyseven.coreheaders.configuration
 
+import scala.concurrent.duration.FiniteDuration
+
 import com.fortyseven.coreheaders.configuration.internal.types.NonEmptyString
 import com.fortyseven.coreheaders.configuration.internal.{KafkaConfiguration, SchemaRegistryConfiguration}
 
-import scala.concurrent.duration.FiniteDuration
-
 final case class SparkProcessorConfiguration(
-  applicationProperties: ApplicationPropertiesConfiguration,
-  sparkStreamingConfiguration: SparkStreamingConfiguration
+    applicationProperties: ApplicationPropertiesConfiguration,
+    sparkStreaming: SparkStreamingConfiguration,
+    kafkaStreaming: KafkaStreamConfiguration
   )
 
 final case class ApplicationPropertiesConfiguration(
-  sparkAppName: NonEmptyString,
-  sparkMasterURL: NonEmptyString
-)
-
+    appName: NonEmptyString,
+    masterURL: NonEmptyString
+  )
 
 final case class SparkStreamingConfiguration(
-  sparkStreamingBackpressureEnabled: Boolean,
-  sparkStreamingBlockInterval: FiniteDuration,
-  sparkStreamingStopGracefullyOnShutdown: Boolean
-)
+    backpressureEnabled: Boolean,
+    blockInterval: FiniteDuration,
+    stopGracefullyOnShutdown: Boolean
+  )
+
+final case class KafkaStreamConfiguration(
+    bootstrapServers: NonEmptyString,
+    topic: NonEmptyString,
+    startingOffsets: NonEmptyString,
+    endingOffsets: Option[NonEmptyString]
+  )
