@@ -16,8 +16,6 @@
 
 package com.fortyseven.coreheaders.model.app
 
-import java.util.UUID
-
 object types:
 
   opaque type Meters <: Int = Int

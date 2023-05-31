@@ -16,7 +16,6 @@
 
 package com.fortyseven.kafkaconsumer
 
-import scala.concurrent.duration.*
 import scala.util.matching.Regex
 
 import org.apache.kafka.clients.producer.ProducerConfig
@@ -25,7 +24,7 @@ import cats.*
 import cats.effect.kernel.Async
 import cats.implicits.*
 import com.fortyseven.coreheaders.configuration.KafkaConsumerConfiguration
-import com.fortyseven.coreheaders.configuration.internal.types.{KafkaAutoOffsetReset, KafkaCompressionType}
+import com.fortyseven.coreheaders.configuration.internal.types.KafkaAutoOffsetReset
 import com.fortyseven.coreheaders.{ConfigurationLoaderHeader, KafkaConsumerHeader}
 import fs2.kafka.*
 

@@ -16,33 +16,18 @@
 
 package com.fortyseven.processor.flink
 
-import java.nio.charset.StandardCharsets
-
 import org.apache.flink.api.common.eventtime.WatermarkStrategy
-import org.apache.flink.api.common.serialization.{DeserializationSchema, SimpleStringSchema}
-import org.apache.flink.api.common.typeinfo.TypeInformation
-import org.apache.flink.connector.kafka.sink.{KafkaRecordSerializationSchema, KafkaSink}
 import org.apache.flink.connector.kafka.source.KafkaSource
 import org.apache.flink.connector.kafka.source.enumerator.initializer.OffsetsInitializer
-import org.apache.flink.connector.kafka.source.reader.deserializer.KafkaRecordDeserializationSchema
 import org.apache.flink.core.execution.JobClient
 import org.apache.flink.formats.avro.registry.confluent.ConfluentRegistryAvroDeserializationSchema
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
-import org.apache.flink.streaming.connectors.kafka.KafkaDeserializationSchema
-import org.apache.flink.util.Collector
-
-import org.apache.kafka.clients.consumer.ConsumerRecord
 
 import cats.Applicative
-import cats.effect.*
 import cats.implicits.*
 import com.fortyseven.core.codecs.iot.IotCodecs.given
 import com.fortyseven.coreheaders.configuration.JobProcessorConfiguration
-import com.fortyseven.coreheaders.model.iot.model.{GPSPosition, PneumaticPressure}
-import com.fortyseven.coreheaders.model.iot.types.Bar
 import org.apache.avro.Schema
-import org.apache.avro.generic.GenericRecord
-import org.apache.avro.specific.SpecificRecord
 
 final class FlinkDataProcessor[F[_]: Applicative](env: StreamExecutionEnvironment):
 
@@ -52,9 +37,9 @@ final class FlinkDataProcessor[F[_]: Applicative](env: StreamExecutionEnvironmen
       throw new RuntimeException("No consumer config available")
     )
 
-    val producerConfig = jpc.kafkaConfiguration.producer.getOrElse(
-      throw new RuntimeException("No producer config available")
-    )
+    // val producerConfig = jpc.kafkaConfiguration.producer.getOrElse(
+    //  throw new RuntimeException("No producer config available")
+    // )
 
     val deserializationSchema = pneumaticPressureCodec.schema match
       case Right(s) =>
@@ -76,18 +61,18 @@ final class FlinkDataProcessor[F[_]: Applicative](env: StreamExecutionEnvironmen
       .setValueOnlyDeserializer(deserializationSchema)
       .build()
 
-    val kafkaSink = KafkaSink
-      .builder()
-      .setBootstrapServers(jpc.kafkaConfiguration.broker.brokerAddress.asString)
-      .setRecordSerializer(
-        KafkaRecordSerializationSchema
-          .builder()
-          .setTopic(producerConfig.topicName.asString)
-          .setKeySerializationSchema(new SimpleStringSchema())
-          .setValueSerializationSchema(new SimpleStringSchema())
-          .build()
-      )
-      .build()
+    // val kafkaSink = KafkaSink
+    //  .builder()
+    //  .setBootstrapServers(jpc.kafkaConfiguration.broker.brokerAddress.asString)
+    //  .setRecordSerializer(
+    //    KafkaRecordSerializationSchema
+    //      .builder()
+    //      .setTopic(producerConfig.topicName.asString)
+    //      .setKeySerializationSchema(new SimpleStringSchema())
+    //      .setValueSerializationSchema(new SimpleStringSchema())
+    //      .build()
+    //  )
+    //  .build()
 
     val stream = env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "kafka-source")
     // .sinkTo(kafkaSink) // ToDo: transform and sink result

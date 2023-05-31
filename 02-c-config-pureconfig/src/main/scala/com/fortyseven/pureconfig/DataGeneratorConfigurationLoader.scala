@@ -17,9 +17,7 @@
 package com.fortyseven.pureconfig
 
 import cats.effect.kernel.Async
-import com.fortyseven.coreheaders.ConfigurationLoaderHeader
 import com.fortyseven.coreheaders.configuration.DataGeneratorConfiguration
-import com.fortyseven.coreheaders.configuration.internal.*
 import com.fortyseven.pureconfig.instances.given
 
 private[pureconfig] final class DataGeneratorConfigurationLoader[F[_]: Async]

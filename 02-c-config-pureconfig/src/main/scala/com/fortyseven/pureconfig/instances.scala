@@ -57,7 +57,9 @@ object instances:
     )(ProducerConfiguration.apply)
 
   given ConfigReader[KafkaConfiguration] =
-    ConfigReader.forProduct3("BrokerConfiguration", "ConsumerConfiguration", "ProducerConfiguration")(KafkaConfiguration.apply)
+    ConfigReader.forProduct3("BrokerConfiguration", "ConsumerConfiguration", "ProducerConfiguration")(
+      KafkaConfiguration.apply
+    )
 
   given ConfigReader[SchemaRegistryConfiguration] =
     ConfigReader.forProduct1("schemaRegistryURL")(SchemaRegistryConfiguration.apply)

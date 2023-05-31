@@ -12,7 +12,7 @@ ThisBuild / scmInfo      := Some(
   )
 )
 
-ThisBuild / scalaVersion := "3.2.2"
+ThisBuild / scalaVersion := "3.3.0"
 
 ThisBuild / semanticdbEnabled := true
 
@@ -26,7 +26,8 @@ ThisBuild / scalacOptions ++=
     "-language:implicitConversions",
     "-unchecked",
     "-Xfatal-warnings",
-    "-Ykind-projector"
+    "-Ykind-projector",
+    "-Wunused:all"
   ) ++ Seq("-rewrite", "-indent") ++ Seq("-source", "future-migration")
 
 lazy val `poc-scala-data-streaming`: Project =
