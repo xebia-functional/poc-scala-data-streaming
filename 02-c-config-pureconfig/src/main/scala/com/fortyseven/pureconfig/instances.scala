@@ -86,9 +86,16 @@ object instances:
       KafkaStreamConfiguration.apply
     )
 
+  given ConfigReader[ReaderConfiguration] =
+    ConfigReader.forProduct1("KafkaStreamConfiguration")(ReaderConfiguration.apply)
+
+  given ConfigReader[WriterConfiguration] =
+    ConfigReader.forProduct1("format")(WriterConfiguration.apply)
+
   given ConfigReader[SparkProcessorConfiguration] =
-    ConfigReader.forProduct3(
+    ConfigReader.forProduct4(
       "ApplicationPropertiesConfiguration",
       "SparkStreamingConfiguration",
-      "KafkaStreamConfiguration"
+      "ReaderConfiguration",
+      "WriterConfiguration"
     )(SparkProcessorConfiguration.apply)

@@ -36,6 +36,12 @@ class DataProcessor[F[_]: Async] extends SparkProcessorHeader[F]:
     val sparkConf: SparkConf = new SparkConf()
       .setAppName(sparkConfiguration.applicationProperties.appName.asString)
       .setMaster(sparkConfiguration.applicationProperties.masterURL.asString)
+      .set("spark.streaming.backpressure.enabled", sparkConfiguration.sparkStreaming.backpressureEnabled.toString)
+      .set("spark.streaming.blockInterval", sparkConfiguration.sparkStreaming.blockInterval.toString)
+      .set(
+        "spark.streaming.stopGracefullyOnShutdown",
+        sparkConfiguration.sparkStreaming.stopGracefullyOnShutdown.toString
+      )
 
     val spark = SparkSession.builder.config(sparkConf).getOrCreate()
 

@@ -20,9 +20,10 @@ import cats.effect.kernel.Async
 import com.fortyseven.coreheaders.configuration.SparkProcessorConfiguration
 import com.fortyseven.pureconfig.instances.given_ConfigReader_SparkProcessorConfiguration
 
-private [pureconfig] final class SparkProcessorConfigurationLoader[F[_]: Async]
-  extends PureConfiguration[F, SparkProcessorConfiguration]("SparkProcessorConfiguration")
+private[pureconfig] final class SparkProcessorConfigurationLoader[F[_]: Async]
+    extends PureConfiguration[F, SparkProcessorConfiguration]("SparkProcessorConfiguration")
 
 object SparkProcessorConfigurationLoader:
+
   def apply[F[_]: Async]: SparkProcessorConfigurationLoader[F] =
     new SparkProcessorConfigurationLoader[F]

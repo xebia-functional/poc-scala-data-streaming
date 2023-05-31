@@ -24,7 +24,8 @@ import com.fortyseven.coreheaders.configuration.internal.{KafkaConfiguration, Sc
 final case class SparkProcessorConfiguration(
     applicationProperties: ApplicationPropertiesConfiguration,
     sparkStreaming: SparkStreamingConfiguration,
-    kafkaStreaming: KafkaStreamConfiguration
+    readerConfiguration: ReaderConfiguration,
+    writerConfiguration: WriterConfiguration
   )
 
 final case class ApplicationPropertiesConfiguration(
@@ -42,5 +43,13 @@ final case class KafkaStreamConfiguration(
     bootstrapServers: NonEmptyString,
     topic: NonEmptyString,
     startingOffsets: NonEmptyString,
-    endingOffsets: Option[NonEmptyString]
+    endingOffsets: NonEmptyString
+  )
+
+final case class ReaderConfiguration(
+    kafkaStreamConfiguration: KafkaStreamConfiguration
+  )
+
+final case class WriterConfiguration(
+    format: NonEmptyString
   )
