@@ -20,7 +20,6 @@ import scala.reflect.ClassTag
 
 import cats.effect.kernel.Async
 import com.fortyseven.coreheaders.ConfigurationLoaderHeader
-import com.fortyseven.coreheaders.configuration.JobProcessorConfiguration
 import pureconfig.module.catseffect.syntax.*
 import pureconfig.{ConfigReader, ConfigSource}
 
