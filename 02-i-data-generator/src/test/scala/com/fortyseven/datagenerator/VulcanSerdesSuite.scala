@@ -21,11 +21,10 @@ import org.apache.kafka.common.serialization.Serde
 import com.fortyseven.core.codecs.iot.IotCodecs.pneumaticPressureCodec
 import com.fortyseven.coreheaders.model.iot.model.PneumaticPressure
 import com.fortyseven.coreheaders.model.iot.types.Bar
-import io.confluent.kafka.schemaregistry.SchemaProvider
+
 import io.confluent.kafka.schemaregistry.avro.AvroSchema
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
-import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
-import vulcan.Codec
+import munit.CatsEffectSuite
 
 class VulcanSerdesSuite extends CatsEffectSuite:
 
@@ -37,7 +36,7 @@ class VulcanSerdesSuite extends CatsEffectSuite:
   private def deserialize[A](topic: String, bytes: Array[Byte])(using serde: Serde[A]): A =
     serde.deserializer.deserialize(topic, bytes)
 
-  test("Serialize a case class as a record") {
+  test("Serialize a case class as a record"):
     val mockedClient = new MockSchemaRegistryClient()
     val topic        = "test-topic"
 
@@ -51,4 +50,3 @@ class VulcanSerdesSuite extends CatsEffectSuite:
     val result = deserialize(topic, serialize(topic, data))
 
     assertEquals(data, result)
-  }

@@ -16,13 +16,8 @@
 
 package com.fortyseven.processor.spark
 
-import org.apache.spark.SparkConf
-import org.apache.spark.internal.Logging
-import org.apache.spark.sql.streaming.DataStreamReader
 import org.apache.spark.sql.{DataFrame, DataFrameReader, DataFrameWriter, Row, SparkSession}
 
-import cats.Applicative
-import cats.effect.IO
 import cats.effect.kernel.Async
 import com.fortyseven.coreheaders.configuration.{ReaderConfiguration, SparkProcessorConfiguration, WriterConfiguration}
 

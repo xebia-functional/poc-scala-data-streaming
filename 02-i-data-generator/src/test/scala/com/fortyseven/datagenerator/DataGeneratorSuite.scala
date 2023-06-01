@@ -18,11 +18,8 @@ package com.fortyseven.datagenerator
 
 import scala.concurrent.duration.*
 
-import cats.effect.syntax.temporal.*
-import cats.effect.{IO, Temporal}
-import cats.implicits.*
+import cats.effect.IO
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
-import org.scalacheck.Prop.*
 import org.scalacheck.*
 import org.scalacheck.effect.PropF
 import org.typelevel.log4cats.slf4j.Slf4jLogger
@@ -31,7 +28,7 @@ class DataGeneratorSuite extends CatsEffectSuite with ScalaCheckEffectSuite:
 
   private val dataGenerator = new ModelGenerators[IO](1.millisecond)
 
-  test("generateGPSPosition") {
+  test("generateGPSPosition"):
     PropF.forAllF(Gen.choose(1, 20)) { (sampleSize: Int) =>
       for
         logger <- Slf4jLogger.create[IO]
@@ -46,9 +43,8 @@ class DataGeneratorSuite extends CatsEffectSuite with ScalaCheckEffectSuite:
                     ).foreach(it => assert(it._1 <= 1e-3 && it._2 <= 1e-3))
       yield ()
     }
-  }
 
-  test("generatePneumaticPressure") {
+  test("generatePneumaticPressure"):
     PropF.forAllF(Gen.choose(1, 20)) { (sampleSize: Int) =>
       for
         logger <- Slf4jLogger.create[IO]
@@ -59,4 +55,3 @@ class DataGeneratorSuite extends CatsEffectSuite with ScalaCheckEffectSuite:
         _       = sample.sliding(2).map(l => l.head.pressure - l.last.pressure).foreach(it => assert(it >= 0 && it <= 1e-3))
       yield ()
     }
-  }

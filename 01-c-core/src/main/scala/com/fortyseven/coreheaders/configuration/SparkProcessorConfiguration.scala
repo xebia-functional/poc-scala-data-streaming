@@ -19,7 +19,6 @@ package com.fortyseven.coreheaders.configuration
 import scala.concurrent.duration.FiniteDuration
 
 import com.fortyseven.coreheaders.configuration.internal.types.NonEmptyString
-import com.fortyseven.coreheaders.configuration.internal.{KafkaConfiguration, SchemaRegistryConfiguration}
 
 final case class SparkProcessorConfiguration(
     applicationProperties: ApplicationPropertiesConfiguration,

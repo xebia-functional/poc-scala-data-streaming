@@ -21,7 +21,7 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
 import cats.*
 import cats.effect.kernel.Async
 import cats.implicits.*
-import com.fortyseven.coreheaders.configuration.{FlinkProcessorConfiguration, KafkaConsumerConfiguration}
+import com.fortyseven.coreheaders.configuration.FlinkProcessorConfiguration
 import com.fortyseven.coreheaders.{ConfigurationLoaderHeader, FlinkProcessorHeader}
 
 class DataProcessor[F[_]: Async] extends FlinkProcessorHeader[F]:

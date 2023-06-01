@@ -21,7 +21,7 @@ import com.fortyseven.coreheaders.model.iot.model.{GPSPosition, PneumaticPressur
 import com.fortyseven.coreheaders.model.iot.types.{Bar, Latitude, Longitude}
 import munit.ScalaCheckSuite
 import org.scalacheck.Prop.forAll
-import org.scalacheck.{Arbitrary, Gen}
+import org.scalacheck.Gen
 import vulcan.{AvroError, Codec}
 
 class CodecSpec extends ScalaCheckSuite:
@@ -32,7 +32,7 @@ class CodecSpec extends ScalaCheckSuite:
       result  <- vulcan.Codec.decode[C](encoded)
     yield result
 
-  property("GPSPosition") {
+  property("GPSPosition"):
     forAll(Gen.choose(-90, 90), Gen.choose(-180, 180)) { (latitude: Int, longitude: Int) =>
       (Latitude(latitude), Longitude(longitude)) match
         case (Right(lat), Right(lon)) =>
@@ -41,9 +41,8 @@ class CodecSpec extends ScalaCheckSuite:
         case _                        => assert(false)
       ()
     }
-  }
 
-  property("PneumaticPressure") {
+  property("PneumaticPressure"):
     forAll(Gen.choose(1, 100)) { (pressure: Int) =>
       Bar(pressure) match
         case Right(p) =>
@@ -52,4 +51,3 @@ class CodecSpec extends ScalaCheckSuite:
         case _        => assert(false)
       ()
     }
-  }

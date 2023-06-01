@@ -21,8 +21,8 @@ import org.apache.spark.sql.SparkSession
 
 import cats.effect.kernel.Async
 import cats.implicits.{toFlatMapOps, toFunctorOps}
-import com.fortyseven.coreheaders.configuration.{FlinkProcessorConfiguration, SparkProcessorConfiguration}
-import com.fortyseven.coreheaders.{ConfigurationLoaderHeader, FlinkProcessorHeader, SparkProcessorHeader}
+import com.fortyseven.coreheaders.configuration.SparkProcessorConfiguration
+import com.fortyseven.coreheaders.{ConfigurationLoaderHeader, SparkProcessorHeader}
 
 class DataProcessor[F[_]: Async] extends SparkProcessorHeader[F]:
 
