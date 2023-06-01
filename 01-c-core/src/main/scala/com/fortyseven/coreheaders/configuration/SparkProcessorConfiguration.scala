@@ -23,8 +23,8 @@ import com.fortyseven.coreheaders.configuration.internal.types.NonEmptyString
 final case class SparkProcessorConfiguration(
     applicationProperties: ApplicationPropertiesConfiguration,
     sparkStreaming: SparkStreamingConfiguration,
-    readerConfiguration: ReaderConfiguration,
-    writerConfiguration: WriterConfiguration
+    reader: ReaderConfiguration,
+    writer: WriterConfiguration
   )
 
 final case class ApplicationPropertiesConfiguration(
@@ -46,7 +46,7 @@ final case class KafkaStreamConfiguration(
   )
 
 final case class ReaderConfiguration(
-    kafkaStreamConfiguration: KafkaStreamConfiguration
+    kafkaStream: KafkaStreamConfiguration
   )
 
 final case class WriterConfiguration(

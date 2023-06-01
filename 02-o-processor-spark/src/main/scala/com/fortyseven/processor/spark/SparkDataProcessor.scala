@@ -25,37 +25,37 @@ private[spark] final class SparkDataProcessor[F[_]: Async](sparkSession: SparkSe
 
   def run(sparkProcessorConfiguration: SparkProcessorConfiguration): F[Unit] =
 
-    def setReader(readerConfiguration: ReaderConfiguration): DataFrameReader =
+    def setReader(reader: ReaderConfiguration): DataFrameReader =
       sparkSession.read
         .format("kafka")
         .option(
           "kafka.bootstrap.servers",
-          readerConfiguration.kafkaStreamConfiguration.bootstrapServers.asString
+          reader.kafkaStream.bootstrapServers.asString
         )
         .option(
           "subscribePattern",
-          readerConfiguration.kafkaStreamConfiguration.topic.asString
+          reader.kafkaStream.topic.asString
         )
         .option(
           "startingOffsets",
-          readerConfiguration.kafkaStreamConfiguration.startingOffsets.asString
+          reader.kafkaStream.startingOffsets.asString
         )
         .option(
           "endingOffsets",
-          readerConfiguration.kafkaStreamConfiguration.endingOffsets.asString
+          reader.kafkaStream.endingOffsets.asString
         )
 
     def setLogic(dataFrameReader: DataFrameReader): DataFrame = dataFrameReader.load()
 
-    def setWriter(writerConfiguration: WriterConfiguration, dataFrame: DataFrame): DataFrameWriter[Row] =
-      dataFrame.write.format(writerConfiguration.format.asString)
+    def setWriter(writer: WriterConfiguration, dataFrame: DataFrame): DataFrameWriter[Row] =
+      dataFrame.write.format(writer.format.asString)
 
     Async.apply.delay(
       setWriter(
-        sparkProcessorConfiguration.writerConfiguration,
+        sparkProcessorConfiguration.writer,
         setLogic(
           setReader(
-            sparkProcessorConfiguration.readerConfiguration
+            sparkProcessorConfiguration.reader
           )
         )
       ).save()
