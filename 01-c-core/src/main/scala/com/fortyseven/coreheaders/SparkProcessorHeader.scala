@@ -16,8 +16,8 @@
 
 package com.fortyseven.coreheaders
 
-import com.fortyseven.coreheaders.configuration.JobProcessorConfiguration
+import com.fortyseven.coreheaders.configuration.SparkProcessorConfiguration
 
-trait JobProcessorHeader[F[_]]:
+trait SparkProcessorHeader[F[_]]:
 
-  def process(config: ConfigurationLoaderHeader[F, JobProcessorConfiguration]): F[Unit]
+  def process(config: ConfigurationLoaderHeader[F, SparkProcessorConfiguration]): F[Unit]

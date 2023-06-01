@@ -14,21 +14,10 @@
  * limitations under the License.
  */
 
-package com.fortyseven.pureconfig
+package com.fortyseven.coreheaders
 
-import cats.effect.IO
-import munit.CatsEffectSuite
+import com.fortyseven.coreheaders.configuration.FlinkProcessorConfiguration
 
-class ConfigSpec extends CatsEffectSuite:
+trait FlinkProcessorHeader[F[_]]:
 
-  test("Load data generator config"):
-    assertIO_(DataGeneratorConfigurationLoader.apply[IO].load().void)
-
-  test("Load job processor config"):
-    assertIO_(FlinkProcessorConfigurationLoader.apply[IO].load().void)
-
-  test("Load kafka configuration loader config"):
-    assertIO_(KafkaConsumerConfigurationLoader.apply[IO].load().void)
-
-  test("Load Spark configuration loader config"):
-    assertIO_(SparkProcessorConfigurationLoader.apply[IO].load().void)
+  def process(config: ConfigurationLoaderHeader[F, FlinkProcessorConfiguration]): F[Unit]

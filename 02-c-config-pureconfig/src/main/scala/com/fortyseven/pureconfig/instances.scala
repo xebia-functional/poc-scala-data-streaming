@@ -67,8 +67,35 @@ object instances:
   given ConfigReader[DataGeneratorConfiguration] =
     ConfigReader.forProduct2("KafkaConfiguration", "SchemaRegistryConfiguration")(DataGeneratorConfiguration.apply)
 
-  given ConfigReader[JobProcessorConfiguration] =
-    ConfigReader.forProduct2("KafkaConfiguration", "SchemaRegistryConfiguration")(JobProcessorConfiguration.apply)
+  given ConfigReader[FlinkProcessorConfiguration] =
+    ConfigReader.forProduct2("KafkaConfiguration", "SchemaRegistryConfiguration")(FlinkProcessorConfiguration.apply)
 
   given ConfigReader[KafkaConsumerConfiguration] =
     ConfigReader.forProduct1("KafkaConfiguration")(KafkaConsumerConfiguration.apply)
+
+  given ConfigReader[ApplicationPropertiesConfiguration] =
+    ConfigReader.forProduct2("appName", "masterURL")(ApplicationPropertiesConfiguration.apply)
+
+  given ConfigReader[SparkStreamingConfiguration] =
+    ConfigReader.forProduct3("backpressureEnabled", "blockInterval", "stopGracefullyOnShutdown")(
+      SparkStreamingConfiguration.apply
+    )
+
+  given ConfigReader[KafkaStreamConfiguration] =
+    ConfigReader.forProduct4("bootstrapServers", "topic", "startingOffsets", "endingOffsets")(
+      KafkaStreamConfiguration.apply
+    )
+
+  given ConfigReader[ReaderConfiguration] =
+    ConfigReader.forProduct1("KafkaStreamConfiguration")(ReaderConfiguration.apply)
+
+  given ConfigReader[WriterConfiguration] =
+    ConfigReader.forProduct1("format")(WriterConfiguration.apply)
+
+  given ConfigReader[SparkProcessorConfiguration] =
+    ConfigReader.forProduct4(
+      "ApplicationPropertiesConfiguration",
+      "SparkStreamingConfiguration",
+      "ReaderConfiguration",
+      "WriterConfiguration"
+    )(SparkProcessorConfiguration.apply)

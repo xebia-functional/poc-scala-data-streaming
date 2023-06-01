@@ -20,7 +20,6 @@ import cats.effect.*
 import cats.implicits.*
 import fs2.kafka.*
 import org.apache.kafka.clients.admin.NewTopic
-import org.apache.kafka.common.serialization.StringDeserializer
 
 object KafkaUtils:
 

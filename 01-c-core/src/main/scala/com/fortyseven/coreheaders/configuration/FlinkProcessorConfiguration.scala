@@ -14,15 +14,11 @@
  * limitations under the License.
  */
 
-package com.fortyseven.pureconfig
+package com.fortyseven.coreheaders.configuration
 
-import cats.effect.kernel.Async
-import com.fortyseven.coreheaders.configuration.JobProcessorConfiguration
-import com.fortyseven.pureconfig.instances.given
+import com.fortyseven.coreheaders.configuration.internal.{KafkaConfiguration, SchemaRegistryConfiguration}
 
-private[pureconfig] final class JobProcessorConfigurationLoader[F[_]: Async]
-    extends PureConfiguration[F, JobProcessorConfiguration]("JobProcessorConfiguration")
-
-object JobProcessorConfigurationLoader:
-
-  def apply[F[_]: Async]: JobProcessorConfigurationLoader[F] = new JobProcessorConfigurationLoader[F]
+final case class FlinkProcessorConfiguration(
+    kafkaConfiguration: KafkaConfiguration,
+    schemaRegistryConfiguration: SchemaRegistryConfiguration
+  )

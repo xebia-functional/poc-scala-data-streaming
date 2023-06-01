@@ -16,19 +16,14 @@
 
 package com.fortyseven.pureconfig
 
-import cats.effect.IO
-import munit.CatsEffectSuite
+import cats.effect.kernel.Async
+import com.fortyseven.coreheaders.configuration.SparkProcessorConfiguration
+import com.fortyseven.pureconfig.instances.given_ConfigReader_SparkProcessorConfiguration
 
-class ConfigSpec extends CatsEffectSuite:
+private[pureconfig] final class SparkProcessorConfigurationLoader[F[_]: Async]
+    extends PureConfiguration[F, SparkProcessorConfiguration]("SparkProcessorConfiguration")
 
-  test("Load data generator config"):
-    assertIO_(DataGeneratorConfigurationLoader.apply[IO].load().void)
+object SparkProcessorConfigurationLoader:
 
-  test("Load job processor config"):
-    assertIO_(FlinkProcessorConfigurationLoader.apply[IO].load().void)
-
-  test("Load kafka configuration loader config"):
-    assertIO_(KafkaConsumerConfigurationLoader.apply[IO].load().void)
-
-  test("Load Spark configuration loader config"):
-    assertIO_(SparkProcessorConfigurationLoader.apply[IO].load().void)
+  def apply[F[_]: Async]: SparkProcessorConfigurationLoader[F] =
+    new SparkProcessorConfigurationLoader[F]

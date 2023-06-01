@@ -22,7 +22,6 @@ import munit.*
 import com.dimafeng.testcontainers.lifecycle.and
 import com.dimafeng.testcontainers.{KafkaContainer, SchemaRegistryContainer}
 import com.dimafeng.testcontainers.munit.TestContainersForAll
-import org.testcontainers.Testcontainers
 import org.testcontainers.containers.Network
 import org.testcontainers.utility.DockerImageName
 import org.typelevel.log4cats.slf4j.Slf4jLogger
@@ -53,7 +52,7 @@ class DataProcessorSuite extends CatsEffectSuite with TestContainersForAll:
 
     kafkaContainer `and` schemaRegistryContainer
 
-  test("Flink processing") {
+  test("Flink processing"):
     val sourceTopic = "input-topic"
     val sinkTopic   = "output-topic"
 
@@ -80,4 +79,3 @@ class DataProcessorSuite extends CatsEffectSuite with TestContainersForAll:
         _      <- fiber.cancel
       yield assertEquals(result.sorted, List("id1", "id2", "id3").sorted)
     }
-  }
