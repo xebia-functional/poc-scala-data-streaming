@@ -17,8 +17,6 @@
 package com.fortyseven
 
 import cats.effect.{IO, IOApp}
-import cats.implicits.*
-import com.fortyseven.core.codecs.iot.IotCodecs
 import com.fortyseven.datagenerator.DataGenerator
 import com.fortyseven.kafkaconsumer.KafkaConsumer
 import com.fortyseven.processor.flink.DataProcessor
@@ -28,7 +26,6 @@ import com.fortyseven.pureconfig.{
   KafkaConsumerConfigurationLoader
 }
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import vulcan.Codec
 
 object Main extends IOApp.Simple:
 
