@@ -27,7 +27,8 @@ ThisBuild / scalacOptions ++=
     "-unchecked",
     "-Xfatal-warnings",
     "-Ykind-projector",
-    "-Wunused:all"
+    "-Wunused:all",
+    "-Wvalue-discard"
   ) ++ Seq("-rewrite", "-indent") ++ Seq("-source", "future-migration")
 
 lazy val `poc-scala-data-streaming`: Project =
