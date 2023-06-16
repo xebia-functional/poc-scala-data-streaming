@@ -18,19 +18,13 @@ package com.fortyseven.core
 
 import com.fortyseven.core.codecs.iot.IotCodecs.given
 import com.fortyseven.coreheaders.model.iot.model.{GPSPosition, PneumaticPressure}
-import com.fortyseven.coreheaders.model.iot.types.{Bar, Latitude, Longitude}
+import com.fortyseven.coreheaders.model.types.types.{Bar, Latitude, Longitude}
 import munit.ScalaCheckSuite
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Gen
-import vulcan.{AvroError, Codec}
+import TestUtils.getOutput
 
 class CodecSpec extends ScalaCheckSuite:
-
-  private def getOutput[C](instance: C)(using Codec[C]): Either[AvroError, C] =
-    for
-      encoded <- vulcan.Codec.encode[C](instance)
-      result  <- vulcan.Codec.decode[C](encoded)
-    yield result
 
   property("GPSPosition"):
     forAll(Gen.choose(-90, 90), Gen.choose(-180, 180)) { (latitude: Int, longitude: Int) =>

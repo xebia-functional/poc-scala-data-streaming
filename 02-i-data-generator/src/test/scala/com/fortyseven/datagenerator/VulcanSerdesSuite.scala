@@ -20,7 +20,7 @@ import org.apache.kafka.common.serialization.Serde
 
 import com.fortyseven.core.codecs.iot.IotCodecs.pneumaticPressureCodec
 import com.fortyseven.coreheaders.model.iot.model.PneumaticPressure
-import com.fortyseven.coreheaders.model.iot.types.Bar
+import com.fortyseven.coreheaders.model.types.types.Bar
 
 import io.confluent.kafka.schemaregistry.avro.AvroSchema
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient

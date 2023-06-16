@@ -14,24 +14,15 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.model.iot
+package com.fortyseven.core.codecs.iot
 
-import scala.concurrent.duration.Duration
+import com.fortyseven.coreheaders.model.iot.errors.OutOfBoundsError
+import vulcan.Codec
 
-import com.fortyseven.coreheaders.model.types.types.*
+object IotErrorCodecs:
+  private val _namespace = "iot-error"
 
-object model:
+  given outOfBoundsErrorCodec: Codec[OutOfBoundsError] =
+    Codec.record(name = "OutOfBoundsError", namespace = _namespace)(_("msg", _.msg).map(OutOfBoundsError.apply))
 
-  case class GPSPosition(latitude: Latitude, longitude: Longitude)
 
-  case class WheelRotation(s: Hz)
-
-  case class BatteryCharge(percentage: Percentage)
-
-  case class BatteryHealth(remaining: Percentage)
-
-  case class PneumaticPressure(pressure: Bar)
-
-  case class BreaksUsage(duration: Duration)
-
-  case class BreaksHealth(remaining: Percentage)

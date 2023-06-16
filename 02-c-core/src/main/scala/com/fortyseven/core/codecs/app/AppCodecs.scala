@@ -16,18 +16,46 @@
 
 package com.fortyseven.core.codecs.app
 
+import cats.implicits.*
+import com.fortyseven.core.codecs.ids.IdsCodecs.given
+import com.fortyseven.core.codecs.types.TypesCodecs.given
 import com.fortyseven.coreheaders.model.app.model.*
-import com.fortyseven.coreheaders.model.app.types.Meters
+import com.fortyseven.coreheaders.model.types.types.Meters
 import vulcan.Codec
 
 object AppCodecs:
 
-  given totalDistanceByTripCodec: Codec[TotalDistanceByTrip] = ???
+  private val _namespace = "app"
 
-  given totalDistanceByUserCodec: Codec[TotalDistanceByUser] = ???
+  given totalDistanceByTripCodec: Codec[TotalDistanceByTrip] =
+    Codec.record("TotalDistanceByTrip", _namespace) { totalDistanceByTrip =>
+      (
+        totalDistanceByTrip("tripId", _.tripId),
+        totalDistanceByTrip("distance", _.distance)
+      ).mapN(TotalDistanceByTrip.apply)
+    }
 
-  given currentSpeedCodec: Codec[CurrentSpeed] = ???
+  given totalDistanceByUserCodec: Codec[TotalDistanceByUser] =
+    Codec.record("TotalDistanceByUser", _namespace) { totalDistanceByUser =>
+      (
+        totalDistanceByUser("userId", _.userId),
+        totalDistanceByUser("distance", _.distance)
+      ).mapN(TotalDistanceByUser.apply)
+    }
 
-  given totalRangeCodec: Codec[TotalRange] = ???
+  given currentSpeedCodec: Codec[CurrentSpeed] =
+    Codec.record("CurrentSpeed", _namespace) { currentSpeed =>
+      (
+        currentSpeed("tripId", _.tripId),
+        currentSpeed("speed", _.speed)
+      ).mapN(CurrentSpeed.apply)
+    }
 
-  given metersCodec: Codec[Meters] = ???
+  given totalRangeCodec: Codec[TotalRange] =
+    Codec.record("TotalRange", _namespace) { totalRange =>
+      (
+        totalRange("tripId", _.tripId),
+        totalRange("bicycleId", _.bicycleId),
+        totalRange("remainingRange", _.remainingRange)
+      ).mapN(TotalRange.apply)
+    }

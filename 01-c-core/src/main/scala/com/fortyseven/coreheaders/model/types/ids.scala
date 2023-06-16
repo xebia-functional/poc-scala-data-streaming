@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.model
+package com.fortyseven.coreheaders.model.types
 
 import java.util.UUID
 

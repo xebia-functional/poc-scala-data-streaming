@@ -21,7 +21,7 @@ import scala.concurrent.duration.*
 import cats.effect.Temporal
 import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
-import com.fortyseven.coreheaders.model.iot.types.*
+import com.fortyseven.coreheaders.model.types.types.*
 import fs2.Stream
 
 class ModelGenerators[F[_]: Temporal](meteredInterval: FiniteDuration):

@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.model.app
+package com.fortyseven.core.codecs.ids
 
-object types:
+import com.fortyseven.coreheaders.model.types.ids.{BicycleId, TripId, UserId}
+import vulcan.Codec
 
-  opaque type Meters <: Int = Int
-
-  object Meters:
-
-    def apply(meters: Int): Meters = meters
-
-    extension (meters: Meters) def value: Int = meters
+object IdsCodecs:
+  
+  given bicycleIdCodec: Codec[BicycleId] = Codec.uuid.imap(BicycleId.apply)(_.value)
+  
+  given userIdCodec: Codec[UserId] = Codec.uuid.imap(UserId.apply)(_.value)
+  
+  given tripIdCodec: Codec[TripId] = Codec.uuid.imap(TripId.apply)(_.value)
