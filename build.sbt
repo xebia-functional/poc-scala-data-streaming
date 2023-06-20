@@ -245,7 +245,12 @@ lazy val main: Project =
 
 lazy val commonSettings = commonScalacOptions ++ Seq(
   resolvers += "confluent" at "https://packages.confluent.io/maven/",
-  update / evictionWarningOptions := EvictionWarningOptions.empty
+  update / evictionWarningOptions := EvictionWarningOptions.empty,
+  assemblyMergeStrategy := {
+    case PathList("META-INF") => MergeStrategy.discard
+    case x => MergeStrategy.first
+  }
+
 )
 
 lazy val commonScalacOptions = Seq(
