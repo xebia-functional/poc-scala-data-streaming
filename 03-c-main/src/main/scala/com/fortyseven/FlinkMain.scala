@@ -27,7 +27,7 @@ import com.fortyseven.pureconfig.{
 }
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
-object Main extends IOApp.Simple:
+object FlinkMain extends IOApp.Simple:
 
   override def run: IO[Unit] = for
     logger         <- Slf4jLogger.create[IO]
