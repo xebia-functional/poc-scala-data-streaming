@@ -15,7 +15,7 @@ First, we will _compose-up_ the kafka consumer, that will make the data availabl
 
 ```shell
 cd ../02-i-consumer-kafka
-docker compose-up -d
+docker compose up -d
 ```
 
 Once the code is compiled and the kafka consumer is up, you can run the `SparkMain` in module `03-c-main`. In order to 
