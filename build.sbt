@@ -5,7 +5,7 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 
 ThisBuild / organization := "com.47deg"
 
-ThisBuild / scmInfo      := Some(
+ThisBuild / scmInfo := Some(
   ScmInfo(
     url("https://github.com/47deg/poc-scala-data-streaming"),
     "scm:git@github.com:47deg/poc-scala-data-streaming.git"
@@ -15,8 +15,6 @@ ThisBuild / scmInfo      := Some(
 ThisBuild / scalaVersion := "3.3.0"
 
 ThisBuild / semanticdbEnabled := true
-
-ThisBuild / scalafixDependencies += SbtPlugins.organizeImports
 
 ThisBuild / scalacOptions ++=
   Seq(
@@ -88,8 +86,8 @@ lazy val `configuration-typesafe`: Project = (project in file("02-c-config-purec
       Libraries.cats.effectKernel,
       Libraries.cats.core,
       Libraries.test.munitCatsEffect
-      )
     )
+  )
 
 lazy val core: Project =
   project
@@ -178,7 +176,8 @@ lazy val `processor-flink`: Project =
     )
 
 lazy val `processor-flink-integration`: Project =
-  project.in(file("02-o-processor-flink/integration"))
+  project
+    .in(file("02-o-processor-flink/integration"))
     .dependsOn(`processor-flink`)
     .settings(commonSettings)
     .settings(
@@ -195,7 +194,8 @@ lazy val `processor-flink-integration`: Project =
       javacOptions ++= Seq("-source", "11", "-target", "11")
     )
 
-lazy val `processor-spark`: Project = project.in(file("02-o-processor-spark"))
+lazy val `processor-spark`: Project = project
+  .in(file("02-o-processor-spark"))
   .dependsOn(`core-headers`)
   .settings(commonSettings)
   .settings(
@@ -210,11 +210,12 @@ lazy val `processor-spark`: Project = project.in(file("02-o-processor-spark"))
     libraryDependencies ++= Seq(
       Libraries.cats.effect
     ),
-    Compile / run := Defaults.runTask(
-      Compile / fullClasspath,
-      Compile / run / mainClass,
-      Compile / run / runner
-    ).evaluated,
+    Compile / run := Defaults
+      .runTask(
+        Compile / fullClasspath,
+        Compile / run / mainClass,
+        Compile / run / runner
+      ).evaluated,
     javacOptions ++= Seq("-source", "17", "-target", "17")
   )
 

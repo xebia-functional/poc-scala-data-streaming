@@ -17,6 +17,7 @@
 package com.fortyseven.pureconfig
 
 import cats.effect.kernel.Async
+
 import com.fortyseven.coreheaders.configuration.DataGeneratorConfiguration
 import com.fortyseven.pureconfig.instances.given
 

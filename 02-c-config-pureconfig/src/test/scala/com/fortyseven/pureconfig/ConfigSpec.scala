@@ -17,6 +17,7 @@
 package com.fortyseven.pureconfig
 
 import cats.effect.IO
+
 import munit.CatsEffectSuite
 
 class ConfigSpec extends CatsEffectSuite:

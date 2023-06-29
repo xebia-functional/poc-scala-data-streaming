@@ -19,6 +19,7 @@ package com.fortyseven.cirisconfiguration
 import scala.concurrent.duration.*
 
 import cats.effect.kernel.Async
+
 import ciris.*
 import com.fortyseven.cirisconfiguration.CommonConfiguration.*
 import com.fortyseven.cirisconfiguration.decoders.given
@@ -27,17 +28,16 @@ import com.fortyseven.coreheaders.configuration.DataGeneratorConfiguration
 import com.fortyseven.coreheaders.configuration.internal.*
 import com.fortyseven.coreheaders.configuration.internal.types.*
 
-final class DataGeneratorConfigurationLoader[F[_]: Async]
-    extends ConfigurationLoaderHeader[F, DataGeneratorConfiguration]:
+final class DataGeneratorConfigurationLoader[F[_]: Async] extends ConfigurationLoaderHeader[F, DataGeneratorConfiguration]:
 
   lazy val config: ConfigValue[Effect, DataGeneratorConfiguration] =
     for
-      brokerAddress         <- default(kafkaBrokerAddress).as[NonEmptyString]
-      schemaRegistryUrl     <- default(schemaRegistryUrl).as[NonEmptyString]
-      topicName             <- default("data-generator").as[NonEmptyString]
-      valueSerializerClass  <- default("io.confluent.kafka.serializers.KafkaAvroSerializer").as[NonEmptyString]
-      maxConcurrent         <- default(Int.MaxValue).as[PositiveInt]
-      compressionType       <- default(KafkaCompressionType.lz4).as[KafkaCompressionType]
+      brokerAddress <- default(kafkaBrokerAddress).as[NonEmptyString]
+      schemaRegistryUrl <- default(schemaRegistryUrl).as[NonEmptyString]
+      topicName <- default("data-generator").as[NonEmptyString]
+      valueSerializerClass <- default("io.confluent.kafka.serializers.KafkaAvroSerializer").as[NonEmptyString]
+      maxConcurrent <- default(Int.MaxValue).as[PositiveInt]
+      compressionType <- default(KafkaCompressionType.lz4).as[KafkaCompressionType]
       commitBatchWithinSize <- default(1).as[PositiveInt]
       commitBatchWithinTime <- default(15.seconds).as[FiniteDuration]
     yield DataGeneratorConfiguration(

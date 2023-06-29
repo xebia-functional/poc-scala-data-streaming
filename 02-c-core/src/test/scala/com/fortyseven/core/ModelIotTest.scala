@@ -17,8 +17,10 @@
 package com.fortyseven.core
 
 import com.fortyseven.coreheaders.model.iot.types.*
-import munit.{FunSuite, ScalaCheckSuite}
-import org.scalacheck.{Arbitrary, Gen}
+import munit.FunSuite
+import munit.ScalaCheckSuite
+import org.scalacheck.Arbitrary
+import org.scalacheck.Gen
 import org.scalacheck.Prop.forAll
 
 class ModelIotTest extends ScalaCheckSuite:

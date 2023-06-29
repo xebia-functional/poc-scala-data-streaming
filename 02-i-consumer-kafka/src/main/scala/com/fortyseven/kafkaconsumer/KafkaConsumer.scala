@@ -18,28 +18,28 @@ package com.fortyseven.kafkaconsumer
 
 import scala.util.matching.Regex
 
-import org.apache.kafka.clients.producer.ProducerConfig
-
 import cats.*
 import cats.effect.kernel.Async
 import cats.implicits.*
+
+import com.fortyseven.coreheaders.ConfigurationLoaderHeader
+import com.fortyseven.coreheaders.KafkaConsumerHeader
 import com.fortyseven.coreheaders.configuration.KafkaConsumerConfiguration
 import com.fortyseven.coreheaders.configuration.internal.types.KafkaAutoOffsetReset
-import com.fortyseven.coreheaders.{ConfigurationLoaderHeader, KafkaConsumerHeader}
 import fs2.kafka.*
+import org.apache.kafka.clients.producer.ProducerConfig
 
 final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
 
   extension (kaor: KafkaAutoOffsetReset)
-
     def asKafka: AutoOffsetReset = kaor match
       case KafkaAutoOffsetReset.Earliest => AutoOffsetReset.Earliest
-      case KafkaAutoOffsetReset.Latest   => AutoOffsetReset.Latest
-      case KafkaAutoOffsetReset.None     => AutoOffsetReset.None
+      case KafkaAutoOffsetReset.Latest => AutoOffsetReset.Latest
+      case KafkaAutoOffsetReset.None => AutoOffsetReset.None
 
   override def consume(conf: ConfigurationLoaderHeader[F, KafkaConsumerConfiguration]): F[Unit] = for
     kc <- conf.load()
-    _  <- runWithConfiguration(kc)
+    _ <- runWithConfiguration(kc)
   yield ()
 
   private def runWithConfiguration(kc: KafkaConsumerConfiguration): F[Unit] =

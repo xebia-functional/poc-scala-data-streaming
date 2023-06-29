@@ -17,6 +17,7 @@
 package com.fortyseven.pureconfig
 
 import cats.syntax.all.*
+
 import com.fortyseven.coreheaders.configuration.*
 import com.fortyseven.coreheaders.configuration.internal.*
 import com.fortyseven.coreheaders.configuration.internal.types.*

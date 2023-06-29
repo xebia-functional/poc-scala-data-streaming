@@ -16,19 +16,20 @@
 
 package com.fortyseven.processor.flink
 
-import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
-
 import cats.*
 import cats.effect.kernel.Async
 import cats.implicits.*
+
+import com.fortyseven.coreheaders.ConfigurationLoaderHeader
+import com.fortyseven.coreheaders.FlinkProcessorHeader
 import com.fortyseven.coreheaders.configuration.FlinkProcessorConfiguration
-import com.fortyseven.coreheaders.{ConfigurationLoaderHeader, FlinkProcessorHeader}
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
 
 class DataProcessor[F[_]: Async] extends FlinkProcessorHeader[F]:
 
   override def process(conf: ConfigurationLoaderHeader[F, FlinkProcessorConfiguration]): F[Unit] = for
     kc <- conf.load()
-    _  <- runWithConfiguration(kc)
+    _ <- runWithConfiguration(kc)
   yield ()
 
   private def runWithConfiguration(jpc: FlinkProcessorConfiguration): F[Unit] =

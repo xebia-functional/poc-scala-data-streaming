@@ -16,34 +16,34 @@
 
 package com.fortyseven
 
-import cats.effect.{IO, IOApp}
+import cats.effect.IO
+import cats.effect.IOApp
+
 import com.fortyseven.datagenerator.DataGenerator
 import com.fortyseven.kafkaconsumer.KafkaConsumer
 import com.fortyseven.processor.flink.DataProcessor
-import com.fortyseven.pureconfig.{
-  DataGeneratorConfigurationLoader,
-  FlinkProcessorConfigurationLoader,
-  KafkaConsumerConfigurationLoader
-}
+import com.fortyseven.pureconfig.DataGeneratorConfigurationLoader
+import com.fortyseven.pureconfig.FlinkProcessorConfigurationLoader
+import com.fortyseven.pureconfig.KafkaConsumerConfigurationLoader
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 object Main extends IOApp.Simple:
 
   override def run: IO[Unit] = for
-    logger         <- Slf4jLogger.create[IO]
-    dataGenConf    <- DataGeneratorConfigurationLoader[IO].load()
-    _              <- logger.info(s"DataGeneratorConfiguration: $dataGenConf")
-    consumerConf   <- KafkaConsumerConfigurationLoader[IO].load()
-    _              <- logger.info(s"KafkaConsumerConfiguration: $consumerConf")
-    processorConf  <- FlinkProcessorConfigurationLoader[IO].load()
-    _              <- logger.info(s"JobProcessorConfiguration: $processorConf")
-    _              <- logger.info("Start data generator")
-    dataGenFiber   <- new DataGenerator[IO].generate(DataGeneratorConfigurationLoader[IO]).start
-    _              <- logger.info("Start kafka consumer")
-    consumerFiber  <- new KafkaConsumer[IO].consume(KafkaConsumerConfigurationLoader[IO]).start
-    _              <- logger.info("Start flink processor")
+    logger <- Slf4jLogger.create[IO]
+    dataGenConf <- DataGeneratorConfigurationLoader[IO].load()
+    _ <- logger.info(s"DataGeneratorConfiguration: $dataGenConf")
+    consumerConf <- KafkaConsumerConfigurationLoader[IO].load()
+    _ <- logger.info(s"KafkaConsumerConfiguration: $consumerConf")
+    processorConf <- FlinkProcessorConfigurationLoader[IO].load()
+    _ <- logger.info(s"JobProcessorConfiguration: $processorConf")
+    _ <- logger.info("Start data generator")
+    dataGenFiber <- new DataGenerator[IO].generate(DataGeneratorConfigurationLoader[IO]).start
+    _ <- logger.info("Start kafka consumer")
+    consumerFiber <- new KafkaConsumer[IO].consume(KafkaConsumerConfigurationLoader[IO]).start
+    _ <- logger.info("Start flink processor")
     processorFiber <- new DataProcessor[IO].process(FlinkProcessorConfigurationLoader[IO]).start
-    _              <- dataGenFiber.join
-    _              <- consumerFiber.join
-    _              <- processorFiber.join
+    _ <- dataGenFiber.join
+    _ <- consumerFiber.join
+    _ <- processorFiber.join
   yield ()

@@ -19,6 +19,7 @@ package com.fortyseven.cirisconfiguration
 import scala.concurrent.duration.*
 
 import cats.effect.kernel.Async
+
 import ciris.*
 import com.fortyseven.cirisconfiguration.CommonConfiguration.*
 import com.fortyseven.cirisconfiguration.decoders.given
@@ -27,20 +28,19 @@ import com.fortyseven.coreheaders.configuration.KafkaConsumerConfiguration
 import com.fortyseven.coreheaders.configuration.internal.*
 import com.fortyseven.coreheaders.configuration.internal.types.*
 
-final class KafkaConsumerConfigurationLoader[F[_]: Async]
-    extends ConfigurationLoaderHeader[F, KafkaConsumerConfiguration]:
+final class KafkaConsumerConfigurationLoader[F[_]: Async] extends ConfigurationLoaderHeader[F, KafkaConsumerConfiguration]:
 
   lazy val config: ConfigValue[Effect, KafkaConsumerConfiguration] =
     for
-      brokerAddress         <- default(kafkaBrokerAddress).as[NonEmptyString]
-      sourceTopicName       <- default("data-generator").as[NonEmptyString]
-      sinkTopicName         <- default("input-topic").as[NonEmptyString]
-      autoOffsetReset       <- default(KafkaAutoOffsetReset.Earliest).as[KafkaAutoOffsetReset]
-      groupId               <- default("groupId").as[NonEmptyString]
-      valueSerializerClass  <- default("io.confluent.kafka.serializers.KafkaAvroSerializer").as[NonEmptyString]
+      brokerAddress <- default(kafkaBrokerAddress).as[NonEmptyString]
+      sourceTopicName <- default("data-generator").as[NonEmptyString]
+      sinkTopicName <- default("input-topic").as[NonEmptyString]
+      autoOffsetReset <- default(KafkaAutoOffsetReset.Earliest).as[KafkaAutoOffsetReset]
+      groupId <- default("groupId").as[NonEmptyString]
+      valueSerializerClass <- default("io.confluent.kafka.serializers.KafkaAvroSerializer").as[NonEmptyString]
       consumerMaxConcurrent <- default(25).as[PositiveInt]
       producerMaxConcurrent <- default(Int.MaxValue).as[PositiveInt]
-      compressionType       <- default(KafkaCompressionType.lz4).as[KafkaCompressionType]
+      compressionType <- default(KafkaCompressionType.lz4).as[KafkaCompressionType]
       commitBatchWithinSize <- default(10).as[PositiveInt]
       commitBatchWithinTime <- default(15.seconds).as[FiniteDuration]
     yield KafkaConsumerConfiguration(

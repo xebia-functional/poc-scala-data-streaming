@@ -16,19 +16,21 @@
 
 package com.fortyseven.processor.spark
 
+import cats.effect.kernel.Async
+import cats.implicits.toFlatMapOps
+import cats.implicits.toFunctorOps
+
+import com.fortyseven.coreheaders.ConfigurationLoaderHeader
+import com.fortyseven.coreheaders.SparkProcessorHeader
+import com.fortyseven.coreheaders.configuration.SparkProcessorConfiguration
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
-
-import cats.effect.kernel.Async
-import cats.implicits.{toFlatMapOps, toFunctorOps}
-import com.fortyseven.coreheaders.configuration.SparkProcessorConfiguration
-import com.fortyseven.coreheaders.{ConfigurationLoaderHeader, SparkProcessorHeader}
 
 class DataProcessor[F[_]: Async] extends SparkProcessorHeader[F]:
 
   override def process(config: ConfigurationLoaderHeader[F, SparkProcessorConfiguration]): F[Unit] = for
     conf <- config.load()
-    _    <- runWithConfiguration(conf)
+    _ <- runWithConfiguration(conf)
   yield ()
 
   private def runWithConfiguration(sparkConfiguration: SparkProcessorConfiguration): F[Unit] =

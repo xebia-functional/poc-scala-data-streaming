@@ -9,7 +9,7 @@ object CustomSbt {
     scala.Console.CYAN + in + scala.Console.RESET
 
   def prompt(projectName: String): String =
-    gitPrompt.fold(projectPrompt(projectName)) { g => s"$g:${projectPrompt(projectName)}" }
+    gitPrompt.fold(projectPrompt(projectName))(g => s"$g:${projectPrompt(projectName)}")
 
   private def projectPrompt(projectName: String): String =
     s"sbt:${styled(projectName)}"

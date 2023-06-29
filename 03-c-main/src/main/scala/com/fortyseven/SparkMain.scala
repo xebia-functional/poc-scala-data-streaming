@@ -16,7 +16,9 @@
 
 package com.fortyseven
 
-import cats.effect.{IO, IOApp}
+import cats.effect.IO
+import cats.effect.IOApp
+
 import com.fortyseven.datagenerator.DataGenerator
 import com.fortyseven.kafkaconsumer.KafkaConsumer
 import com.fortyseven.processor.spark.DataProcessor
@@ -26,20 +28,20 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 object SparkMain extends IOApp.Simple:
 
   override def run: IO[Unit] = for
-    logger         <- Slf4jLogger.create[IO]
-    dataGenConf    <- DataGeneratorConfigurationLoader[IO].load()
-    _              <- logger.info(s"DataGeneratorConfiguration: $dataGenConf")
-    consumerConf   <- KafkaConsumerConfigurationLoader[IO].load()
-    _              <- logger.info(s"KafkaConsumerConfiguration: $consumerConf")
-    processorConf  <- SparkProcessorConfigurationLoader[IO].load()
-    _              <- logger.info(s"SparkProcessorConfiguration: $processorConf")
-    _              <- logger.info("Start data generator")
-    dataGenFiber   <- new DataGenerator[IO].generate(DataGeneratorConfigurationLoader[IO]).start
-    _              <- logger.info("Start kafka consumer")
-    consumerFiber  <- new KafkaConsumer[IO].consume(KafkaConsumerConfigurationLoader[IO]).start
-    _              <- logger.info("Start spark processor")
+    logger <- Slf4jLogger.create[IO]
+    dataGenConf <- DataGeneratorConfigurationLoader[IO].load()
+    _ <- logger.info(s"DataGeneratorConfiguration: $dataGenConf")
+    consumerConf <- KafkaConsumerConfigurationLoader[IO].load()
+    _ <- logger.info(s"KafkaConsumerConfiguration: $consumerConf")
+    processorConf <- SparkProcessorConfigurationLoader[IO].load()
+    _ <- logger.info(s"SparkProcessorConfiguration: $processorConf")
+    _ <- logger.info("Start data generator")
+    dataGenFiber <- new DataGenerator[IO].generate(DataGeneratorConfigurationLoader[IO]).start
+    _ <- logger.info("Start kafka consumer")
+    consumerFiber <- new KafkaConsumer[IO].consume(KafkaConsumerConfigurationLoader[IO]).start
+    _ <- logger.info("Start spark processor")
     processorFiber <- new DataProcessor[IO].process(SparkProcessorConfigurationLoader[IO]).start
-    _              <- dataGenFiber.join
-    _              <- consumerFiber.join
-    _              <- processorFiber.join
+    _ <- dataGenFiber.join
+    _ <- consumerFiber.join
+    _ <- processorFiber.join
   yield ()

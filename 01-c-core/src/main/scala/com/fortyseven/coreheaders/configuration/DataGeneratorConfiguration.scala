@@ -16,9 +16,10 @@
 
 package com.fortyseven.coreheaders.configuration
 
-import com.fortyseven.coreheaders.configuration.internal.{KafkaConfiguration, SchemaRegistryConfiguration}
+import com.fortyseven.coreheaders.configuration.internal.KafkaConfiguration
+import com.fortyseven.coreheaders.configuration.internal.SchemaRegistryConfiguration
 
 final case class DataGeneratorConfiguration(
     kafkaConfiguration: KafkaConfiguration,
     schemaRegistryConfiguration: SchemaRegistryConfiguration
-  )
+)

@@ -16,15 +16,13 @@
 
 package com.fortyseven.datagenerator
 
-import org.apache.kafka.common.serialization.Serde
-
 import com.fortyseven.core.codecs.iot.IotCodecs.pneumaticPressureCodec
 import com.fortyseven.coreheaders.model.iot.model.PneumaticPressure
 import com.fortyseven.coreheaders.model.iot.types.Bar
-
 import io.confluent.kafka.schemaregistry.avro.AvroSchema
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
 import munit.CatsEffectSuite
+import org.apache.kafka.common.serialization.Serde
 
 class VulcanSerdesSuite extends CatsEffectSuite:
 
@@ -38,15 +36,15 @@ class VulcanSerdesSuite extends CatsEffectSuite:
 
   test("Serialize a case class as a record"):
     val mockedClient = new MockSchemaRegistryClient()
-    val topic        = "test-topic"
+    val topic = "test-topic"
 
     pneumaticPressureCodec.schema match
-      case Left(_)       => ()
+      case Left(_) => ()
       case Right(schema) => mockedClient.register(s"$topic-value", AvroSchema(schema.toString))
-    val config                     = Config("useMockedClient", useMockedClient = Some(mockedClient))
+    val config = Config("useMockedClient", useMockedClient = Some(mockedClient))
     given Serde[PneumaticPressure] = avroSerde[PneumaticPressure](config, includeKey = false)
 
-    val data   = PneumaticPressure(Bar.unsafeApply(2.0))
+    val data = PneumaticPressure(Bar.unsafeApply(2.0))
     val result = deserialize(topic, serialize(topic, data))
 
     assertEquals(data, result)

@@ -18,23 +18,25 @@ package com.fortyseven.datagenerator
 
 import scala.concurrent.duration.*
 
-import org.apache.kafka.clients.producer.ProducerConfig
-
 import cats.Parallel
 import cats.effect.kernel.Async
 import cats.implicits.*
+
 import com.fortyseven.core.codecs.iot.IotCodecs.given
+import com.fortyseven.coreheaders.ConfigurationLoaderHeader
+import com.fortyseven.coreheaders.DataGeneratorHeader
 import com.fortyseven.coreheaders.configuration.DataGeneratorConfiguration
-import com.fortyseven.coreheaders.model.iot.model.{GPSPosition, PneumaticPressure}
-import com.fortyseven.coreheaders.{ConfigurationLoaderHeader, DataGeneratorHeader}
+import com.fortyseven.coreheaders.model.iot.model.GPSPosition
+import com.fortyseven.coreheaders.model.iot.model.PneumaticPressure
 import fs2.kafka.*
+import org.apache.kafka.clients.producer.ProducerConfig
 
 final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorHeader[F]:
 
   override def generate(conf: ConfigurationLoaderHeader[F, DataGeneratorConfiguration]): F[Unit] =
     for
       dgc <- conf.load()
-      _   <- runWithConfiguration(dgc)
+      _ <- runWithConfiguration(dgc)
     yield ()
 
   private def runWithConfiguration(dgc: DataGeneratorConfiguration): F[Unit] =
@@ -47,7 +49,7 @@ final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorHeader[F]:
       throw new RuntimeException("No producer config available")
     )
 
-    val gpsPositionTopicName       = s"${producerConfig.topicName}-gps"
+    val gpsPositionTopicName = s"${producerConfig.topicName}-gps"
     val pneumaticPressureTopicName = s"${producerConfig.topicName}-pp"
 
     val producerSettings = ProducerSettings[F, String, Array[Byte]]
@@ -68,7 +70,7 @@ final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorHeader[F]:
     KafkaProducer
       .stream(producerSettings)
       .flatMap { producer =>
-        val gpsPositionStream       =
+        val gpsPositionStream =
           generators.generateGPSPosition.mapRecords(gpsPositionTopicName)(using gpsPositionSerializer)
         val pneumaticPressureStream =
           generators.generatePneumaticPressure.mapRecords(pneumaticPressureTopicName)(using pneumaticPressureSerializer)
@@ -86,12 +88,11 @@ final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorHeader[F]:
       .drain
 
   extension [T](inputStream: fs2.Stream[F, T])
-
     private def mapRecords(
         topic: String
-      )(using serializer: KafkaSerializer[T]): fs2.Stream[F, ProducerRecords[String, Array[Byte]]] =
+    )(using serializer: KafkaSerializer[T]): fs2.Stream[F, ProducerRecords[String, Array[Byte]]] =
       inputStream.map { committable =>
-        val key   = committable.getClass.getSimpleName
+        val key = committable.getClass.getSimpleName
         val value = serializer.serialize(topic, committable)
         ProducerRecords.one(ProducerRecord(topic, key, value))
       }
