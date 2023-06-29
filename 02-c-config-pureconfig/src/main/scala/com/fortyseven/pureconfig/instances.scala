@@ -65,9 +65,6 @@ object instances:
   given ConfigReader[SchemaRegistryConfiguration] =
     ConfigReader.forProduct1("schemaRegistryURL")(SchemaRegistryConfiguration.apply)
 
-  given ConfigReader[DataGeneratorConfiguration] =
-    ConfigReader.forProduct2("KafkaConfiguration", "SchemaRegistryConfiguration")(DataGeneratorConfiguration.apply)
-
   given ConfigReader[FlinkProcessorConfiguration] =
     ConfigReader.forProduct2("KafkaConfiguration", "SchemaRegistryConfiguration")(FlinkProcessorConfiguration.apply)
 

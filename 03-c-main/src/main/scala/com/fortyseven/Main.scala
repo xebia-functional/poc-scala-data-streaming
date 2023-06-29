@@ -18,29 +18,23 @@ package com.fortyseven
 
 import cats.effect.{IO, IOApp}
 
-import com.fortyseven.datagenerator.DataGenerator
 import com.fortyseven.kafkaconsumer.KafkaConsumer
 import com.fortyseven.processor.flink.DataProcessor
-import com.fortyseven.pureconfig.{DataGeneratorConfigurationLoader, FlinkProcessorConfigurationLoader, KafkaConsumerConfigurationLoader}
+import com.fortyseven.pureconfig.{FlinkProcessorConfigurationLoader, KafkaConsumerConfigurationLoader}
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 object Main extends IOApp.Simple:
 
   override def run: IO[Unit] = for
     logger <- Slf4jLogger.create[IO]
-    dataGenConf <- DataGeneratorConfigurationLoader[IO].load()
-    _ <- logger.info(s"DataGeneratorConfiguration: $dataGenConf")
     consumerConf <- KafkaConsumerConfigurationLoader[IO].load()
     _ <- logger.info(s"KafkaConsumerConfiguration: $consumerConf")
     processorConf <- FlinkProcessorConfigurationLoader[IO].load()
     _ <- logger.info(s"JobProcessorConfiguration: $processorConf")
-    _ <- logger.info("Start data generator")
-    dataGenFiber <- new DataGenerator[IO].generate(DataGeneratorConfigurationLoader[IO]).start
     _ <- logger.info("Start kafka consumer")
     consumerFiber <- new KafkaConsumer[IO].consume(KafkaConsumerConfigurationLoader[IO]).start
     _ <- logger.info("Start flink processor")
     processorFiber <- new DataProcessor[IO].process(FlinkProcessorConfigurationLoader[IO]).start
-    _ <- dataGenFiber.join
     _ <- consumerFiber.join
     _ <- processorFiber.join
   yield ()

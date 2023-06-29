@@ -76,7 +76,7 @@ object Dependencies {
     }
 
     object test {
-      private val munitScalacheckVersion: String = "2.0-9366e44"
+      private val munitScalacheckVersion: String = "1.0.4"
       private val munitCatsEffectVersion: String = "1.0.7"
       val munitCatsEffect: ModuleID = "org.typelevel" %% "munit-cats-effect-3"     % munitCatsEffectVersion % Test
       val munitScalacheck: ModuleID = "org.typelevel" %% "scalacheck-effect-munit" % munitScalacheckVersion % Test
