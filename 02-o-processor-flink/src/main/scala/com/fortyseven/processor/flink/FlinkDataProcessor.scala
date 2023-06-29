@@ -56,7 +56,7 @@ final class FlinkDataProcessor[F[_]: Applicative](env: StreamExecutionEnvironmen
       .setGroupId(consumerConfig.groupId.asString)
       .setStartingOffsets(consumerConfig.autoOffsetReset.toString.toLowerCase match
         case "earliest" => OffsetsInitializer.earliest()
-        case _ => OffsetsInitializer.latest()
+        case _          => OffsetsInitializer.latest()
       )
       .setValueOnlyDeserializer(deserializationSchema)
       .build()

@@ -47,7 +47,7 @@ class ModelGenerators[F[_]: Temporal](meteredInterval: FiniteDuration):
     def emitLoop(pValue: Double): fs2.Stream[F, PneumaticPressure] =
       Bar(pValue - math.random() * 1e-3) match
         case Right(p) => fs2.Stream.emit(PneumaticPressure(p)).metered(meteredInterval) ++ emitLoop(p)
-        case _ => emitLoop(pValue)
+        case _        => emitLoop(pValue)
 
     emitLoop(pValue = 2.0)
 

@@ -39,9 +39,9 @@ class DataGeneratorSuite extends CatsEffectSuite with ScalaCheckEffectSuite:
         _ = sample.foreach(it => assert(it.longitude >= -180.0 && it.longitude <= 180.0))
         _ <- logger.debug("Assert small coordinate changes")
         _ = sample
-          .sliding(2).map(l => (math.abs(l.head.latitude - l.last.latitude), math.abs(l.head.longitude - l.last.longitude))).foreach(it =>
-            assert(it._1 <= 1e-3 && it._2 <= 1e-3)
-          )
+              .sliding(2).map(l => (math.abs(l.head.latitude - l.last.latitude), math.abs(l.head.longitude - l.last.longitude))).foreach(it =>
+                assert(it._1 <= 1e-3 && it._2 <= 1e-3)
+              )
       yield ()
     }
 

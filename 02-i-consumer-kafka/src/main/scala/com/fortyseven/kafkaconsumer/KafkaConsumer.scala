@@ -33,8 +33,8 @@ final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
   extension (kaor: KafkaAutoOffsetReset)
     def asKafka: AutoOffsetReset = kaor match
       case KafkaAutoOffsetReset.Earliest => AutoOffsetReset.Earliest
-      case KafkaAutoOffsetReset.Latest => AutoOffsetReset.Latest
-      case KafkaAutoOffsetReset.None => AutoOffsetReset.None
+      case KafkaAutoOffsetReset.Latest   => AutoOffsetReset.Latest
+      case KafkaAutoOffsetReset.None     => AutoOffsetReset.None
 
   override def consume(conf: ConfigurationLoaderHeader[F, KafkaConsumerConfiguration]): F[Unit] = for
     kc <- conf.load()

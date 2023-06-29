@@ -65,7 +65,7 @@ object VulcanSerdes:
         serializer.serialize(
           topic,
           codec.encode(data) match
-            case Left(err) => SerializationError(err.message)
+            case Left(err)     => SerializationError(err.message)
             case Right(record) => record
         )
 

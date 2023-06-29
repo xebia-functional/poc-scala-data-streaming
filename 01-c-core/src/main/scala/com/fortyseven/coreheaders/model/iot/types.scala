@@ -36,7 +36,7 @@ object types:
 
     def apply(coordinate: Double): Either[OutOfBoundsError, Latitude] = coordinate match
       case c if c < -90.0 || c > 90.0 => Left(OutOfBoundsError(s"Invalid latitude value $c"))
-      case c => Right(c)
+      case c                          => Right(c)
 
     extension (coordinate: Latitude) def value: Double = coordinate
 
@@ -44,7 +44,7 @@ object types:
 
     def apply(coordinate: Double): Either[OutOfBoundsError, Longitude] = coordinate match
       case c if c < -180.0 || c > 180.0 => Left(OutOfBoundsError(s"Invalid longitude value $c"))
-      case c => Right(c)
+      case c                            => Right(c)
 
     extension (coordinate: Longitude) def value: Double = coordinate
 
@@ -70,7 +70,7 @@ object types:
 
     def apply(bar: Double): Either[OutOfBoundsError, Bar] = bar match
       case p if p < 0.0 => Left(OutOfBoundsError(s"Invalid pressure value $p"))
-      case p => Right(p)
+      case p            => Right(p)
 
     def unsafeApply(bar: Double): Bar = bar
 
