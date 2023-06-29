@@ -17,38 +17,39 @@
 package com.fortyseven.core.codecs.iot
 
 import com.fortyseven.coreheaders.model.iot.model.*
-import com.fortyseven.core.TestUtils.getOutput
+import com.fortyseven.core.TestUtils.codeAndDecode
 import com.fortyseven.core.TestUtils.given
 import munit.ScalaCheckSuite
 import org.scalacheck.Prop.forAll
 import com.fortyseven.core.codecs.iot.IotCodecs.given
+import scala.concurrent.duration.*
 
 class IotCodecsTest extends ScalaCheckSuite:
 
   property("GPSPosition should return the same value after encoding and decoding"):
     forAll: (gPSPosition: GPSPosition) =>
-      assert(getOutput(gPSPosition).isRight)
+      assertEquals(codeAndDecode(gPSPosition), Right(gPSPosition))
 
   property("WheelRotation should return the same value after encoding and decoding"):
     forAll: (wheelRotation: WheelRotation) =>
-      assert(getOutput(wheelRotation).isRight)
+      assertEquals(codeAndDecode(wheelRotation), Right(wheelRotation))
 
   property("BatteryCharge should return the same value after encoding and decoding"):
     forAll: (batteryCharge: BatteryCharge) =>
-      assert(getOutput(batteryCharge).isRight)
+      assertEquals(codeAndDecode(batteryCharge), Right(batteryCharge))
 
   property("BatteryHealth should return the same value after encoding and decoding"):
     forAll: (batteryHealth: BatteryHealth) =>
-      assert(getOutput(batteryHealth).isRight)
+      assertEquals(codeAndDecode(batteryHealth), Right(batteryHealth))
 
   property("PneumaticPressure should return the same value after encoding and decoding"):
     forAll: (pneumaticPressure: PneumaticPressure) =>
-      assert(getOutput(pneumaticPressure).isRight)
+      assertEquals(codeAndDecode(pneumaticPressure), Right(pneumaticPressure))
 
   property("BreaksUsage should return the same value after encoding and decoding"):
-    forAll: (breaksUsage: BreaksUsage) =>
-      assert(getOutput(breaksUsage).isRight)
+    forAll: (breaksUsage: BreaksUsage) => //It builds finiteDuration in NanoSeconds
+      assertEquals(codeAndDecode(breaksUsage), Right(BreaksUsage(breaksUsage.finiteDuration.toMillis.millis)))
 
   property("BreaksHealth should return the same value after encoding and decoding"):
     forAll: (breaksHealth: BreaksHealth) =>
-      assert(getOutput(breaksHealth).isRight)
+      assertEquals(codeAndDecode(breaksHealth), Right(breaksHealth))

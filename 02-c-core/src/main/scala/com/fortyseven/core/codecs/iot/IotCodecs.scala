@@ -16,7 +16,7 @@
 
 package com.fortyseven.core.codecs.iot
 
-import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.duration.*
 
 import cats.implicits.*
 import com.fortyseven.core.codecs.types.TypesCodecs.given
@@ -50,7 +50,7 @@ object IotCodecs:
       _("pressure", _.pressure).map(PneumaticPressure.apply)
     )
 
-  given finiteDurationCodec: Codec[FiniteDuration] = Codec.long.imap(FiniteDuration(_, "millis"))(_.toMillis)
+  given finiteDurationCodec: Codec[FiniteDuration] = Codec.long.imap(_.millis)(_.toMillis)
 
   given breaksUsageCodec: Codec[BreaksUsage] =
     Codec.record(name = "BreaksUsage", namespace = _namespace)(
