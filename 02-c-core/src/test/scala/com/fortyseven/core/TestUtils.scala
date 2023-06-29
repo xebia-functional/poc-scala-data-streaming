@@ -28,64 +28,64 @@ import scala.concurrent.duration.FiniteDuration
 
 object TestUtils:
 
-  given Arbitrary[UUID] = Arbitrary.apply(Gen.uuid)
+  given Arbitrary[UUID] = Arbitrary(Gen.uuid)
 
-  given Arbitrary[UserId] = Arbitrary.apply(Gen.resultOf[UUID, UserId](UserId.apply))
+  given Arbitrary[UserId] = Arbitrary(Gen.resultOf[UUID, UserId](UserId.apply))
 
-  given Arbitrary[TripId] = Arbitrary.apply(Gen.resultOf[UUID, TripId](TripId.apply))
+  given Arbitrary[TripId] = Arbitrary(Gen.resultOf[UUID, TripId](TripId.apply))
 
-  given Arbitrary[BicycleId] = Arbitrary.apply(Gen.uuid.map(BicycleId.apply))
+  given Arbitrary[BicycleId] = Arbitrary(Gen.uuid.map(BicycleId.apply))
 
-  given Arbitrary[Latitude] = Arbitrary.apply(Gen.chooseNum[Double](-90.0, 90.0).map(Latitude.unsafeApply))
-
-  given Arbitrary[Longitude] = Arbitrary.apply(Gen.chooseNum[Double](-180.0, 180.0).map(Longitude.unsafeApply))
-
-  given Arbitrary[Percentage] = Arbitrary.apply(Gen.chooseNum[Double](0.0, 100.0).map(Percentage.unsafeApply))
-
-  given Arbitrary[Speed] = Arbitrary.apply(Gen.posNum[Double].map(Speed.unsafeApply))
-
-  given Arbitrary[Hz] = Arbitrary.apply(Gen.posNum[Double].map(Hz.unsafeApply))
-
-  given Arbitrary[Bar] = Arbitrary.apply(Gen.posNum[Double].map(Bar.unsafeApply))
-
-  given Arbitrary[Meters] = Arbitrary.apply(Gen.posNum[Int].map(Meters.unsafeApply))
-
-  given Arbitrary[TotalDistanceByTrip] = Arbitrary.apply(
-    Gen.resultOf[TripId, Meters, TotalDistanceByTrip]((tripId, meters) => TotalDistanceByTrip.apply(tripId, meters))
+  given Arbitrary[Latitude] = Arbitrary(
+    Gen.chooseNum[Double](-90.0, 90.0).flatMap(Latitude(_).fold(_ => Gen.fail, Gen.const))
   )
 
-  given Arbitrary[TotalDistanceByUser] = Arbitrary.apply(
-    Gen.resultOf[UserId, Meters, TotalDistanceByUser]((userId, meters) => TotalDistanceByUser.apply(userId, meters))
+  given Arbitrary[Longitude] = Arbitrary(
+    Gen.chooseNum[Double](-180.0, 180.0).flatMap(Longitude(_).fold(_ => Gen.fail, Gen.const))
   )
 
-  given Arbitrary[CurrentSpeed] = Arbitrary.apply(Gen.resultOf[TripId, Speed, CurrentSpeed](CurrentSpeed.apply))
-
-  given Arbitrary[TotalRange] = Arbitrary.apply(
-    Gen.resultOf[TripId, BicycleId, Meters, TotalRange]((tripId, bicycleId, remainingRange) =>
-      TotalRange(tripId, bicycleId, remainingRange)
-    )
+  given Arbitrary[Percentage] = Arbitrary(
+    Gen.chooseNum[Double](0.0, 100.0).flatMap(Percentage(_).fold(_ => Gen.fail, Gen.const))
   )
 
-  given Arbitrary[GPSPosition] = Arbitrary.apply(
-    Gen.resultOf[Latitude, Longitude, GPSPosition]((latitude, longitude) => GPSPosition(latitude, longitude))
+  given Arbitrary[Speed] = Arbitrary(Gen.posNum[Double].flatMap(Speed(_).fold(_ => Gen.fail, Gen.const)))
+
+  given Arbitrary[Hz] = Arbitrary(Gen.posNum[Double].flatMap(Hz(_).fold(_ => Gen.fail, Gen.const)))
+
+  given Arbitrary[Bar] = Arbitrary(Gen.posNum[Double].flatMap(Bar(_).fold(_ => Gen.fail, Gen.const)))
+
+  given Arbitrary[Meters] = Arbitrary(Gen.posNum[Int].flatMap(Meters(_).fold(_ => Gen.fail, Gen.const)))
+
+  given Arbitrary[TotalDistanceByTrip] = Arbitrary(
+    Gen.resultOf(TotalDistanceByTrip.apply)
   )
 
-  given Arbitrary[WheelRotation] = Arbitrary.apply(Gen.resultOf[Hz, WheelRotation](hz => WheelRotation(hz)))
+  given Arbitrary[TotalDistanceByUser] = Arbitrary(
+    Gen.resultOf(TotalDistanceByUser.apply)
+  )
+
+  given Arbitrary[CurrentSpeed] = Arbitrary(Gen.resultOf(CurrentSpeed.apply))
+
+  given Arbitrary[TotalRange] = Arbitrary(
+    Gen.resultOf(TotalRange.apply)
+  )
+
+  given Arbitrary[GPSPosition] = Arbitrary(
+    Gen.resultOf(GPSPosition.apply)
+  )
+
+  given Arbitrary[WheelRotation] = Arbitrary(Gen.resultOf(WheelRotation.apply))
 
   given Arbitrary[BatteryCharge] =
-    Arbitrary.apply(Gen.resultOf[Percentage, BatteryCharge](percentage => BatteryCharge(percentage)))
+    Arbitrary(Gen.resultOf(BatteryCharge.apply))
 
-  given Arbitrary[BatteryHealth] =
-    Arbitrary.apply(Gen.resultOf[Percentage, BatteryHealth](remaining => BatteryHealth(remaining)))
+  given Arbitrary[BatteryHealth] = Arbitrary(Gen.resultOf(BatteryHealth.apply))
 
-  given Arbitrary[PneumaticPressure] =
-    Arbitrary.apply(Gen.resultOf[Bar, PneumaticPressure](pressure => PneumaticPressure(pressure)))
+  given Arbitrary[PneumaticPressure] = Arbitrary(Gen.resultOf(PneumaticPressure.apply))
 
-  given Arbitrary[BreaksUsage] =
-    Arbitrary.apply(Gen.resultOf[FiniteDuration, BreaksUsage](finiteDuration => BreaksUsage(finiteDuration)))
+  given Arbitrary[BreaksUsage] = Arbitrary(Gen.resultOf(BreaksUsage.apply))
 
-  given Arbitrary[BreaksHealth] =
-    Arbitrary.apply(Gen.resultOf[Percentage, BreaksHealth](remaining => BreaksHealth(remaining)))
+  given Arbitrary[BreaksHealth] = Arbitrary(Gen.resultOf(BreaksHealth.apply))
 
   def getOutput[C](instance: C)(using Codec[C]): Either[AvroError, C] =
     for
