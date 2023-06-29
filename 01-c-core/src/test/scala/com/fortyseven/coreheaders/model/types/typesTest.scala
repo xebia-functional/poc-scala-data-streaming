@@ -17,46 +17,77 @@
 package com.fortyseven.coreheaders.model.types
 
 import munit.ScalaCheckSuite
-import org.scalacheck.{Arbitrary, Gen}
+import org.scalacheck.Gen
 import org.scalacheck.Prop.forAll
 import com.fortyseven.coreheaders.model.types.types.*
 import org.scalacheck
 
 class typesTest extends ScalaCheckSuite:
 
-  given Arbitrary[Double] = Arbitrary.apply(Gen.double)
+  property("Latitudes grater than 90 are not allowed"):
+    forAll(Gen.chooseNum(90.0, Double.MaxValue).suchThat(_ > 90.0)): latitude =>
+      Latitude(latitude).isLeft
 
-  property("Latitude should conform with Earth latitude limits"):
-    forAll: (latitude: Double) =>
-      if latitude > 90.0 || latitude < -90.00 then Latitude.apply(latitude).isLeft
-      else Latitude.apply(latitude).isRight
+  property("Latitudes smaller than -90 are not allowed"):
+    forAll(Gen.chooseNum(Double.MinValue, 90.0).suchThat(_ < -90.0)): latitude =>
+      Latitude(latitude).isLeft
 
-  property("Longitude should conform with Earth longitude limits"):
-    forAll: (longitude: Double) =>
-      if longitude > 180.0 || longitude < -180.00 then Longitude.apply(longitude).isLeft
-      else Longitude.apply(longitude).isRight
+  property("Latitude should build from values that conform with Earth latitude limits"):
+    forAll(Gen.chooseNum(-90.0, 90.0)): latitude =>
+      Latitude(latitude).isRight
+
+  property("Longitude grater than 180 are not allowed"):
+    forAll(Gen.chooseNum(180.0, Double.MaxValue).suchThat(_ > 180.0)): longitude =>
+      Longitude(longitude).isLeft
+
+  property("Longitude smaller than -180 are not allowed"):
+    forAll(Gen.chooseNum(Double.MinValue, -180.0).suchThat(_ < -180.0)): longitude =>
+      Longitude(longitude).isLeft
+
+  property("Longitude should build from values that conform with Earth longitude limits"):
+    forAll(Gen.chooseNum(-180.0, 180.0)): longitude =>
+      Longitude(longitude).isRight
+
+  property("An invalid Percentage should have values bellow 0"):
+    forAll(Gen.negNum[Double]): percentage =>
+      Percentage(percentage).isLeft
+
+  property("An invalid Percentage should have values above 100"):
+    forAll(Gen.chooseNum(100.0, Double.MaxValue).suchThat(_ > 100.0)): percentage =>
+      Percentage(percentage).isLeft
 
   property("A valid Percentage should have values between 0 and 100"):
-    forAll: (percentage: Double) =>
-      if percentage > 100.0 || percentage < 0.0 then Percentage.apply(percentage).isLeft
-      else Percentage.apply(percentage).isRight
+    forAll(Gen.chooseNum(0.0, 100.0)): percentage =>
+      Percentage(percentage).isRight
+
+  property("An invalid Speed should have a value lower than 0"):
+    forAll(Gen.negNum[Double]): speed =>
+      Speed(speed).isLeft
 
   property("A valid Speed should have a value equal to 0 or higher"):
-    forAll: (speed: Double) =>
-      if speed < 0.0 then Speed.apply(speed).isLeft
-      else Speed.apply(speed).isRight
+    forAll(Gen.posNum[Double]): speed =>
+      Speed(speed).isRight
+
+  property("An invalid Hz should have a value lower than 0"):
+    forAll(Gen.negNum[Double]): hz =>
+      Hz(hz).isLeft
 
   property("A valid Hz should have a value equal to 0 or higher"):
-    forAll: (hz: Double) =>
-      if hz < 0.0 then Hz.apply(hz).isLeft
-      else Hz.apply(hz).isRight
+    forAll(Gen.posNum[Double]): hz =>
+      Hz(hz).isRight
+
+  property("An invalid Bar should have a value lower than 0"):
+    forAll(Gen.negNum[Double]): bar =>
+      Bar(bar).isLeft
 
   property("A valid Bar should have a value equal to 0 or higher"):
-    forAll: (bar: Double) =>
-      if bar < 0.0 then Bar.apply(bar).isLeft
-      else Bar.apply(bar).isRight
+    forAll(Gen.posNum[Double]): bar =>
+      Bar(bar).isRight
+
+  property("An invalid Meters should have a value lower than 0"):
+    forAll(Gen.negNum[Int]): meters =>
+      Meters(meters).isLeft
 
   property("A valid Meters should have a value equal to 0 or higher"):
-    forAll: (meters: Int) =>
-      if meters < 0 then Meters.apply(meters).isLeft
-      else Meters.apply(meters).isRight
+    forAll(Gen.posNum[Int]): meters =>
+      Meters(meters).isRight

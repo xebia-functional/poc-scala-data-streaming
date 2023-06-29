@@ -16,7 +16,7 @@
 
 package com.fortyseven.coreheaders.model.types
 
-import com.fortyseven.coreheaders.model.types.ids.{BicycleId, UserId, TripId}
+import com.fortyseven.coreheaders.model.types.ids.{BicycleId, TripId, UserId}
 import munit.ScalaCheckSuite
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalacheck.Prop.forAll
@@ -25,7 +25,7 @@ import java.util.UUID
 
 class idsTest extends ScalaCheckSuite:
 
-  given Arbitrary[UUID] = Arbitrary.apply(Gen.uuid)
+  given Arbitrary[UUID] = Arbitrary(Gen.uuid)
 
   property("BicycleId should build from a valid UUID and method call value should return the same UUID"):
     forAll: (uuid: UUID) =>
