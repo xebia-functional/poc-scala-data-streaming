@@ -16,7 +16,7 @@
 
 package com.fortyseven.core.codecs.app
 
-import com.fortyseven.core.TestUtils.getOutput
+import com.fortyseven.core.TestUtils.codeAndDecode
 import com.fortyseven.core.TestUtils.given
 import com.fortyseven.coreheaders.model.app.model.*
 import munit.ScalaCheckSuite
@@ -27,16 +27,16 @@ class AppCodecsTest extends ScalaCheckSuite:
 
   property("Total distance by trip should return the same value after encoding and decoding"):
     forAll: (totalDistanceByTrip: TotalDistanceByTrip) =>
-      assert(getOutput(totalDistanceByTrip).isRight)
+      assertEquals(codeAndDecode(totalDistanceByTrip), Right(totalDistanceByTrip))
 
   property("Total distance by user should return the same value after encoding and decoding"):
     forAll: (totalDistanceByUser: TotalDistanceByUser) =>
-      assert(getOutput(totalDistanceByUser).isRight)
+      assertEquals(codeAndDecode(totalDistanceByUser), Right(totalDistanceByUser))
 
   property("Current speed should return the same value after encoding and decoding"):
     forAll: (currentSpeed: CurrentSpeed) =>
-      assert(getOutput(currentSpeed).isRight)
+      assertEquals(codeAndDecode(currentSpeed), Right(currentSpeed))
 
   property("Total range should return the same value after encoding and decoding"):
     forAll: (totalRange: TotalRange) =>
-      assert(getOutput(totalRange).isRight)
+      assertEquals(codeAndDecode(totalRange), Right(totalRange))
