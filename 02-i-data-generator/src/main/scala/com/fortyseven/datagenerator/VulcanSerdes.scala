@@ -83,8 +83,8 @@ object VulcanSerdes:
       override def deserialize(topic: String, data: Array[Byte]): T =
         (for
           readerSchema <- codec.schema.left.map(_.throwable)
-          avro <- Try(deserializer.deserialize(topic, data, readerSchema)).toEither
-          decoded <- codec.decode(avro, readerSchema).left.map(_.throwable)
+          avro         <- Try(deserializer.deserialize(topic, data, readerSchema)).toEither
+          decoded      <- codec.decode(avro, readerSchema).left.map(_.throwable)
         yield decoded).fold(err => throw RuntimeException(err.getMessage), identity)
 
   def avroSerde[T](config: Config, includeKey: Boolean)(using Codec[T]): Serde[T] =

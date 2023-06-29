@@ -36,7 +36,7 @@ final class DataGenerator[F[_]: Async: Parallel]:
 
     val generators = new ModelGenerators[F](100.milliseconds)
 
-    val gpsPositionTopicName = s"${dgc.kafka.producer.topicName}-gps"
+    val gpsPositionTopicName       = s"${dgc.kafka.producer.topicName}-gps"
     val pneumaticPressureTopicName = s"${dgc.kafka.producer.topicName}-pp"
 
     val producerSettings = ProducerSettings[F, String, Array[Byte]]
@@ -79,7 +79,7 @@ final class DataGenerator[F[_]: Async: Parallel]:
         topic: String
     )(using serializer: KafkaSerializer[T]): fs2.Stream[F, ProducerRecords[String, Array[Byte]]] =
       inputStream.map { committable =>
-        val key = committable.getClass.getSimpleName
+        val key   = committable.getClass.getSimpleName
         val value = serializer.serialize(topic, committable)
         ProducerRecords.one(ProducerRecord(topic, key, value))
       }

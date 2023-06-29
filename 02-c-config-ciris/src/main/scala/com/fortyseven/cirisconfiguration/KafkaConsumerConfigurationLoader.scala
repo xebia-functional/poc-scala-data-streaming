@@ -32,15 +32,15 @@ final class KafkaConsumerConfigurationLoader[F[_]: Async] extends ConfigurationL
 
   lazy val config: ConfigValue[Effect, KafkaConsumerConfiguration] =
     for
-      brokerAddress <- default(kafkaBrokerAddress).as[NonEmptyString]
-      sourceTopicName <- default("data-generator").as[NonEmptyString]
-      sinkTopicName <- default("input-topic").as[NonEmptyString]
-      autoOffsetReset <- default(KafkaAutoOffsetReset.Earliest).as[KafkaAutoOffsetReset]
-      groupId <- default("groupId").as[NonEmptyString]
-      valueSerializerClass <- default("io.confluent.kafka.serializers.KafkaAvroSerializer").as[NonEmptyString]
+      brokerAddress         <- default(kafkaBrokerAddress).as[NonEmptyString]
+      sourceTopicName       <- default("data-generator").as[NonEmptyString]
+      sinkTopicName         <- default("input-topic").as[NonEmptyString]
+      autoOffsetReset       <- default(KafkaAutoOffsetReset.Earliest).as[KafkaAutoOffsetReset]
+      groupId               <- default("groupId").as[NonEmptyString]
+      valueSerializerClass  <- default("io.confluent.kafka.serializers.KafkaAvroSerializer").as[NonEmptyString]
       consumerMaxConcurrent <- default(25).as[PositiveInt]
       producerMaxConcurrent <- default(Int.MaxValue).as[PositiveInt]
-      compressionType <- default(KafkaCompressionType.lz4).as[KafkaCompressionType]
+      compressionType       <- default(KafkaCompressionType.lz4).as[KafkaCompressionType]
       commitBatchWithinSize <- default(10).as[PositiveInt]
       commitBatchWithinTime <- default(15.seconds).as[FiniteDuration]
     yield KafkaConsumerConfiguration(

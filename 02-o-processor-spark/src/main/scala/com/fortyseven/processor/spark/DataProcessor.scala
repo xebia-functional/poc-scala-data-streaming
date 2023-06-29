@@ -28,7 +28,7 @@ class DataProcessor[F[_]: Async] extends SparkProcessorHeader[F]:
 
   override def process(config: ConfigurationLoaderHeader[F, SparkProcessorConfiguration]): F[Unit] = for
     conf <- config.load()
-    _ <- runWithConfiguration(conf)
+    _    <- runWithConfiguration(conf)
   yield ()
 
   private def runWithConfiguration(sparkConfiguration: SparkProcessorConfiguration): F[Unit] =

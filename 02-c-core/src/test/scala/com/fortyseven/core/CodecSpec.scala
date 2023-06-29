@@ -29,7 +29,7 @@ class CodecSpec extends ScalaCheckSuite:
   private def getOutput[C](instance: C)(using Codec[C]): Either[AvroError, C] =
     for
       encoded <- vulcan.Codec.encode[C](instance)
-      result <- vulcan.Codec.decode[C](encoded)
+      result  <- vulcan.Codec.decode[C](encoded)
     yield result
 
   property("GPSPosition"):

@@ -32,19 +32,19 @@ class JobProcessorConfigurationLoader[F[_]: Async] extends ConfigurationLoaderHe
 
   lazy private val config: ConfigValue[Effect, FlinkProcessorConfiguration] =
     for
-      brokerAddress <- default(kafkaBrokerAddress).as[NonEmptyString]
-      schemaRegistryUrl <- default(schemaRegistryUrl).as[NonEmptyString]
-      sourceTopicName <- default("input-topic-pp").as[NonEmptyString]
-      sinkTopicName <- default("output-topic").as[NonEmptyString]
-      autoOffsetReset <- default(KafkaAutoOffsetReset.Earliest).as[KafkaAutoOffsetReset]
-      groupId <- default("groupId").as[NonEmptyString]
-      valueSerializerClass <- default("io.confluent.kafka.serializers.KafkaAvroSerializer").as[NonEmptyString]
+      brokerAddress          <- default(kafkaBrokerAddress).as[NonEmptyString]
+      schemaRegistryUrl      <- default(schemaRegistryUrl).as[NonEmptyString]
+      sourceTopicName        <- default("input-topic-pp").as[NonEmptyString]
+      sinkTopicName          <- default("output-topic").as[NonEmptyString]
+      autoOffsetReset        <- default(KafkaAutoOffsetReset.Earliest).as[KafkaAutoOffsetReset]
+      groupId                <- default("groupId").as[NonEmptyString]
+      valueSerializerClass   <- default("io.confluent.kafka.serializers.KafkaAvroSerializer").as[NonEmptyString]
       valueDeserializerClass <- default("io.confluent.kafka.serializers.KafkaAvroDeserializer").as[NonEmptyString]
-      consumerMaxConcurrent <- default(25).as[PositiveInt]
-      producerMaxConcurrent <- default(Int.MaxValue).as[PositiveInt]
-      compressionType <- default(KafkaCompressionType.lz4).as[KafkaCompressionType]
-      commitBatchWithinSize <- default(10).as[PositiveInt]
-      commitBatchWithinTime <- default(15.seconds).as[FiniteDuration]
+      consumerMaxConcurrent  <- default(25).as[PositiveInt]
+      producerMaxConcurrent  <- default(Int.MaxValue).as[PositiveInt]
+      compressionType        <- default(KafkaCompressionType.lz4).as[KafkaCompressionType]
+      commitBatchWithinSize  <- default(10).as[PositiveInt]
+      commitBatchWithinTime  <- default(15.seconds).as[FiniteDuration]
     yield FlinkProcessorConfiguration(
       KafkaConfiguration(
         broker = BrokerConfiguration(brokerAddress),

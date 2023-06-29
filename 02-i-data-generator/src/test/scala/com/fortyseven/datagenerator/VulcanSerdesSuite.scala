@@ -36,15 +36,15 @@ class VulcanSerdesSuite extends CatsEffectSuite:
 
   test("Serialize a case class as a record"):
     val mockedClient = new MockSchemaRegistryClient()
-    val topic = "test-topic"
+    val topic        = "test-topic"
 
     pneumaticPressureCodec.schema match
       case Left(_)       => ()
       case Right(schema) => mockedClient.register(s"$topic-value", AvroSchema(schema.toString))
-    val config = Config("useMockedClient", useMockedClient = Some(mockedClient))
+    val config                     = Config("useMockedClient", useMockedClient = Some(mockedClient))
     given Serde[PneumaticPressure] = avroSerde[PneumaticPressure](config, includeKey = false)
 
-    val data = PneumaticPressure(Bar.unsafeApply(2.0))
+    val data   = PneumaticPressure(Bar.unsafeApply(2.0))
     val result = deserialize(topic, serialize(topic, data))
 
     assertEquals(data, result)

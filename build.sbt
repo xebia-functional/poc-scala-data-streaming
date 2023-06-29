@@ -31,7 +31,7 @@ ThisBuild / scalacOptions ++=
 
 ThisBuild / assemblyMergeStrategy := {
   case PathList(ps @ _*) if ps.lastOption.contains("module-info.class") => MergeStrategy.discard
-  case x if x.endsWith(".properties") => MergeStrategy.filterDistinctLines
+  case x if x.endsWith(".properties")                                   => MergeStrategy.filterDistinctLines
   case x =>
     val oldStrategy = (ThisBuild / assemblyMergeStrategy).value
     oldStrategy(x)
@@ -120,10 +120,10 @@ lazy val `data-generator`: Project = (project in file("02-i-data-generator"))
   .enablePlugins(JavaAppPackaging)
   .settings(commonSettings)
   .settings(
-    name := "data-generator",
+    name                 := "data-generator",
     assembly / mainClass := Some("com.fortyseven.datagenerator.Main"),
     Docker / packageName := "data-generator",
-    dockerBaseImage := "openjdk:11-jre-slim-buster",
+    dockerBaseImage      := "openjdk:11-jre-slim-buster",
     dockerExposedPorts ++= Seq(8080),
     dockerUpdateLatest := true,
     dockerAlias := DockerAlias(
@@ -202,7 +202,7 @@ lazy val `processor-flink-integration`: Project =
     .dependsOn(`processor-flink`)
     .settings(commonSettings)
     .settings(
-      name := "flink-integration-test",
+      name           := "flink-integration-test",
       publish / skip := true,
       libraryDependencies ++= Seq(
         Libraries.testContainers.kafka,

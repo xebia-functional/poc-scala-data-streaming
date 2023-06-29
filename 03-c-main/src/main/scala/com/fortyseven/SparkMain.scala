@@ -26,15 +26,15 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 object SparkMain extends IOApp.Simple:
 
   override def run: IO[Unit] = for
-    logger <- Slf4jLogger.create[IO]
-    consumerConf <- KafkaConsumerConfigurationLoader[IO].load()
-    _ <- logger.info(s"KafkaConsumerConfiguration: $consumerConf")
-    processorConf <- SparkProcessorConfigurationLoader[IO].load()
-    _ <- logger.info(s"SparkProcessorConfiguration: $processorConf")
-    _ <- logger.info("Start kafka consumer")
-    consumerFiber <- new KafkaConsumer[IO].consume(KafkaConsumerConfigurationLoader[IO]).start
-    _ <- logger.info("Start spark processor")
+    logger         <- Slf4jLogger.create[IO]
+    consumerConf   <- KafkaConsumerConfigurationLoader[IO].load()
+    _              <- logger.info(s"KafkaConsumerConfiguration: $consumerConf")
+    processorConf  <- SparkProcessorConfigurationLoader[IO].load()
+    _              <- logger.info(s"SparkProcessorConfiguration: $processorConf")
+    _              <- logger.info("Start kafka consumer")
+    consumerFiber  <- new KafkaConsumer[IO].consume(KafkaConsumerConfigurationLoader[IO]).start
+    _              <- logger.info("Start spark processor")
     processorFiber <- new DataProcessor[IO].process(SparkProcessorConfigurationLoader[IO]).start
-    _ <- consumerFiber.join
-    _ <- processorFiber.join
+    _              <- consumerFiber.join
+    _              <- processorFiber.join
   yield ()

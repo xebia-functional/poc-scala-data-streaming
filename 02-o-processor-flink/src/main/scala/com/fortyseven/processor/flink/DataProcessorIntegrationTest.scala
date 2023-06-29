@@ -32,10 +32,10 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
 object DataProcessorIntegrationTest extends IOApp.Simple:
 
   override def run: IO[Unit] =
-    val env = StreamExecutionEnvironment.getExecutionEnvironment()
+    val env              = StreamExecutionEnvironment.getExecutionEnvironment()
     val bootstrapServers = "localhost:9092"
-    val sourceTopic = "input-topic"
-    val sinkTopic = "output-topic"
+    val sourceTopic      = "input-topic"
+    val sinkTopic        = "output-topic"
     new DataProcessorIntegrationTest(env).run(bootstrapServers, sourceTopic, sinkTopic).void
 
   def runLocal(bootstrapServers: String, sourceTopic: String, sinkTopic: String): IO[Unit] =
