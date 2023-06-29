@@ -24,6 +24,7 @@ import org.scalacheck.{Arbitrary, Gen}
 import vulcan.{AvroError, Codec}
 
 import java.util.UUID
+import scala.concurrent.duration.FiniteDuration
 
 object TestUtils:
 
@@ -49,50 +50,45 @@ object TestUtils:
 
   given Arbitrary[Meters] = Arbitrary.apply(Gen.posNum[Int].map(Meters.unsafeApply))
 
-  given Arbitrary[TotalDistanceByTrip] = Arbitrary.apply(Gen.resultOf[TripId, Meters, TotalDistanceByTrip](
-    (tripId, meters) => TotalDistanceByTrip.apply(tripId, meters))
+  given Arbitrary[TotalDistanceByTrip] = Arbitrary.apply(
+    Gen.resultOf[TripId, Meters, TotalDistanceByTrip]((tripId, meters) => TotalDistanceByTrip.apply(tripId, meters))
   )
 
-  given Arbitrary[TotalDistanceByUser] = Arbitrary.apply(Gen.resultOf[UserId, Meters, TotalDistanceByUser](
-    (userId, meters) => TotalDistanceByUser.apply(userId, meters)
-  ))
+  given Arbitrary[TotalDistanceByUser] = Arbitrary.apply(
+    Gen.resultOf[UserId, Meters, TotalDistanceByUser]((userId, meters) => TotalDistanceByUser.apply(userId, meters))
+  )
 
   given Arbitrary[CurrentSpeed] = Arbitrary.apply(Gen.resultOf[TripId, Speed, CurrentSpeed](CurrentSpeed.apply))
 
-  given Arbitrary[TotalRange] = Arbitrary.apply(Gen.resultOf[TripId, BicycleId, Meters, TotalRange](
-    (tripId, bicycleId, remainingRange) => TotalRange(tripId, bicycleId, remainingRange)
-  ))
+  given Arbitrary[TotalRange] = Arbitrary.apply(
+    Gen.resultOf[TripId, BicycleId, Meters, TotalRange]((tripId, bicycleId, remainingRange) =>
+      TotalRange(tripId, bicycleId, remainingRange)
+    )
+  )
 
-
-  given Arbitrary[GPSPosition] = Arbitrary.apply(Gen.resultOf[Latitude, Longitude, GPSPosition](
-    (latitude, longitude) => GPSPosition(latitude, longitude)
-  ))
+  given Arbitrary[GPSPosition] = Arbitrary.apply(
+    Gen.resultOf[Latitude, Longitude, GPSPosition]((latitude, longitude) => GPSPosition(latitude, longitude))
+  )
 
   given Arbitrary[WheelRotation] = Arbitrary.apply(Gen.resultOf[Hz, WheelRotation](hz => WheelRotation(hz)))
 
-  given Arbitrary[BatteryCharge] = Arbitrary.apply(Gen.resultOf[Percentage, BatteryCharge](
-    percentage => BatteryCharge(percentage)
-  ))
+  given Arbitrary[BatteryCharge] =
+    Arbitrary.apply(Gen.resultOf[Percentage, BatteryCharge](percentage => BatteryCharge(percentage)))
 
-  given Arbitrary[BatteryHealth] = Arbitrary.apply(Gen.resultOf[Percentage, BatteryHealth](
-    remaining => BatteryHealth(remaining)
-  ))
+  given Arbitrary[BatteryHealth] =
+    Arbitrary.apply(Gen.resultOf[Percentage, BatteryHealth](remaining => BatteryHealth(remaining)))
 
-  given Arbitrary[PneumaticPressure] = Arbitrary.apply(Gen.resultOf[Bar, PneumaticPressure](
-    pressure => PneumaticPressure(pressure)
-  ))
+  given Arbitrary[PneumaticPressure] =
+    Arbitrary.apply(Gen.resultOf[Bar, PneumaticPressure](pressure => PneumaticPressure(pressure)))
 
-  //TODO: implement the codec for BreaksUsage in [com.fortyseven.core.codecs.iot.IotCodecs.scala]
-  //given Arbitrary[BreaksUsage] = Arbitrary.apply(Gen.resultOf[Duration, BreaksUsage](
-  //  duration => BreaksUsage(duration)
-  //))
+  given Arbitrary[BreaksUsage] =
+    Arbitrary.apply(Gen.resultOf[FiniteDuration, BreaksUsage](finiteDuration => BreaksUsage(finiteDuration)))
 
-  given Arbitrary[BreaksHealth] = Arbitrary.apply(Gen.resultOf[Percentage, BreaksHealth](
-    remaining => BreaksHealth(remaining)
-  ))
+  given Arbitrary[BreaksHealth] =
+    Arbitrary.apply(Gen.resultOf[Percentage, BreaksHealth](remaining => BreaksHealth(remaining)))
 
   def getOutput[C](instance: C)(using Codec[C]): Either[AvroError, C] =
     for
       encoded <- vulcan.Codec.encode[C](instance)
-      result <- vulcan.Codec.decode[C](encoded)
+      result  <- vulcan.Codec.decode[C](encoded)
     yield result

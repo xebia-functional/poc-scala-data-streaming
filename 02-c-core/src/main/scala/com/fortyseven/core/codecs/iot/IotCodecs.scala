@@ -16,6 +16,8 @@
 
 package com.fortyseven.core.codecs.iot
 
+import scala.concurrent.duration.FiniteDuration
+
 import cats.implicits.*
 import com.fortyseven.core.codecs.types.TypesCodecs.given
 import com.fortyseven.coreheaders.model.iot.model.*
@@ -48,9 +50,12 @@ object IotCodecs:
       _("pressure", _.pressure).map(PneumaticPressure.apply)
     )
 
-  given breaksUsageCodec: Codec[BreaksUsage] = ???
-  // TODO: missing argument for parameter codec of method apply in class FieldBuilder: (implicit codec: vulcan.Codec[scala.concurrent.duration.Duration])
-  // Codec.record(name = "BreaksUsage", namespace = _namespace)(_("duration", _.duration).map(BreaksUsage.apply))
+  given finiteDurationCodec: Codec[FiniteDuration] = Codec.long.imap(FiniteDuration(_, "millis"))(_.toMillis)
+
+  given breaksUsageCodec: Codec[BreaksUsage] =
+    Codec.record(name = "BreaksUsage", namespace = _namespace)(
+      _("finateDuration", _.finiteDuration).map(BreaksUsage.apply)
+    )
 
   given breaksHealthCodec: Codec[BreaksHealth] =
     Codec.record(name = "BreaksHealth", namespace = _namespace)(_("remaining", _.remaining).map(BreaksHealth.apply))

@@ -45,10 +45,9 @@ class IotCodecsTest extends ScalaCheckSuite:
     forAll: (pneumaticPressure: PneumaticPressure) =>
       assert(getOutput(pneumaticPressure).isRight)
 
-  //TODO: Implement codec for BreakUsage
-  //property("BreaksUsage should return the same value after encoding and decoding"):
-  //  forAll: (breaksUsage: BreaksUsage) =>
-  //    assert(getOutput(breaksUsage).isRight)
+  property("BreaksUsage should return the same value after encoding and decoding"):
+    forAll: (breaksUsage: BreaksUsage) =>
+      assert(getOutput(breaksUsage).isRight)
 
   property("BreaksHealth should return the same value after encoding and decoding"):
     forAll: (breaksHealth: BreaksHealth) =>
