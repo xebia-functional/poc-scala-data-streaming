@@ -47,7 +47,7 @@ class IotCodecsTest extends ScalaCheckSuite:
       assertEquals(codeAndDecode(pneumaticPressure), Right(pneumaticPressure))
 
   property("BreaksUsage should return the same value after encoding and decoding"):
-    forAll: (breaksUsage: BreaksUsage) => //It builds finiteDuration in NanoSeconds
+    forAll: (breaksUsage: BreaksUsage) => // It builds finiteDuration in NanoSeconds
       assertEquals(codeAndDecode(breaksUsage), Right(BreaksUsage(breaksUsage.finiteDuration.toMillis.millis)))
 
   property("BreaksHealth should return the same value after encoding and decoding"):

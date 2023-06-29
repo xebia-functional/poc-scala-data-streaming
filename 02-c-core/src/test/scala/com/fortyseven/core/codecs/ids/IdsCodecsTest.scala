@@ -24,15 +24,17 @@ import com.fortyseven.core.codecs.ids.IdsCodecs.given
 import com.fortyseven.coreheaders.model.types.ids.{BicycleId, TripId, UserId}
 import org.scalacheck.Arbitrary
 
-import scala.reflect.{ClassTag, classTag}
+import scala.reflect.{classTag, ClassTag}
 
 class IdsCodecsTest extends ScalaCheckSuite:
-  
-  private def propCodec[A: Arbitrary : vulcan.Codec : ClassTag](): Unit =
+
+  private def propCodec[A: Arbitrary: vulcan.Codec: ClassTag](): Unit =
     property(s"Encoding and decoding for ${classTag[A].runtimeClass.getSimpleName} should work"):
       forAll: (a: A) =>
         assertEquals(codeAndDecode(a), Right(a))
-        
+
   propCodec[BicycleId]()
+
   propCodec[UserId]()
+
   propCodec[TripId]()

@@ -20,9 +20,9 @@ import com.fortyseven.coreheaders.model.types.ids.{BicycleId, TripId, UserId}
 import vulcan.Codec
 
 object IdsCodecs:
-  
+
   given bicycleIdCodec: Codec[BicycleId] = Codec.uuid.imap(BicycleId.apply)(_.value)
-  
+
   given userIdCodec: Codec[UserId] = Codec.uuid.imap(UserId.apply)(_.value)
-  
+
   given tripIdCodec: Codec[TripId] = Codec.uuid.imap(TripId.apply)(_.value)

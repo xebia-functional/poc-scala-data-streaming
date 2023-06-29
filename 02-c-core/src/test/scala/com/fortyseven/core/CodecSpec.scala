@@ -22,7 +22,7 @@ import com.fortyseven.coreheaders.model.types.types.{Bar, Latitude, Longitude}
 import munit.ScalaCheckSuite
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Gen
-import TestUtils.getOutput
+import TestUtils.codeAndDecode
 
 class CodecSpec extends ScalaCheckSuite:
 
@@ -31,7 +31,7 @@ class CodecSpec extends ScalaCheckSuite:
       (Latitude(latitude), Longitude(longitude)) match
         case (Right(lat), Right(lon)) =>
           val gpsPosition = GPSPosition(lat, lon)
-          getOutput(gpsPosition) == Right(gpsPosition)
+          codeAndDecode(gpsPosition) == Right(gpsPosition)
         case _                        => assert(false)
       ()
     }
@@ -41,7 +41,7 @@ class CodecSpec extends ScalaCheckSuite:
       Bar(pressure) match
         case Right(p) =>
           val pneumaticPressure = PneumaticPressure(p)
-          getOutput(pneumaticPressure) == Right(pneumaticPressure)
+          codeAndDecode(pneumaticPressure) == Right(pneumaticPressure)
         case _        => assert(false)
       ()
     }

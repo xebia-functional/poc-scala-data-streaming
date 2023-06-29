@@ -24,20 +24,25 @@ import com.fortyseven.core.codecs.types.TypesCodecs.given
 import com.fortyseven.coreheaders.model.types.types.*
 import org.scalacheck.Arbitrary
 
-import scala.reflect.{ClassTag, classTag}
+import scala.reflect.{classTag, ClassTag}
 
 class TypesCodecsTest extends ScalaCheckSuite:
 
-  private def propCodec[A: Arbitrary : vulcan.Codec : ClassTag](): Unit =
+  private def propCodec[A: Arbitrary: vulcan.Codec: ClassTag](): Unit =
     property(s"Encoding and decoding for ${classTag[A].runtimeClass.getSimpleName} should work"):
       forAll: (a: A) =>
         assertEquals(codeAndDecode(a), Right(a))
 
   propCodec[Latitude]()
-  propCodec[Longitude]()
-  propCodec[Percentage]()
-  propCodec[Speed]()
-  propCodec[Hz]()
-  propCodec[Bar]()
-  propCodec[Meters]()
 
+  propCodec[Longitude]()
+
+  propCodec[Percentage]()
+
+  propCodec[Speed]()
+
+  propCodec[Hz]()
+
+  propCodec[Bar]()
+
+  propCodec[Meters]()

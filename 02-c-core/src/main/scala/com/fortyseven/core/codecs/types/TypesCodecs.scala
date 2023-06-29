@@ -28,16 +28,15 @@ object TypesCodecs:
   given longitudeCodec: Codec[Longitude] =
     Codec.double.imapError(Longitude(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
 
-  given percentageCodec: Codec[Percentage] = Codec
-    .double
-    .imapError(Percentage(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
+  given percentageCodec: Codec[Percentage] =
+    Codec.double.imapError(Percentage(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
 
-  given speedCodec: Codec[Speed] = Codec
-    .double
-    .imapError(Speed(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
+  given speedCodec: Codec[Speed] =
+    Codec.double.imapError(Speed(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
 
   given hertzCodec: Codec[Hz] = Codec.double.imapError(Hz(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
 
   given barCodec: Codec[Bar] = Codec.double.imapError(Bar(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
 
-  given metersCodec: Codec[Meters] = Codec.int.imapError(Meters(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
+  given metersCodec: Codec[Meters] =
+    Codec.int.imapError(Meters(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)

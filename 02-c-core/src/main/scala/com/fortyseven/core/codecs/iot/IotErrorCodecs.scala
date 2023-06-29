@@ -20,9 +20,8 @@ import com.fortyseven.coreheaders.model.iot.errors.OutOfBoundsError
 import vulcan.Codec
 
 object IotErrorCodecs:
+
   private val _namespace = "iot-error"
 
   given outOfBoundsErrorCodec: Codec[OutOfBoundsError] =
     Codec.record(name = "OutOfBoundsError", namespace = _namespace)(_("msg", _.msg).map(OutOfBoundsError.apply))
-
-
