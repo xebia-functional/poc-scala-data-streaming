@@ -20,19 +20,19 @@ import com.fortyseven.coreheaders.model.iot.errors.*
 
 object types:
 
-  opaque type Latitude <: Double = Double
+  opaque type Latitude = Double
 
-  opaque type Longitude <: Double = Double
+  opaque type Longitude = Double
 
-  opaque type Percentage <: Double = Double
+  opaque type Percentage = Double
 
-  opaque type Speed <: Double = Double // Should be typed better. Meters/second or Km/h?
+  opaque type Speed = Double // Should be typed better. Meters/second or Km/h?
 
-  opaque type Hz <: Double = Double // IS measure for frequency 1/60 Hz would be 1 RPM
+  opaque type Hz  = Double // IS measure for frequency 1/60 Hz would be 1 RPM
 
-  opaque type Bar <: Double = Double
+  opaque type Bar = Double
 
-  opaque type Meters <: Int = Int
+  opaque type Meters = Int
 
   object Latitude:
 

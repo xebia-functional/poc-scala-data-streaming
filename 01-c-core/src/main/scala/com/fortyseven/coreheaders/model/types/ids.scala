@@ -20,11 +20,11 @@ import java.util.UUID
 
 object ids:
 
-  opaque type BicycleId <: UUID = UUID
+  opaque type BicycleId = UUID
 
-  opaque type UserId <: UUID = UUID
+  opaque type UserId = UUID
 
-  opaque type TripId <: UUID = UUID
+  opaque type TripId = UUID
 
   object BicycleId:
 
