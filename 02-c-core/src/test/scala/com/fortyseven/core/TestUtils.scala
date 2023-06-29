@@ -87,8 +87,4 @@ object TestUtils:
 
   given Arbitrary[BreaksHealth] = Arbitrary(Gen.resultOf(BreaksHealth.apply))
 
-  def getOutput[C](instance: C)(using Codec[C]): Either[AvroError, C] =
-    for
-      encoded <- vulcan.Codec.encode[C](instance)
-      result  <- vulcan.Codec.decode[C](encoded)
-    yield result
+  def codeAndDecode[C: Codec](instance: C): Either[AvroError, C] = Codec.encode(instance).flatMap(Codec.decode[C])
