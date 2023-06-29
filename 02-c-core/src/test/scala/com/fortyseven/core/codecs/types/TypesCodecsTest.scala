@@ -16,56 +16,28 @@
 
 package com.fortyseven.core.codecs.types
 
-import com.fortyseven.core.TestUtils.getOutput
+import com.fortyseven.core.TestUtils.codeAndDecode
+import com.fortyseven.core.TestUtils.given
 import munit.ScalaCheckSuite
 import org.scalacheck.Prop.forAll
 import com.fortyseven.core.codecs.types.TypesCodecs.given
-import com.fortyseven.core.codecs.iot.IotErrorCodecs.given
-import com.fortyseven.coreheaders.model.iot.errors.OutOfBoundsError
 import com.fortyseven.coreheaders.model.types.types.*
-import org.scalacheck.Gen
+import org.scalacheck.Arbitrary
+
+import scala.reflect.{ClassTag, classTag}
 
 class TypesCodecsTest extends ScalaCheckSuite:
 
-  property("Latitude should return the same value after encoding and decoding"):
-    forAll(Gen.double.flatMap(Latitude.apply)): (latitude: Either[OutOfBoundsError, Latitude]) =>
-      latitude match
-        case Left(outOfBoundsError: OutOfBoundsError) => assert(getOutput(outOfBoundsError).isLeft)
-        case Right(latitude: Latitude) => assert(getOutput(latitude).isRight)
+  private def propCodec[A: Arbitrary : vulcan.Codec : ClassTag](): Unit =
+    property(s"Encoding and decoding for ${classTag[A].runtimeClass.getSimpleName} should work"):
+      forAll: (a: A) =>
+        assertEquals(codeAndDecode(a), Right(a))
 
-  property("Longitude should return the same value after encoding and decoding"):
-    forAll(Gen.double.flatMap(Longitude.apply)): (longitude: Either[OutOfBoundsError, Longitude]) =>
-      longitude match
-        case Left(outOfBoundsError: OutOfBoundsError) => assert(getOutput(outOfBoundsError).isLeft)
-        case Right(longitude: Longitude) => assert(getOutput(longitude).isRight)
-
-  property("Percentage should return the same value after encoding and decoding"):
-    forAll(Gen.double.flatMap(Percentage.apply)): (percentage: Either[OutOfBoundsError, Percentage]) =>
-      percentage match
-        case Left(outOfBoundsError: OutOfBoundsError) => assert(getOutput(outOfBoundsError).isLeft)
-        case Right(percentage: Percentage) => assert(getOutput(percentage).isRight)
-
-  property("Speed should return the same value after encoding and decoding"):
-    forAll(Gen.double.flatMap(Speed.apply)): (speed: Either[OutOfBoundsError, Speed]) =>
-      speed match
-        case Left(outOfBoundsError: OutOfBoundsError) => assert(getOutput(outOfBoundsError).isLeft)
-        case Right(speed: Speed) => assert(getOutput(speed).isRight)
-
-  property("Hz should return the same value after encoding and decoding"):
-    forAll(Gen.double.flatMap(Hz.apply)): (hertz: Either[OutOfBoundsError, Hz]) =>
-      hertz match
-        case Left(outOfBoundsError: OutOfBoundsError) => assert(getOutput(outOfBoundsError).isLeft)
-        case Right(hertz: Hz) => assert(getOutput(hertz).isRight)
-
-  property("Bar should return the same value after encoding and decoding"):
-    forAll(Gen.double.flatMap(Bar.apply)): (bar: Either[OutOfBoundsError, Bar]) =>
-      bar match
-        case Left(outOfBoundsError: OutOfBoundsError) => assert(getOutput(outOfBoundsError).isLeft)
-        case Right(bar: Bar) => assert(getOutput(bar).isRight)
-
-  // TODO: this test fails but I am confused about why
-  property("Meters should return the same value after encoding and decoding"):
-    forAll(Gen.resultOf[Int, Either[OutOfBoundsError, Meters]](Meters.apply)):
-      case Left(outOfBoundsError: OutOfBoundsError) => assert(getOutput(outOfBoundsError).isLeft)
-      case Right(meters: Meters) => assert(getOutput(meters).isRight)
+  propCodec[Latitude]()
+  propCodec[Longitude]()
+  propCodec[Percentage]()
+  propCodec[Speed]()
+  propCodec[Hz]()
+  propCodec[Bar]()
+  propCodec[Meters]()
 

@@ -16,23 +16,23 @@
 
 package com.fortyseven.core.codecs.ids
 
-import com.fortyseven.core.TestUtils.getOutput
+import com.fortyseven.core.TestUtils.codeAndDecode
 import com.fortyseven.core.TestUtils.given
 import munit.ScalaCheckSuite
 import org.scalacheck.Prop.forAll
 import com.fortyseven.core.codecs.ids.IdsCodecs.given
 import com.fortyseven.coreheaders.model.types.ids.{BicycleId, TripId, UserId}
+import org.scalacheck.Arbitrary
+
+import scala.reflect.{ClassTag, classTag}
 
 class IdsCodecsTest extends ScalaCheckSuite:
-
-  property("BicycleId should return the same value after encoding and decoding"):
-    forAll: (bicycleId: BicycleId) =>
-      assert(getOutput(bicycleId).isRight)
-
-  property("UserId should return the same value after encoding and decoding"):
-    forAll: (userId: UserId) =>
-      assert(getOutput(userId).isRight)
-
-  property("TripId should return the same value after encoding and decoding"):
-    forAll: (tripId: TripId) =>
-      assert(getOutput(tripId).isRight)
+  
+  private def propCodec[A: Arbitrary : vulcan.Codec : ClassTag](): Unit =
+    property(s"Encoding and decoding for ${classTag[A].runtimeClass.getSimpleName} should work"):
+      forAll: (a: A) =>
+        assertEquals(codeAndDecode(a), Right(a))
+        
+  propCodec[BicycleId]()
+  propCodec[UserId]()
+  propCodec[TripId]()
