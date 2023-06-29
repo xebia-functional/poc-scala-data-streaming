@@ -21,9 +21,8 @@ import scala.reflect.ClassTag
 import cats.effect.kernel.Async
 
 import com.fortyseven.coreheaders.ConfigurationLoaderHeader
-import pureconfig.ConfigReader
-import pureconfig.ConfigSource
 import pureconfig.module.catseffect.syntax.*
+import pureconfig.{ConfigReader, ConfigSource}
 
 abstract class PureConfiguration[F[_]: Async, A: ConfigReader: ClassTag](path: String) extends ConfigurationLoaderHeader[F, A]:
 

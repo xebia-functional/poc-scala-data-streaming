@@ -20,9 +20,8 @@ import cats.*
 import cats.effect.kernel.Async
 import cats.implicits.*
 
-import com.fortyseven.coreheaders.ConfigurationLoaderHeader
-import com.fortyseven.coreheaders.FlinkProcessorHeader
 import com.fortyseven.coreheaders.configuration.FlinkProcessorConfiguration
+import com.fortyseven.coreheaders.{ConfigurationLoaderHeader, FlinkProcessorHeader}
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
 
 class DataProcessor[F[_]: Async] extends FlinkProcessorHeader[F]:

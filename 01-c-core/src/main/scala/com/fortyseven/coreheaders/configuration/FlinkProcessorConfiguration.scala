@@ -16,8 +16,7 @@
 
 package com.fortyseven.coreheaders.configuration
 
-import com.fortyseven.coreheaders.configuration.internal.KafkaConfiguration
-import com.fortyseven.coreheaders.configuration.internal.SchemaRegistryConfiguration
+import com.fortyseven.coreheaders.configuration.internal.{KafkaConfiguration, SchemaRegistryConfiguration}
 
 final case class FlinkProcessorConfiguration(
     kafkaConfiguration: KafkaConfiguration,

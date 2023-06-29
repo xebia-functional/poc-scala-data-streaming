@@ -22,14 +22,9 @@ import scala.util.control.NoStackTrace
 
 import io.confluent.kafka.schemaregistry.avro.AvroSchema
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
-import io.confluent.kafka.serializers.KafkaAvroDeserializer
-import io.confluent.kafka.serializers.KafkaAvroSerializer
-import org.apache.kafka.common.serialization.Deserializer
-import org.apache.kafka.common.serialization.Serde
-import org.apache.kafka.common.serialization.Serdes
-import org.apache.kafka.common.serialization.Serializer
-import vulcan.AvroError
-import vulcan.Codec
+import io.confluent.kafka.serializers.{KafkaAvroDeserializer, KafkaAvroSerializer}
+import org.apache.kafka.common.serialization.{Deserializer, Serde, Serdes, Serializer}
+import vulcan.{AvroError, Codec}
 
 object VulcanSerdes:
 

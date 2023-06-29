@@ -20,8 +20,7 @@ import scala.concurrent.duration.*
 
 import cats.effect.IO
 
-import munit.CatsEffectSuite
-import munit.ScalaCheckEffectSuite
+import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.*
 import org.scalacheck.effect.PropF
 import org.typelevel.log4cats.slf4j.Slf4jLogger

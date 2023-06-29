@@ -20,11 +20,8 @@ import scala.concurrent.duration.*
 
 import cats.effect.kernel.Async
 
-import ciris.ConfigValue
-import ciris.Effect
-import ciris.default
-import com.fortyseven.cirisconfiguration.CommonConfiguration.kafkaBrokerAddress
-import com.fortyseven.cirisconfiguration.CommonConfiguration.schemaRegistryUrl
+import ciris.{ConfigValue, Effect, default}
+import com.fortyseven.cirisconfiguration.CommonConfiguration.{kafkaBrokerAddress, schemaRegistryUrl}
 import com.fortyseven.cirisconfiguration.decoders.given
 import com.fortyseven.coreheaders.ConfigurationLoaderHeader
 import com.fortyseven.coreheaders.configuration.FlinkProcessorConfiguration

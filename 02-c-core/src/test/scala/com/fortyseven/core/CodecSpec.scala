@@ -17,16 +17,12 @@
 package com.fortyseven.core
 
 import com.fortyseven.core.codecs.iot.IotCodecs.given
-import com.fortyseven.coreheaders.model.iot.model.GPSPosition
-import com.fortyseven.coreheaders.model.iot.model.PneumaticPressure
-import com.fortyseven.coreheaders.model.iot.types.Bar
-import com.fortyseven.coreheaders.model.iot.types.Latitude
-import com.fortyseven.coreheaders.model.iot.types.Longitude
+import com.fortyseven.coreheaders.model.iot.model.{GPSPosition, PneumaticPressure}
+import com.fortyseven.coreheaders.model.iot.types.{Bar, Latitude, Longitude}
 import munit.ScalaCheckSuite
 import org.scalacheck.Gen
 import org.scalacheck.Prop.forAll
-import vulcan.AvroError
-import vulcan.Codec
+import vulcan.{AvroError, Codec}
 
 class CodecSpec extends ScalaCheckSuite:
 

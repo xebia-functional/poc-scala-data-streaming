@@ -23,11 +23,9 @@ import cats.effect.kernel.Async
 import cats.implicits.*
 
 import com.fortyseven.core.codecs.iot.IotCodecs.given
-import com.fortyseven.coreheaders.ConfigurationLoaderHeader
-import com.fortyseven.coreheaders.DataGeneratorHeader
 import com.fortyseven.coreheaders.configuration.DataGeneratorConfiguration
-import com.fortyseven.coreheaders.model.iot.model.GPSPosition
-import com.fortyseven.coreheaders.model.iot.model.PneumaticPressure
+import com.fortyseven.coreheaders.model.iot.model.{GPSPosition, PneumaticPressure}
+import com.fortyseven.coreheaders.{ConfigurationLoaderHeader, DataGeneratorHeader}
 import fs2.kafka.*
 import org.apache.kafka.clients.producer.ProducerConfig
 

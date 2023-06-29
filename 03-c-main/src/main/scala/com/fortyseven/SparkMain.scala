@@ -16,8 +16,7 @@
 
 package com.fortyseven
 
-import cats.effect.IO
-import cats.effect.IOApp
+import cats.effect.{IO, IOApp}
 
 import com.fortyseven.datagenerator.DataGenerator
 import com.fortyseven.kafkaconsumer.KafkaConsumer

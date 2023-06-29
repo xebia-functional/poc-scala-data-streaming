@@ -20,8 +20,7 @@ import cats.implicits.*
 
 import com.fortyseven.coreheaders.model.iot.model.*
 import com.fortyseven.coreheaders.model.iot.types.*
-import vulcan.AvroError
-import vulcan.Codec
+import vulcan.{AvroError, Codec}
 
 object IotCodecs:
 
