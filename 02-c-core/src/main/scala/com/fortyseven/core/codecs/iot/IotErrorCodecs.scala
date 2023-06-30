@@ -14,32 +14,14 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.model
+package com.fortyseven.core.codecs.iot
 
-import java.util.UUID
+import com.fortyseven.coreheaders.model.iot.errors.OutOfBoundsError
+import vulcan.Codec
 
-object ids:
+object IotErrorCodecs:
 
-  opaque type BicycleId <: UUID = UUID
+  private val _namespace = "iot-error"
 
-  opaque type UserId <: UUID = UUID
-
-  opaque type TripId <: UUID = UUID
-
-  object BicycleId:
-
-    def apply(id: UUID): BicycleId = id
-
-    extension (bicycleId: BicycleId) def value: UUID = bicycleId
-
-  object UserId:
-
-    def apply(id: UUID): UserId = id
-
-    extension (userId: UserId) def value: UUID = userId
-
-  object TripId:
-
-    def apply(tripID: UUID): TripId = tripID
-
-    extension (tripId: TripId) def value: UUID = tripId
+  given outOfBoundsErrorCodec: Codec[OutOfBoundsError] =
+    Codec.record(name = "OutOfBoundsError", namespace = _namespace)(_("msg", _.msg).map(OutOfBoundsError.apply))
