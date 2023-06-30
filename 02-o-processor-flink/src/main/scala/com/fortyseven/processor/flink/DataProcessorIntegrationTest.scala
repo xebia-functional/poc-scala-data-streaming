@@ -16,6 +16,9 @@
 
 package com.fortyseven.processor.flink
 
+import cats.effect.*
+import cats.implicits.*
+
 import org.apache.flink.api.common.eventtime.WatermarkStrategy
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.connector.kafka.sink.{KafkaRecordSerializationSchema, KafkaSink}
@@ -23,9 +26,6 @@ import org.apache.flink.connector.kafka.source.KafkaSource
 import org.apache.flink.connector.kafka.source.enumerator.initializer.OffsetsInitializer
 import org.apache.flink.core.execution.JobClient
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
-
-import cats.effect.*
-import cats.implicits.*
 
 // Temporary object to be removed once integration tests are refactored
 @deprecated

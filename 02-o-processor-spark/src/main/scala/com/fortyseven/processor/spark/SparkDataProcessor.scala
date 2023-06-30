@@ -16,10 +16,10 @@
 
 package com.fortyseven.processor.spark
 
-import org.apache.spark.sql.{DataFrame, DataFrameReader, DataFrameWriter, Row, SparkSession}
-
 import cats.effect.kernel.Async
+
 import com.fortyseven.coreheaders.configuration.{ReaderConfiguration, SparkProcessorConfiguration, WriterConfiguration}
+import org.apache.spark.sql.{DataFrame, DataFrameReader, DataFrameWriter, Row, SparkSession}
 
 private[spark] final class SparkDataProcessor[F[_]: Async](sparkSession: SparkSession):
 

@@ -21,4 +21,4 @@ import com.fortyseven.coreheaders.configuration.internal.{KafkaConfiguration, Sc
 final case class FlinkProcessorConfiguration(
     kafkaConfiguration: KafkaConfiguration,
     schemaRegistryConfiguration: SchemaRegistryConfiguration
-  )
+)

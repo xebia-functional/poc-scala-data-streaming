@@ -24,7 +24,7 @@ object decoders:
   given ConfigDecoder[Int, PositiveInt] =
     ConfigDecoder[Int, Int].mapEither { (None, i) =>
       PositiveInt.from(i) match
-        case Right(value)    => Right(value)
+        case Right(value) => Right(value)
         case Left(throwable) =>
           Left(ConfigError.apply(s"Failing at decoding the value $i. Error: ${throwable.getMessage}"))
     }
@@ -32,7 +32,7 @@ object decoders:
   given ConfigDecoder[String, NonEmptyString] =
     ConfigDecoder[String, String].mapEither { (None, s) =>
       NonEmptyString.from(s) match
-        case Right(value)    => Right(value)
+        case Right(value) => Right(value)
         case Left(throwable) =>
           Left(ConfigError.apply(s"Failing at decoding the value $s. Error: ${throwable.getMessage}"))
     }

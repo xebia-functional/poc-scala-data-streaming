@@ -16,11 +16,11 @@
 
 package com.fortyseven.coreheaders.model.types
 
+import com.fortyseven.coreheaders.model.types.types.*
 import munit.ScalaCheckSuite
+import org.scalacheck
 import org.scalacheck.Gen
 import org.scalacheck.Prop.forAll
-import com.fortyseven.coreheaders.model.types.types.*
-import org.scalacheck
 
 class typesTest extends ScalaCheckSuite:
 

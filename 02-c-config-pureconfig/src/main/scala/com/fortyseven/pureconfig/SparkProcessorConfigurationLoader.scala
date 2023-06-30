@@ -17,6 +17,7 @@
 package com.fortyseven.pureconfig
 
 import cats.effect.kernel.Async
+
 import com.fortyseven.coreheaders.configuration.SparkProcessorConfiguration
 import com.fortyseven.pureconfig.instances.given_ConfigReader_SparkProcessorConfiguration
 

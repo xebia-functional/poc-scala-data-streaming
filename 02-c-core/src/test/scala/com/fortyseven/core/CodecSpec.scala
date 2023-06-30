@@ -16,13 +16,13 @@
 
 package com.fortyseven.core
 
+import com.fortyseven.core.TestUtils.codeAndDecode
 import com.fortyseven.core.codecs.iot.IotCodecs.given
 import com.fortyseven.coreheaders.model.iot.model.{GPSPosition, PneumaticPressure}
 import com.fortyseven.coreheaders.model.types.types.{Bar, Latitude, Longitude}
 import munit.ScalaCheckSuite
-import org.scalacheck.Prop.forAll
 import org.scalacheck.Gen
-import TestUtils.codeAndDecode
+import org.scalacheck.Prop.forAll
 
 class CodecSpec extends ScalaCheckSuite:
 
@@ -32,7 +32,7 @@ class CodecSpec extends ScalaCheckSuite:
         case (Right(lat), Right(lon)) =>
           val gpsPosition = GPSPosition(lat, lon)
           codeAndDecode(gpsPosition) == Right(gpsPosition)
-        case _                        => assert(false)
+        case _ => assert(false)
       ()
     }
 
@@ -42,6 +42,6 @@ class CodecSpec extends ScalaCheckSuite:
         case Right(p) =>
           val pneumaticPressure = PneumaticPressure(p)
           codeAndDecode(pneumaticPressure) == Right(pneumaticPressure)
-        case _        => assert(false)
+        case _ => assert(false)
       ()
     }

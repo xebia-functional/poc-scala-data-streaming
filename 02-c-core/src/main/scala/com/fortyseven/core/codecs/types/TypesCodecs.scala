@@ -17,6 +17,7 @@
 package com.fortyseven.core.codecs.types
 
 import cats.implicits.*
+
 import com.fortyseven.coreheaders.model.types.types.*
 import vulcan.{AvroError, Codec}
 

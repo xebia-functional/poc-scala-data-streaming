@@ -16,14 +16,14 @@
 
 package com.fortyseven.core.codecs.iot
 
+import scala.reflect.{ClassTag, classTag}
+
 import com.fortyseven.core.TestUtils.codeAndDecode
+import com.fortyseven.core.codecs.iot.IotErrorCodecs.given
 import com.fortyseven.coreheaders.model.iot.errors.OutOfBoundsError
 import munit.ScalaCheckSuite
-import org.scalacheck.{Arbitrary, Gen}
 import org.scalacheck.Prop.forAll
-import com.fortyseven.core.codecs.iot.IotErrorCodecs.given
-
-import scala.reflect.{classTag, ClassTag}
+import org.scalacheck.{Arbitrary, Gen}
 
 class IotErrorCodecsTest extends ScalaCheckSuite:
 

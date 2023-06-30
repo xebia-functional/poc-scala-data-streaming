@@ -18,15 +18,15 @@ package com.fortyseven.datagenerator
 
 import scala.concurrent.duration.*
 
-import org.apache.kafka.clients.producer.ProducerConfig
-
 import cats.Parallel
 import cats.effect.kernel.Async
 import cats.implicits.*
+
 import com.fortyseven.core.codecs.iot.IotCodecs.given
 import com.fortyseven.coreheaders.model.iot.model.{GPSPosition, PneumaticPressure}
 import com.fortyseven.datagenerator.config.DataGeneratorConfiguration
 import fs2.kafka.*
+import org.apache.kafka.clients.producer.ProducerConfig
 
 final class DataGenerator[F[_]: Async: Parallel]:
 
@@ -57,7 +57,7 @@ final class DataGenerator[F[_]: Async: Parallel]:
     KafkaProducer
       .stream(producerSettings)
       .flatMap { producer =>
-        val gpsPositionStream       =
+        val gpsPositionStream =
           generators.generateGPSPosition.mapRecords(gpsPositionTopicName)(using gpsPositionSerializer)
         val pneumaticPressureStream =
           generators.generatePneumaticPressure.mapRecords(pneumaticPressureTopicName)(using pneumaticPressureSerializer)
@@ -75,10 +75,9 @@ final class DataGenerator[F[_]: Async: Parallel]:
       .drain
 
   extension [T](inputStream: fs2.Stream[F, T])
-
     private def mapRecords(
         topic: String
-      )(using serializer: KafkaSerializer[T]): fs2.Stream[F, ProducerRecords[String, Array[Byte]]] =
+    )(using serializer: KafkaSerializer[T]): fs2.Stream[F, ProducerRecords[String, Array[Byte]]] =
       inputStream.map { committable =>
         val key   = committable.getClass.getSimpleName
         val value = serializer.serialize(topic, committable)

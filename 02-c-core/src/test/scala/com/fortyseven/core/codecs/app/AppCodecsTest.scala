@@ -18,10 +18,10 @@ package com.fortyseven.core.codecs.app
 
 import com.fortyseven.core.TestUtils.codeAndDecode
 import com.fortyseven.core.TestUtils.given
+import com.fortyseven.core.codecs.app.AppCodecs.given
 import com.fortyseven.coreheaders.model.app.model.*
 import munit.ScalaCheckSuite
 import org.scalacheck.Prop.forAll
-import com.fortyseven.core.codecs.app.AppCodecs.given
 
 class AppCodecsTest extends ScalaCheckSuite:
 

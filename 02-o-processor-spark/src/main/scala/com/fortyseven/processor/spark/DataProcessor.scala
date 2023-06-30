@@ -16,13 +16,13 @@
 
 package com.fortyseven.processor.spark
 
-import org.apache.spark.SparkConf
-import org.apache.spark.sql.SparkSession
-
 import cats.effect.kernel.Async
 import cats.implicits.{toFlatMapOps, toFunctorOps}
+
 import com.fortyseven.coreheaders.configuration.SparkProcessorConfiguration
 import com.fortyseven.coreheaders.{ConfigurationLoaderHeader, SparkProcessorHeader}
+import org.apache.spark.SparkConf
+import org.apache.spark.sql.SparkSession
 
 class DataProcessor[F[_]: Async] extends SparkProcessorHeader[F]:
 

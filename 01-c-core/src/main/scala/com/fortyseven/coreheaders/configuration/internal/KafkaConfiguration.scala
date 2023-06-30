@@ -20,4 +20,4 @@ case class KafkaConfiguration(
     broker: BrokerConfiguration,
     consumer: Option[ConsumerConfiguration],
     producer: Option[ProducerConfiguration]
-  )
+)
