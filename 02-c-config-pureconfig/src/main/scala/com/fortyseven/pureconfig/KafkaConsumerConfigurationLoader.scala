@@ -17,6 +17,7 @@
 package com.fortyseven.pureconfig
 
 import cats.effect.kernel.Async
+
 import com.fortyseven.coreheaders.configuration.KafkaConsumerConfiguration
 import com.fortyseven.pureconfig.instances.given
 

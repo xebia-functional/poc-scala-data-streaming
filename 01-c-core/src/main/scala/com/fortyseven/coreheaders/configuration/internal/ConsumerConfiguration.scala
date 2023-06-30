@@ -23,4 +23,4 @@ final case class ConsumerConfiguration(
     autoOffsetReset: KafkaAutoOffsetReset,
     groupId: NonEmptyString,
     maxConcurrent: PositiveInt
-  )
+)

@@ -16,15 +16,15 @@
 
 package com.fortyseven.core.codecs.types
 
+import scala.reflect.{ClassTag, classTag}
+
 import com.fortyseven.core.TestUtils.codeAndDecode
 import com.fortyseven.core.TestUtils.given
-import munit.ScalaCheckSuite
-import org.scalacheck.Prop.forAll
 import com.fortyseven.core.codecs.types.TypesCodecs.given
 import com.fortyseven.coreheaders.model.types.types.*
+import munit.ScalaCheckSuite
 import org.scalacheck.Arbitrary
-
-import scala.reflect.{classTag, ClassTag}
+import org.scalacheck.Prop.forAll
 
 class TypesCodecsTest extends ScalaCheckSuite:
 

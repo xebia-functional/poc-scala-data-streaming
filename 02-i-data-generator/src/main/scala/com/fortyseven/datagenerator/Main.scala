@@ -1,6 +1,7 @@
 package com.fortyseven.datagenerator
 
 import cats.effect.{IO, IOApp}
+
 import com.fortyseven.datagenerator.config.DataGeneratorConfiguration
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import pureconfig.ConfigSource

@@ -16,15 +16,15 @@
 
 package com.fortyseven.core
 
+import java.util.UUID
+import scala.concurrent.duration.FiniteDuration
+
 import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
 import com.fortyseven.coreheaders.model.types.ids.*
 import com.fortyseven.coreheaders.model.types.types.*
 import org.scalacheck.{Arbitrary, Gen}
 import vulcan.{AvroError, Codec}
-
-import java.util.UUID
-import scala.concurrent.duration.FiniteDuration
 
 object TestUtils:
 

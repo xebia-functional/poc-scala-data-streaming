@@ -33,7 +33,7 @@ object types:
       else
         Left(
           new IllegalStateException(
-            (s"The provided value $s does not correspond with the valid values ${values.mkString("(", ",", ")")}")
+            s"The provided value $s does not correspond with the valid values ${values.mkString("(", ",", ")")}"
           )
         )
 

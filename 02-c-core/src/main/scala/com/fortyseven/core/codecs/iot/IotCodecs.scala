@@ -19,6 +19,7 @@ package com.fortyseven.core.codecs.iot
 import scala.concurrent.duration.*
 
 import cats.implicits.*
+
 import com.fortyseven.core.codecs.types.TypesCodecs.given
 import com.fortyseven.coreheaders.model.iot.model.*
 import com.fortyseven.coreheaders.model.types.types.*

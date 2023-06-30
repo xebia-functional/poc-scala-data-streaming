@@ -23,8 +23,7 @@ import com.fortyseven.pureconfig.instances.given
 import pureconfig.ConfigReader
 import pureconfig.generic.derivation.default.*
 
-final case class DataGeneratorConfiguration(kafka: KafkaConfiguration, schemaRegistry: SchemaRegistryConfiguration)
-    derives ConfigReader
+final case class DataGeneratorConfiguration(kafka: KafkaConfiguration, schemaRegistry: SchemaRegistryConfiguration) derives ConfigReader
 
 final case class KafkaConfiguration(broker: BrokerConfiguration, producer: ProducerConfiguration) derives ConfigReader
 
@@ -37,8 +36,8 @@ final case class ProducerConfiguration(
     compressionType: KafkaCompressionType,
     commitBatchWithinSize: PositiveInt,
     commitBatchWithinTime: FiniteDuration
-  ) derives ConfigReader
+) derives ConfigReader
 
 final case class SchemaRegistryConfiguration(
     schemaRegistryURL: NonEmptyString
-  ) derives ConfigReader
+) derives ConfigReader

@@ -25,30 +25,30 @@ final case class SparkProcessorConfiguration(
     sparkStreaming: SparkStreamingConfiguration,
     reader: ReaderConfiguration,
     writer: WriterConfiguration
-  )
+)
 
 final case class ApplicationPropertiesConfiguration(
     appName: NonEmptyString,
     masterURL: NonEmptyString
-  )
+)
 
 final case class SparkStreamingConfiguration(
     backpressureEnabled: Boolean,
     blockInterval: FiniteDuration,
     stopGracefullyOnShutdown: Boolean
-  )
+)
 
 final case class KafkaStreamConfiguration(
     bootstrapServers: NonEmptyString,
     topic: NonEmptyString,
     startingOffsets: NonEmptyString,
     endingOffsets: NonEmptyString
-  )
+)
 
 final case class ReaderConfiguration(
     kafkaStream: KafkaStreamConfiguration
-  )
+)
 
 final case class WriterConfiguration(
     format: NonEmptyString
-  )
+)

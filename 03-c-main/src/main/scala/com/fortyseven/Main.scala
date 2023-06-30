@@ -17,6 +17,7 @@
 package com.fortyseven
 
 import cats.effect.{IO, IOApp}
+
 import com.fortyseven.kafkaconsumer.KafkaConsumer
 import com.fortyseven.processor.flink.DataProcessor
 import com.fortyseven.pureconfig.{FlinkProcessorConfigurationLoader, KafkaConsumerConfigurationLoader}

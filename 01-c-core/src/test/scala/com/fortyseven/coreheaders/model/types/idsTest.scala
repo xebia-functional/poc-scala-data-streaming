@@ -16,12 +16,12 @@
 
 package com.fortyseven.coreheaders.model.types
 
+import java.util.UUID
+
 import com.fortyseven.coreheaders.model.types.ids.{BicycleId, TripId, UserId}
 import munit.ScalaCheckSuite
-import org.scalacheck.{Arbitrary, Gen}
 import org.scalacheck.Prop.forAll
-
-import java.util.UUID
+import org.scalacheck.{Arbitrary, Gen}
 
 class idsTest extends ScalaCheckSuite:
 

@@ -16,13 +16,14 @@
 
 package com.fortyseven.core.codecs.iot
 
-import com.fortyseven.coreheaders.model.iot.model.*
+import scala.concurrent.duration.*
+
 import com.fortyseven.core.TestUtils.codeAndDecode
 import com.fortyseven.core.TestUtils.given
+import com.fortyseven.core.codecs.iot.IotCodecs.given
+import com.fortyseven.coreheaders.model.iot.model.*
 import munit.ScalaCheckSuite
 import org.scalacheck.Prop.forAll
-import com.fortyseven.core.codecs.iot.IotCodecs.given
-import scala.concurrent.duration.*
 
 class IotCodecsTest extends ScalaCheckSuite:
 

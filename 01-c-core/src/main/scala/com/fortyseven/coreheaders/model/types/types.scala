@@ -28,7 +28,7 @@ object types:
 
   opaque type Speed = Double // Should be typed better. Meters/second or Km/h?
 
-  opaque type Hz  = Double // IS measure for frequency 1/60 Hz would be 1 RPM
+  opaque type Hz = Double // IS measure for frequency 1/60 Hz would be 1 RPM
 
   opaque type Bar = Double
 

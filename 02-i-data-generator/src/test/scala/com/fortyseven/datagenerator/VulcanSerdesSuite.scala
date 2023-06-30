@@ -16,7 +16,6 @@
 
 package com.fortyseven.datagenerator
 
-import org.apache.kafka.common.serialization.Serde
 import com.fortyseven.core.codecs.iot.IotCodecs.pneumaticPressureCodec
 import com.fortyseven.coreheaders.model.iot.errors
 import com.fortyseven.coreheaders.model.iot.model.PneumaticPressure
@@ -24,6 +23,7 @@ import com.fortyseven.coreheaders.model.types.types.Bar
 import io.confluent.kafka.schemaregistry.avro.AvroSchema
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
 import munit.CatsEffectSuite
+import org.apache.kafka.common.serialization.Serde
 
 class VulcanSerdesSuite extends CatsEffectSuite:
 
@@ -42,8 +42,7 @@ class VulcanSerdesSuite extends CatsEffectSuite:
     pneumaticPressureCodec.schema match
       case Left(_)       => ()
       case Right(schema) => mockedClient.register(s"$topic-value", AvroSchema(schema.toString))
-    val config = Config("useMockedClient", useMockedClient = Some(mockedClient))
-
+    val config                     = Config("useMockedClient", useMockedClient = Some(mockedClient))
     given Serde[PneumaticPressure] = avroSerde[PneumaticPressure](config, includeKey = false)
 
     val data: Either[errors.OutOfBoundsError, PneumaticPressure] =
@@ -52,7 +51,7 @@ class VulcanSerdesSuite extends CatsEffectSuite:
 
     val result: Either[errors.OutOfBoundsError, PneumaticPressure] =
       for
-        d           <- data
+        d <- data
         serialized   = serialize(topic, d)
         deserialized = deserialize(topic, serialized)
       yield deserialized
