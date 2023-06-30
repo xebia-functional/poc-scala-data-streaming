@@ -29,7 +29,7 @@ class typesTest extends ScalaCheckSuite:
       Latitude(latitude).isLeft
 
   property("Latitudes smaller than -90 are not allowed"):
-    forAll(Gen.chooseNum(Double.MinValue, 90.0).suchThat(_ < -90.0)): latitude =>
+    forAll(Gen.chooseNum(Double.MinValue, -90.0).suchThat(_ < -90.0)): latitude =>
       Latitude(latitude).isLeft
 
   property("Latitude should build from values that conform with Earth latitude limits"):
