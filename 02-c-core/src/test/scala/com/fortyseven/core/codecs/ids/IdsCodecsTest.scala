@@ -14,17 +14,27 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.model.app
+package com.fortyseven.core.codecs.ids
 
+import scala.reflect.{ClassTag, classTag}
+
+import com.fortyseven.core.TestUtils.codeAndDecode
+import com.fortyseven.core.TestUtils.given
+import com.fortyseven.core.codecs.ids.IdsCodecs.given
 import com.fortyseven.coreheaders.model.types.ids.{BicycleId, TripId, UserId}
-import com.fortyseven.coreheaders.model.types.types.{Meters, Speed}
+import munit.ScalaCheckSuite
+import org.scalacheck.Arbitrary
+import org.scalacheck.Prop.forAll
 
-object model:
+class IdsCodecsTest extends ScalaCheckSuite:
 
-  case class TotalDistanceByTrip(tripId: TripId, distance: Meters)
+  private def propCodec[A: Arbitrary: vulcan.Codec: ClassTag](): Unit =
+    property(s"Encoding and decoding for ${classTag[A].runtimeClass.getSimpleName} should work"):
+      forAll: (a: A) =>
+        assertEquals(codeAndDecode(a), Right(a))
 
-  case class TotalDistanceByUser(userId: UserId, distance: Meters)
+  propCodec[BicycleId]()
 
-  case class CurrentSpeed(tripId: TripId, speed: Speed)
+  propCodec[UserId]()
 
-  case class TotalRange(tripId: TripId, bicycleId: BicycleId, remainingRange: Meters)
+  propCodec[TripId]()

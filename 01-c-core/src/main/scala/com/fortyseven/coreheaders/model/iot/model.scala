@@ -16,9 +16,9 @@
 
 package com.fortyseven.coreheaders.model.iot
 
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration.FiniteDuration
 
-import com.fortyseven.coreheaders.model.iot.types.*
+import com.fortyseven.coreheaders.model.types.types.*
 
 object model:
 
@@ -32,6 +32,6 @@ object model:
 
   case class PneumaticPressure(pressure: Bar)
 
-  case class BreaksUsage(duration: Duration)
+  case class BreaksUsage(finiteDuration: FiniteDuration)
 
   case class BreaksHealth(remaining: Percentage)

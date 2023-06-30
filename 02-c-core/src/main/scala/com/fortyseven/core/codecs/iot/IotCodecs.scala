@@ -16,11 +16,14 @@
 
 package com.fortyseven.core.codecs.iot
 
+import scala.concurrent.duration.*
+
 import cats.implicits.*
 
+import com.fortyseven.core.codecs.types.TypesCodecs.given
 import com.fortyseven.coreheaders.model.iot.model.*
-import com.fortyseven.coreheaders.model.iot.types.*
-import vulcan.{AvroError, Codec}
+import com.fortyseven.coreheaders.model.types.types.*
+import vulcan.Codec
 
 object IotCodecs:
 
@@ -34,31 +37,26 @@ object IotCodecs:
       ).mapN(GPSPosition.apply)
     }
 
-  given wheelRotationCodec: Codec[WheelRotation] = ???
+  given wheelRotationCodec: Codec[WheelRotation] =
+    Codec.record(name = "WheelRotation", namespace = _namespace)(_("s", _.s).map(WheelRotation.apply))
 
-  given batteryChargeCodec: Codec[BatteryCharge] = ???
+  given batteryChargeCodec: Codec[BatteryCharge] =
+    Codec.record(name = "BatteryCharge", namespace = _namespace)(_("percentage", _.percentage).map(BatteryCharge.apply))
 
-  given batteryHealthCodec: Codec[BatteryHealth] = ???
+  given batteryHealthCodec: Codec[BatteryHealth] =
+    Codec.record(name = "BatteryHealth", namespace = _namespace)(_("remaining", _.remaining).map(BatteryHealth.apply))
 
   given pneumaticPressureCodec: Codec[PneumaticPressure] =
     Codec.record(name = "PneumaticPressure", namespace = _namespace)(
       _("pressure", _.pressure).map(PneumaticPressure.apply)
     )
 
-  given breaksUsageCodec: Codec[BreaksUsage] = ???
+  given finiteDurationCodec: Codec[FiniteDuration] = Codec.long.imap(_.millis)(_.toMillis)
 
-  given breaksHealthCodec: Codec[BreaksHealth] = ???
+  given breaksUsageCodec: Codec[BreaksUsage] =
+    Codec.record(name = "BreaksUsage", namespace = _namespace)(
+      _("finateDuration", _.finiteDuration).map(BreaksUsage.apply)
+    )
 
-  given latitudeCodec: Codec[Latitude] =
-    Codec.double.imapError(Latitude(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
-
-  given longitudeCodec: Codec[Longitude] =
-    Codec.double.imapError(Longitude(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
-
-  given percentageCodec: Codec[Percentage] = ???
-
-  given speedCodec: Codec[Speed] = ???
-
-  given hertzCodec: Codec[Hz] = ???
-
-  given barCodec: Codec[Bar] = Codec.double.imapError(Bar(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
+  given breaksHealthCodec: Codec[BreaksHealth] =
+    Codec.record(name = "BreaksHealth", namespace = _namespace)(_("remaining", _.remaining).map(BreaksHealth.apply))

@@ -14,17 +14,32 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.model.app
+package com.fortyseven.coreheaders.model.types
 
-import com.fortyseven.coreheaders.model.types.ids.{BicycleId, TripId, UserId}
-import com.fortyseven.coreheaders.model.types.types.{Meters, Speed}
+import java.util.UUID
 
-object model:
+object ids:
 
-  case class TotalDistanceByTrip(tripId: TripId, distance: Meters)
+  opaque type BicycleId = UUID
 
-  case class TotalDistanceByUser(userId: UserId, distance: Meters)
+  opaque type UserId = UUID
 
-  case class CurrentSpeed(tripId: TripId, speed: Speed)
+  opaque type TripId = UUID
 
-  case class TotalRange(tripId: TripId, bicycleId: BicycleId, remainingRange: Meters)
+  object BicycleId:
+
+    def apply(id: UUID): BicycleId = id
+
+    extension (bicycleId: BicycleId) def value: UUID = bicycleId
+
+  object UserId:
+
+    def apply(id: UUID): UserId = id
+
+    extension (userId: UserId) def value: UUID = userId
+
+  object TripId:
+
+    def apply(tripID: UUID): TripId = tripID
+
+    extension (tripId: TripId) def value: UUID = tripId

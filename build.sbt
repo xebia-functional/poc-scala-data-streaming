@@ -66,7 +66,9 @@ lazy val `core-headers`: Project =
     .settings(commonSettings)
     .settings(
       name := "core-headers",
-      libraryDependencies ++= Seq()
+      libraryDependencies ++= Seq(
+        Libraries.test.munitScalacheck
+      )
     )
 
 // Layer 2
