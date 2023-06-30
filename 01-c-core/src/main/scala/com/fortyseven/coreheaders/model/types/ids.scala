@@ -14,15 +14,32 @@
  * limitations under the License.
  */
 
-package com.fortyseven.pureconfig
+package com.fortyseven.coreheaders.model.types
 
-import cats.effect.kernel.Async
-import com.fortyseven.coreheaders.configuration.DataGeneratorConfiguration
-import com.fortyseven.pureconfig.instances.given
+import java.util.UUID
 
-private[pureconfig] final class DataGeneratorConfigurationLoader[F[_]: Async]
-    extends PureConfiguration[F, DataGeneratorConfiguration]("DataGeneratorConfiguration")
+object ids:
 
-object DataGeneratorConfigurationLoader:
+  opaque type BicycleId = UUID
 
-  def apply[F[_]: Async]: DataGeneratorConfigurationLoader[F] = new DataGeneratorConfigurationLoader[F]
+  opaque type UserId = UUID
+
+  opaque type TripId = UUID
+
+  object BicycleId:
+
+    def apply(id: UUID): BicycleId = id
+
+    extension (bicycleId: BicycleId) def value: UUID = bicycleId
+
+  object UserId:
+
+    def apply(id: UUID): UserId = id
+
+    extension (userId: UserId) def value: UUID = userId
+
+  object TripId:
+
+    def apply(tripID: UUID): TripId = tripID
+
+    extension (tripId: TripId) def value: UUID = tripId

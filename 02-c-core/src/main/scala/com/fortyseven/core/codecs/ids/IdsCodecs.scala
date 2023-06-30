@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders
+package com.fortyseven.core.codecs.ids
 
-import com.fortyseven.coreheaders.configuration.DataGeneratorConfiguration
+import com.fortyseven.coreheaders.model.types.ids.{BicycleId, TripId, UserId}
+import vulcan.Codec
 
-trait DataGeneratorHeader[F[_]]:
+object IdsCodecs:
 
-  def generate(config: ConfigurationLoaderHeader[F, DataGeneratorConfiguration]): F[Unit]
+  given bicycleIdCodec: Codec[BicycleId] = Codec.uuid.imap(BicycleId.apply)(_.value)
+
+  given userIdCodec: Codec[UserId] = Codec.uuid.imap(UserId.apply)(_.value)
+
+  given tripIdCodec: Codec[TripId] = Codec.uuid.imap(TripId.apply)(_.value)

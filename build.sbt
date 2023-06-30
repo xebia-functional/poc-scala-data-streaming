@@ -31,6 +31,14 @@ ThisBuild / scalacOptions ++=
     "-Wvalue-discard"
   ) ++ Seq("-rewrite", "-indent") ++ Seq("-source", "future-migration")
 
+ThisBuild / assemblyMergeStrategy := {
+  case PathList(ps@_*) if ps.lastOption.contains("module-info.class") => MergeStrategy.discard
+  case x if x.endsWith(".properties") => MergeStrategy.filterDistinctLines
+  case x =>
+    val oldStrategy = (ThisBuild / assemblyMergeStrategy).value
+    oldStrategy(x)
+}
+
 lazy val `poc-scala-data-streaming`: Project =
   project
     .in(file("."))
@@ -60,7 +68,9 @@ lazy val `core-headers`: Project =
     .settings(commonSettings)
     .settings(
       name := "core-headers",
-      libraryDependencies ++= Seq()
+      libraryDependencies ++= Seq(
+        Libraries.test.munitScalacheck
+      )
     )
 
 // Layer 2
@@ -109,11 +119,23 @@ lazy val core: Project =
 
 // Input
 lazy val `data-generator`: Project = (project in file("02-i-data-generator"))
-  .dependsOn(`core-headers` % Cctt)
-  .dependsOn(core % Cctt) // This should be avoided
+  .dependsOn(`core-headers`, core, `configuration-typesafe`)
+  .enablePlugins(DockerPlugin)
+  .enablePlugins(JavaAppPackaging)
   .settings(commonSettings)
   .settings(
     name := "data-generator",
+    assembly / mainClass := Some("com.fortyseven.datagenerator.Main"),
+    Docker / packageName := "data-generator",
+    dockerBaseImage := "openjdk:11-jre-slim-buster",
+    dockerExposedPorts ++= Seq(8080),
+    dockerUpdateLatest := true,
+    dockerAlias := DockerAlias(
+      registryHost = Some("ghcr.io"),
+      username = Some((ThisBuild / organization).value),
+      name = (Docker / packageName).value,
+      tag = Some("latest")
+    ),
     libraryDependencies ++= Seq(
       Libraries.fs2.core,
       Libraries.fs2.kafka,
@@ -126,9 +148,10 @@ lazy val `data-generator`: Project = (project in file("02-i-data-generator"))
       Libraries.kafka.kafkaSchemaRegistry,
       Libraries.kafka.kafkaSchemaSerializer,
       Libraries.kafka.kafkaSerializer,
-      Libraries.logging.catsSlf4j % Test,
+      Libraries.logging.catsSlf4j,
       Libraries.logging.logback,
-      Libraries.test.munitCatsEffect
+      Libraries.test.munitCatsEffect,
+      Libraries.test.munitScalacheck
     )
   )
 

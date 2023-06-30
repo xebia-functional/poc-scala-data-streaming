@@ -21,9 +21,6 @@ import munit.CatsEffectSuite
 
 class ConfigSpec extends CatsEffectSuite:
 
-  test("Load data generator config"):
-    assertIO_(DataGeneratorConfigurationLoader.apply[IO].load().void)
-
   test("Load job processor config"):
     assertIO_(FlinkProcessorConfigurationLoader.apply[IO].load().void)
 
