@@ -5,7 +5,7 @@ FROM openjdk:11.0.13-jre-slim-buster as builder
 
 RUN apt-get update && apt-get install -y curl vim wget software-properties-common ssh net-tools ca-certificates
 
-ENV SPARK_VERSION=3.4.0 \
+ENV SPARK_VERSION=3.4.1 \
 SCALA_VERSION=2.13 \
 HADOOP_VERSION=3 \
 SPARK_HOME=/opt/spark
@@ -18,9 +18,8 @@ RUN wget --no-verbose -O apache-spark.tgz "https://archive.apache.org/dist/spark
 
 FROM builder as apache-spark
 
-ARG SCALA_VERSION="3.3.0"
+ARG SCALA_VERSION="2.13.8"
 ARG PROJECT_VERSION="0.1.0-SNAPSHOT"
-
 
 WORKDIR /opt/spark
 
@@ -41,5 +40,7 @@ ln -sf /dev/stdout $SPARK_MASTER_LOG && \
 ln -sf /dev/stdout $SPARK_WORKER_LOG
 
 COPY start-spark.sh /
+
+RUN mkdir /opt/spark/app-jar
 
 CMD ["/bin/bash", "/start-spark.sh"]

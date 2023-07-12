@@ -219,7 +219,7 @@ lazy val `processor-flink-integration`: Project =
 
 lazy val `processor-spark`: Project = project
   .in(file("02-o-processor-spark"))
-  .dependsOn(`core-headers`)
+  .dependsOn(`core-headers`, `configuration-typesafe`)
   .settings(commonSettings)
   .settings(
     name := "processor-spark",
@@ -229,10 +229,7 @@ lazy val `processor-spark`: Project = project
       Libraries.spark.sql,
       Libraries.spark.streaming,
       Libraries.spark.`sql-kafka`
-    ).map(_.cross(CrossVersion.for3Use2_13)),
-    libraryDependencies ++= Seq(
-      Libraries.cats.effect
-    ),
+    ).map(_.cross(CrossVersion.for2_13Use3)),
     Compile / run := Defaults
       .runTask(
         Compile / fullClasspath,
@@ -272,9 +269,8 @@ lazy val commonSettings = commonScalacOptions ++ Seq(
   update / evictionWarningOptions := EvictionWarningOptions.empty,
   assemblyMergeStrategy := {
     case PathList("META-INF") => MergeStrategy.discard
-    case x => MergeStrategy.first
+    case x                    => MergeStrategy.first
   }
-
 )
 
 lazy val commonScalacOptions = Seq(

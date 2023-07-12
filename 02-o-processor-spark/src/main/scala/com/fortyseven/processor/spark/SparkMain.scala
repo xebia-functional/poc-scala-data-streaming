@@ -14,17 +14,10 @@
  * limitations under the License.
  */
 
-package com.fortyseven.pureconfig
+package com.fortyseven.processor.spark
 
-import cats.effect.kernel.Async
+object SparkMain:
 
-import com.fortyseven.coreheaders.configuration.SparkProcessorConfiguration
-import com.fortyseven.pureconfig.instances.given_ConfigReader_SparkProcessorConfiguration
-
-private[pureconfig] final class SparkProcessorConfigurationLoader[F[_]: Async]
-    extends PureConfiguration[F, SparkProcessorConfiguration]("SparkProcessorConfiguration")
-
-object SparkProcessorConfigurationLoader:
-
-  def apply[F[_]: Async]: SparkProcessorConfigurationLoader[F] =
-    new SparkProcessorConfigurationLoader[F]
+  @main def run(): Unit =
+    val processor = new DataProcessor
+    processor.process()

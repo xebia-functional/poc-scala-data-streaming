@@ -16,33 +16,31 @@
 
 package com.fortyseven.processor.spark
 
-import cats.effect.kernel.Async
-
-import com.fortyseven.coreheaders.configuration.{ReaderConfiguration, SparkProcessorConfiguration, WriterConfiguration}
+import com.fortyseven.processor.spark.config.{ProcessorSparkConfiguration, ReaderConfiguration, WriterConfiguration}
 import org.apache.spark.sql.{DataFrame, DataFrameReader, DataFrameWriter, Row, SparkSession}
 
-private[spark] final class SparkDataProcessor[F[_]: Async](sparkSession: SparkSession):
+private[spark] final class SparkDataProcessor(sparkSession: SparkSession):
 
-  def run(sparkProcessorConfiguration: SparkProcessorConfiguration): F[Unit] =
+  def run(sparkConf: ProcessorSparkConfiguration): Unit =
 
     def setReader(reader: ReaderConfiguration): DataFrameReader =
       sparkSession.read
         .format("kafka")
         .option(
           "kafka.bootstrap.servers",
-          reader.kafkaStream.bootstrapServers.asString
+          reader.kafka.bootstrapServers.asString
         )
         .option(
           "subscribePattern",
-          reader.kafkaStream.topic.asString
+          reader.kafka.topic.asString
         )
         .option(
           "startingOffsets",
-          reader.kafkaStream.startingOffsets.asString
+          reader.kafka.startingOffsets.asString
         )
         .option(
           "endingOffsets",
-          reader.kafkaStream.endingOffsets.asString
+          reader.kafka.endingOffsets.asString
         )
 
     def setLogic(dataFrameReader: DataFrameReader): DataFrame = dataFrameReader.load()
@@ -50,13 +48,11 @@ private[spark] final class SparkDataProcessor[F[_]: Async](sparkSession: SparkSe
     def setWriter(writer: WriterConfiguration, dataFrame: DataFrame): DataFrameWriter[Row] =
       dataFrame.write.format(writer.format.asString)
 
-    Async.apply.delay(
-      setWriter(
-        sparkProcessorConfiguration.writer,
-        setLogic(
-          setReader(
-            sparkProcessorConfiguration.reader
-          )
+    setWriter(
+      sparkConf.writer,
+      setLogic(
+        setReader(
+          sparkConf.reader
         )
-      ).save()
-    )
+      )
+    ).save()

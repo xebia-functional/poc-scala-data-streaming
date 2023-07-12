@@ -53,7 +53,7 @@ object Dependencies {
     }
 
     object spark {
-      private val version: String = "3.4.0"
+      private val version: String = "3.4.1"
       val catalyst: ModuleID      = "org.apache.spark" % "spark-catalyst"       % version
       val core: ModuleID          = "org.apache.spark" % "spark-core"           % version
       val sql: ModuleID           = "org.apache.spark" % "spark-sql"            % version
