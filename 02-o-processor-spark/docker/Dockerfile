@@ -18,9 +18,6 @@ RUN wget --no-verbose -O apache-spark.tgz "https://archive.apache.org/dist/spark
 
 FROM builder as apache-spark
 
-ARG SCALA_VERSION="2.13.8"
-ARG PROJECT_VERSION="0.1.0-SNAPSHOT"
-
 WORKDIR /opt/spark
 
 ENV SPARK_MASTER_PORT=7077 \
@@ -29,9 +26,11 @@ SPARK_LOG_DIR=/opt/spark/logs \
 SPARK_MASTER_LOG=/opt/spark/logs/spark-master.out \
 SPARK_WORKER_LOG=/opt/spark/logs/spark-worker.out \
 SPARK_WORKER_WEBUI_PORT=8080 \
-SPARK_WORKER_PORT=7000
+SPARK_WORKER_PORT=7000 \
+SPARK_MASTER="spark://spark-master:7077" \
+SPARK_WORKLOAD="master"
 
-EXPOSE 8080 7077 7000
+EXPOSE 8080 7077 7000 6666
 
 RUN mkdir -p $SPARK_LOG_DIR && \
 touch $SPARK_MASTER_LOG && \

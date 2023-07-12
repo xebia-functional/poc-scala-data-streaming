@@ -1,5 +1,5 @@
-import Dependencies.*
-import CustomSbt.*
+import Dependencies._
+import CustomSbt._
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
