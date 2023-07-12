@@ -49,29 +49,15 @@ Running Apache Spark has its caveats. It is important to follow the steps proper
 If you wish to run Spark in your local machine, you have to make sure that both `kafka-consumer` and `data-generator` are running on Docker.
 Otherwise, Spark will not be able to read any data. Once the two services are running you can execute Spark locally.
 
-* If you have installed Java 11 or older:
+The assumption here is that your sbt, in your local machine, runs with Java 9 or newer (11, 17...). Then you can just run:
 
 ```bash
 sbt "project processor-spark; run"
 ```
 
-* If you have a newer version than Java 11, you must add the following flags:
+If you run your sbt with an older version of Java, we recommend you to update Java. If you want to keep using and older version of Java,
+go to the file `.jvmopts` and delete all the flags that start with `--add-opens`.
 
-```
---add-opens=java.base/java.lang=ALL-UNNAMED
---add-opens=java.base/java.lang.invoke=ALL-UNNAMED
---add-opens=java.base/java.lang.reflect=ALL-UNNAMED
---add-opens=java.base/java.io=ALL-UNNAMED
---add-opens=java.base/java.net=ALL-UNNAMED
---add-opens=java.base/java.nio=ALL-UNNAMED
---add-opens=java.base/java.util=ALL-UNNAMED
---add-opens=java.base/java.util.concurrent=ALL-UNNAMED
---add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED
---add-opens=java.base/sun.nio.ch=ALL-UNNAMED
---add-opens=java.base/sun.nio.cs=ALL-UNNAMED
---add-opens=java.base/sun.security.action=ALL-UNNAMED
---add-opens=java.base/sun.util.calendar=ALL-UNNAMED
-```
 Otherwise, Spark/Java classes will not be accesible and the program will fail.
 
 If you wish to run Spark on Docker, you can execute the shell script runSpark.sh:
