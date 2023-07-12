@@ -229,7 +229,7 @@ lazy val `processor-spark`: Project = project
       Libraries.spark.sql,
       Libraries.spark.streaming,
       Libraries.spark.`sql-kafka`
-    ).map(_.cross(CrossVersion.for2_13Use3)),
+    ).map(_.cross(CrossVersion.for3Use2_13)),
     Compile / run := Defaults
       .runTask(
         Compile / fullClasspath,

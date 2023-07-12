@@ -1,27 +1,37 @@
 #!/bin/sh
 
-sbt "main / assembly; processor-spark / assembly;"
+# Generates the App's jar file
+sbt "processor-spark / assembly;"
 
-mkdir -p ./02-o-processor-spark/spark-jars
+# Create the folder where the jar will be copied
+mkdir -p ./02-o-processor-spark/app-jar
 
-cp "./03-c-main/target/scala-3.3.0/main-assembly-0.1.0-SNAPSHOT.jar" "./02-o-processor-spark/spark-jars"
+# Copies the generated jar into the folder created in the previous step
+cp "./02-o-processor-spark/target/scala-3.3.0/processor-spark-assembly-0.1.0-SNAPSHOT.jar" "./02-o-processor-spark/app-jar"
 
-cp "./02-o-processor-spark/target/scala-3.3.0/processor-spark-assembly-0.1.0-SNAPSHOT.jar" "./02-o-processor-spark/spark-jars"
+# Replaces the name of the jar to make it easier to manage in docker. Target name = spark-app.jar
+mv "./02-o-processor-spark/app-jar/processor-spark-assembly-0.1.0-SNAPSHOT.jar" "./02-o-processor-spark/app-jar/spark-app.jar"
 
-cd "./02-o-processor-spark/docker" || returns
+# Builds the docker image using the Dockerfile
+# The tag will be used in the docker-compose
+docker build ./02-o-processor-spark/docker/ -t cluster-apache-spark:3.4.1
 
-# Start a master node and 2 workers
-docker compose up -d --scale spark-worker=2
+# Start a master node and 1 workers
+docker compose -f ./docker/docker-compose-spark.yml up -d --scale spark-worker=1
+
+# Copies the jar from the folder app-jar into the running container (master)
+docker cp "./02-o-processor-spark/app-jar/spark-app.jar" "docker-spark-master-1:/opt/spark/app-jar"
+
 
 # We're using the default 'client' deploy mode here, so the driver will run on the master node
 # and the job's stdout will be printed to the terminal console.
 # You can also do `--deploy-mode cluster`, which will cause the driver to run on one of the worker nodes.
 # I've confirmed that both modes work fine with Scala 3, but for our purposes client mode is slightly more convenient.
-docker compose exec spark-master /opt/spark/bin/spark-submit \
-  --master spark://spark-master:7077 \
+docker exec docker-spark-master-1 /opt/spark/bin/spark-submit \
+  --master spark://spark:7077 \
+  --deploy-mode client \
+  --driver-memory 1G \
+  --executor-memory 2G \
   --total-executor-cores 2 \
-  --class com.fortyseven.SparkMain.run \
-  --driver-memory 4G \
-  --executor-memory 1G \
-  --jars /opt/spark-jars/processor-spark-assembly-0.1.0-SNAPSHOT.jar \
-  /opt/spark-jars/main-assembly-0.1.0-SNAPSHOT.jar
+  --class com.fortyseven.processor.spark.run \
+  app-jar/spark-app.jar

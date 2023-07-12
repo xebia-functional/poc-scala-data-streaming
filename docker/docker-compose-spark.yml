@@ -12,7 +12,7 @@ services:
       - SPARK_LOCAL_IP=spark-master
       - SPARK_WORKLOAD=master
 
-  spark-worker-a:
+  spark-worker:
     image: cluster-apache-spark:3.4.1
     ports:
       - "9091:8080"
