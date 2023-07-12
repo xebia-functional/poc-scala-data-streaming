@@ -32,6 +32,7 @@ ThisBuild / scalacOptions ++=
 ThisBuild / assemblyMergeStrategy := {
   case PathList(ps @ _*) if ps.lastOption.contains("module-info.class") => MergeStrategy.discard
   case x if x.endsWith(".properties")                                   => MergeStrategy.filterDistinctLines
+  case x if x.endsWith("application.conf")                              => MergeStrategy.concat
   case x =>
     val oldStrategy = (ThisBuild / assemblyMergeStrategy).value
     oldStrategy(x)
