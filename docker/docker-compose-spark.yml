@@ -27,4 +27,4 @@ services:
       - SPARK_DRIVER_MEMORY=1G
       - SPARK_EXECUTOR_MEMORY=1G
       - SPARK_WORKLOAD=worker
-      - SPARK_LOCAL_IP=spark-worker-a
+      - SPARK_LOCAL_IP=spark-worker
