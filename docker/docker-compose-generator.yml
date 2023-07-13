@@ -7,3 +7,4 @@ services:
     environment:
       BOOTSTRAP_SERVERS: plaintext://broker:9093
       SCHEMA_REGISTRY_URL: http://schema-registry:8081
+    restart: always

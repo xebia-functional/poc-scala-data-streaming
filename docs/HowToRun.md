@@ -83,7 +83,7 @@ mkdir -p ./02-o-processor-spark/app-jar
 cd ..
 cp "./02-o-processor-spark/target/scala-3.3.0/processor-spark-assembly-0.1.0-SNAPSHOT.jar" "./02-o-processor-spark/app-jar"
 ```
-4) Renames the jar so it is easier to handle on the container
+4) Renames the jar, so it is easier to handle on the container
 ```bash
 cd ..
 mv "./02-o-processor-spark/app-jar/processor-spark-assembly-0.1.0-SNAPSHOT.jar" "./02-o-processor-spark/app-jar/spark-app.jar"
