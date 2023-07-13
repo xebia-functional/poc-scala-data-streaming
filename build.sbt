@@ -1,5 +1,5 @@
-import Dependencies.*
-import CustomSbt.*
+import Dependencies._
+import CustomSbt._
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
@@ -32,6 +32,7 @@ ThisBuild / scalacOptions ++=
 ThisBuild / assemblyMergeStrategy := {
   case PathList(ps @ _*) if ps.lastOption.contains("module-info.class") => MergeStrategy.discard
   case x if x.endsWith(".properties")                                   => MergeStrategy.filterDistinctLines
+  case x if x.endsWith("application.conf")                              => MergeStrategy.concat
   case x =>
     val oldStrategy = (ThisBuild / assemblyMergeStrategy).value
     oldStrategy(x)
@@ -219,7 +220,7 @@ lazy val `processor-flink-integration`: Project =
 
 lazy val `processor-spark`: Project = project
   .in(file("02-o-processor-spark"))
-  .dependsOn(`core-headers`)
+  .dependsOn(`core-headers`, `configuration-typesafe`)
   .settings(commonSettings)
   .settings(
     name := "processor-spark",
@@ -230,9 +231,6 @@ lazy val `processor-spark`: Project = project
       Libraries.spark.streaming,
       Libraries.spark.`sql-kafka`
     ).map(_.cross(CrossVersion.for3Use2_13)),
-    libraryDependencies ++= Seq(
-      Libraries.cats.effect
-    ),
     Compile / run := Defaults
       .runTask(
         Compile / fullClasspath,
@@ -269,7 +267,11 @@ lazy val main: Project =
 
 lazy val commonSettings = commonScalacOptions ++ Seq(
   resolvers += "confluent" at "https://packages.confluent.io/maven/",
-  update / evictionWarningOptions := EvictionWarningOptions.empty
+  update / evictionWarningOptions := EvictionWarningOptions.empty,
+  assemblyMergeStrategy := {
+    case PathList("META-INF") => MergeStrategy.discard
+    case x                    => MergeStrategy.first
+  }
 )
 
 lazy val commonScalacOptions = Seq(

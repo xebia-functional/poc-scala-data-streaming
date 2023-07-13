@@ -14,19 +14,10 @@
  * limitations under the License.
  */
 
-package com.fortyseven.pureconfig
+package com.fortyseven.processor.spark
 
-import cats.effect.IO
+object SparkMain:
 
-import munit.CatsEffectSuite
-
-class ConfigSpec extends CatsEffectSuite:
-
-  test("Load job processor config"):
-    assertIO_(FlinkProcessorConfigurationLoader.apply[IO].load().void)
-
-  test("Load kafka configuration loader config"):
-    assertIO_(KafkaConsumerConfigurationLoader.apply[IO].load().void)
-
-  test("Load Spark configuration loader config"):
-    assertIO_(SparkProcessorConfigurationLoader.apply[IO].load().void)
+  @main def run(): Unit =
+    val processor = new DataProcessor
+    processor.process()

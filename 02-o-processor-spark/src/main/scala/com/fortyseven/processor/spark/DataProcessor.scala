@@ -16,33 +16,32 @@
 
 package com.fortyseven.processor.spark
 
-import cats.effect.kernel.Async
-import cats.implicits.{toFlatMapOps, toFunctorOps}
-
-import com.fortyseven.coreheaders.configuration.SparkProcessorConfiguration
-import com.fortyseven.coreheaders.{ConfigurationLoaderHeader, SparkProcessorHeader}
+import com.fortyseven.coreheaders.SparkProcessorHeader
+import com.fortyseven.processor.spark.config.ProcessorSparkConfiguration
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
+import pureconfig.ConfigSource
+import pureconfig.error.ConfigReaderFailures
 
-class DataProcessor[F[_]: Async] extends SparkProcessorHeader[F]:
+class DataProcessor extends SparkProcessorHeader:
 
-  override def process(config: ConfigurationLoaderHeader[F, SparkProcessorConfiguration]): F[Unit] = for
-    conf <- config.load()
-    _    <- runWithConfiguration(conf)
-  yield ()
+  override def process(): Unit =
+    ConfigSource.default.at("processor-spark").load[ProcessorSparkConfiguration] match
+      case Right(conf) => runWithConfiguration(conf)
+      case Left(fail)  => throw new Exception(s"${fail.head.description}")
 
-  private def runWithConfiguration(sparkConfiguration: SparkProcessorConfiguration): F[Unit] =
+  private def runWithConfiguration(sconf: ProcessorSparkConfiguration): Unit =
 
     val sparkConf: SparkConf = new SparkConf()
-      .setAppName(sparkConfiguration.applicationProperties.appName.asString)
-      .setMaster(sparkConfiguration.applicationProperties.masterURL.asString)
-      .set("spark.streaming.backpressure.enabled", sparkConfiguration.sparkStreaming.backpressureEnabled.toString)
-      .set("spark.streaming.blockInterval", sparkConfiguration.sparkStreaming.blockInterval.toString)
+      .setAppName(sconf.app.appName.asString)
+      .setMaster(sconf.app.masterURL.asString)
+      .set("spark.streaming.backpressure.enabled", sconf.streaming.backpressureEnabled.toString)
+      .set("spark.streaming.blockInterval", sconf.streaming.blockInterval.toString)
       .set(
         "spark.streaming.stopGracefullyOnShutdown",
-        sparkConfiguration.sparkStreaming.stopGracefullyOnShutdown.toString
+        sconf.streaming.stopGracefullyOnShutdown.toString
       )
 
     val spark = SparkSession.builder.config(sparkConf).getOrCreate()
 
-    new SparkDataProcessor(spark).run(sparkConfiguration)
+    new SparkDataProcessor(spark).run(sconf)
