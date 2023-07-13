@@ -11,7 +11,7 @@ services:
   spark-worker-a:
     image: cluster-apache-spark:3.4.1
     ports:
-      - "9091:8080"
+      - "9094:8080"
       - "7000:7000"
     depends_on:
       - spark-master
@@ -26,7 +26,7 @@ services:
   spark-worker-b:
     image: cluster-apache-spark:3.4.1
     ports:
-      - "9092:8080"
+      - "9095:8080"
       - "7001:7000"
     depends_on:
       - spark-master

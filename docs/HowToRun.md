@@ -27,7 +27,7 @@ more services.
 To run the data generator, we need the Kafka stack
 
 ```bash
-docker compose -f docker-compose-kafka.yml -f docker-compose-generator.yml up -d
+docker compose -f ../docker/docker-compose-kafka.yml -f ../docker/docker-compose-generator.yml up -d
 ```
 
 Alternatively, we could just start the Kafka stack
@@ -39,7 +39,7 @@ docker compose -f docker-compose-kafka.yml up -d
 And then run the data generator from a SBT console:
 
 ```bash
-sbt "project data-generator; run"
+../sbt "project data-generator; run;"
 ```
 
 ### Spark
@@ -52,7 +52,8 @@ Otherwise, Spark will not be able to read any data. Once the two services are ru
 The assumption here is that your sbt, in your local machine, runs with Java 9 or newer (11, 17...). Then you can just run:
 
 ```bash
-sbt "project processor-spark; run"
+cd ..
+sbt "project processor-spark; run;"
 ```
 
 If you run your sbt with an older version of Java, we recommend you to update Java. If you want to keep using and older version of Java,
@@ -69,37 +70,42 @@ If you wish to run Spark on Docker, you can execute the shell script runSpark.sh
 The following script does these steps:
 1) Generates the Spark-app jar file
 ```bash
+cd ..
 sbt "processor-spark / assembly;"
 ```
 2) Creates a folder were the jar can be copied
 ```bash
+cd ..
 mkdir -p ./02-o-processor-spark/app-jar
 ```
 3) Copies the generated jar into the new folder
 ```bash
+cd ..
 cp "./02-o-processor-spark/target/scala-3.3.0/processor-spark-assembly-0.1.0-SNAPSHOT.jar" "./02-o-processor-spark/app-jar"
 ```
 4) Renames the jar so it is easier to handle on the container
 ```bash
+cd ..
 mv "./02-o-processor-spark/app-jar/processor-spark-assembly-0.1.0-SNAPSHOT.jar" "./02-o-processor-spark/app-jar/spark-app.jar"
 ```
 5) Build the docker image based on the Dockerfile available in the Spark module
 ```bash
-docker build ./02-o-processor-spark/docker/ -t cluster-apache-spark:3.4.1
+docker build ../02-o-processor-spark/docker/ -t cluster-apache-spark:3.4.1
 ```
 6) Calls docker-compose with two nodes: one master node and one worker node
 ```bash
-docker compose -f ./docker/docker-compose-spark.yml up -d --scale spark-worker=1
+docker compose -f ../docker/docker-compose-spark.yml up -d
 
 ```
 7) Copies the jar file from the folder to the container
 ```bash
-docker cp "./02-o-processor-spark/app-jar/spark-app.jar" "docker-spark-master-1:/opt/spark/app-jar"
+docker cp "../02-o-processor-spark/app-jar/spark-app.jar" "docker-spark-master-1:/opt/spark/app-jar"
 
 ```
 8) Executes the spark-submit command
 ```bash
 docker exec docker-spark-master-1 /opt/spark/bin/spark-submit \
+  --packages org.apache.spark:spark-sql-kafka-0-10_2.13:3.4.1 \
   --master spark://spark:7077 \
   --deploy-mode client \
   --driver-memory 1G \

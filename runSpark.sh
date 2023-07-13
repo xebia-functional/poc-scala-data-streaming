@@ -28,6 +28,7 @@ docker cp "./02-o-processor-spark/app-jar/spark-app.jar" "docker-spark-master-1:
 # You can also do `--deploy-mode cluster`, which will cause the driver to run on one of the worker nodes.
 # I've confirmed that both modes work fine with Scala 3, but for our purposes client mode is slightly more convenient.
 docker exec docker-spark-master-1 /opt/spark/bin/spark-submit \
+  --packages org.apache.spark:spark-sql-kafka-0-10_2.13:3.4.1 \
   --master spark://spark:7077 \
   --deploy-mode client \
   --driver-memory 1G \
