@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.configuration
+package com.fortyseven.core.codecs.iot
 
-import com.fortyseven.coreheaders.configuration.internal.{KafkaConfiguration, SchemaRegistryConfiguration}
+import com.fortyseven.coreheaders.model.iot.errors.OutOfBoundsError
+import vulcan.Codec
 
-final case class DataGeneratorConfiguration(
-    kafkaConfiguration: KafkaConfiguration,
-    schemaRegistryConfiguration: SchemaRegistryConfiguration
-  )
+object IotErrorCodecs:
+
+  private val _namespace = "iot-error"
+
+  given outOfBoundsErrorCodec: Codec[OutOfBoundsError] =
+    Codec.record(name = "OutOfBoundsError", namespace = _namespace)(_("msg", _.msg).map(OutOfBoundsError.apply))

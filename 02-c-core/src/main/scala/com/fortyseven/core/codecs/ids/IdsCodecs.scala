@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package com.fortyseven.pureconfig
+package com.fortyseven.core.codecs.ids
 
-import cats.effect.IO
-import munit.CatsEffectSuite
+import com.fortyseven.coreheaders.model.types.ids.{BicycleId, TripId, UserId}
+import vulcan.Codec
 
-class ConfigSpec extends CatsEffectSuite:
+object IdsCodecs:
 
-  test("Load data generator config"):
-    assertIO_(DataGeneratorConfigurationLoader.apply[IO].load().void)
+  given bicycleIdCodec: Codec[BicycleId] = Codec.uuid.imap(BicycleId.apply)(_.value)
 
-  test("Load job processor config"):
-    assertIO_(FlinkProcessorConfigurationLoader.apply[IO].load().void)
+  given userIdCodec: Codec[UserId] = Codec.uuid.imap(UserId.apply)(_.value)
 
-  test("Load kafka configuration loader config"):
-    assertIO_(KafkaConsumerConfigurationLoader.apply[IO].load().void)
-
-  test("Load Spark configuration loader config"):
-    assertIO_(SparkProcessorConfigurationLoader.apply[IO].load().void)
+  given tripIdCodec: Codec[TripId] = Codec.uuid.imap(TripId.apply)(_.value)

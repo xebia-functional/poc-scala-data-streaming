@@ -16,18 +16,18 @@
 
 package com.fortyseven.processor.flink
 
+import cats.Applicative
+import cats.implicits.*
+
+import com.fortyseven.core.codecs.iot.IotCodecs.given
+import com.fortyseven.coreheaders.configuration.FlinkProcessorConfiguration
+import org.apache.avro.Schema
 import org.apache.flink.api.common.eventtime.WatermarkStrategy
 import org.apache.flink.connector.kafka.source.KafkaSource
 import org.apache.flink.connector.kafka.source.enumerator.initializer.OffsetsInitializer
 import org.apache.flink.core.execution.JobClient
 import org.apache.flink.formats.avro.registry.confluent.ConfluentRegistryAvroDeserializationSchema
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
-
-import cats.Applicative
-import cats.implicits.*
-import com.fortyseven.core.codecs.iot.IotCodecs.given
-import com.fortyseven.coreheaders.configuration.FlinkProcessorConfiguration
-import org.apache.avro.Schema
 
 final class FlinkDataProcessor[F[_]: Applicative](env: StreamExecutionEnvironment):
 
@@ -47,7 +47,7 @@ final class FlinkDataProcessor[F[_]: Applicative](env: StreamExecutionEnvironmen
           s,
           jpc.schemaRegistryConfiguration.schemaRegistryURL.asString
         )
-      case Left(e)  => throw new RuntimeException("No pneumaticPressureCodec schema available")
+      case Left(e) => throw new RuntimeException("No pneumaticPressureCodec schema available")
 
     val kafkaSource = KafkaSource
       .builder()

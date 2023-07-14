@@ -1,11 +1,11 @@
-import Dependencies.*
-import CustomSbt.*
+import Dependencies._
+import CustomSbt._
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 ThisBuild / organization := "com.47deg"
 
-ThisBuild / scmInfo      := Some(
+ThisBuild / scmInfo := Some(
   ScmInfo(
     url("https://github.com/47deg/poc-scala-data-streaming"),
     "scm:git@github.com:47deg/poc-scala-data-streaming.git"
@@ -15,8 +15,6 @@ ThisBuild / scmInfo      := Some(
 ThisBuild / scalaVersion := "3.3.0"
 
 ThisBuild / semanticdbEnabled := true
-
-ThisBuild / scalafixDependencies += SbtPlugins.organizeImports
 
 ThisBuild / scalacOptions ++=
   Seq(
@@ -30,6 +28,15 @@ ThisBuild / scalacOptions ++=
     "-Wunused:all",
     "-Wvalue-discard"
   ) ++ Seq("-rewrite", "-indent") ++ Seq("-source", "future-migration")
+
+ThisBuild / assemblyMergeStrategy := {
+  case PathList(ps @ _*) if ps.lastOption.contains("module-info.class") => MergeStrategy.discard
+  case x if x.endsWith(".properties")                                   => MergeStrategy.filterDistinctLines
+  case x if x.endsWith("application.conf")                              => MergeStrategy.concat
+  case x =>
+    val oldStrategy = (ThisBuild / assemblyMergeStrategy).value
+    oldStrategy(x)
+}
 
 lazy val `poc-scala-data-streaming`: Project =
   project
@@ -60,7 +67,9 @@ lazy val `core-headers`: Project =
     .settings(commonSettings)
     .settings(
       name := "core-headers",
-      libraryDependencies ++= Seq()
+      libraryDependencies ++= Seq(
+        Libraries.test.munitScalacheck
+      )
     )
 
 // Layer 2
@@ -88,8 +97,8 @@ lazy val `configuration-typesafe`: Project = (project in file("02-c-config-purec
       Libraries.cats.effectKernel,
       Libraries.cats.core,
       Libraries.test.munitCatsEffect
-      )
     )
+  )
 
 lazy val core: Project =
   project
@@ -109,11 +118,23 @@ lazy val core: Project =
 
 // Input
 lazy val `data-generator`: Project = (project in file("02-i-data-generator"))
-  .dependsOn(`core-headers` % Cctt)
-  .dependsOn(core % Cctt) // This should be avoided
+  .dependsOn(`core-headers`, core, `configuration-typesafe`)
+  .enablePlugins(DockerPlugin)
+  .enablePlugins(JavaAppPackaging)
   .settings(commonSettings)
   .settings(
-    name := "data-generator",
+    name                 := "data-generator",
+    assembly / mainClass := Some("com.fortyseven.datagenerator.Main"),
+    Docker / packageName := "data-generator",
+    dockerBaseImage      := "openjdk:11-jre-slim-buster",
+    dockerExposedPorts ++= Seq(8080),
+    dockerUpdateLatest := true,
+    dockerAlias := DockerAlias(
+      registryHost = Some("ghcr.io"),
+      username = Some((ThisBuild / organization).value),
+      name = (Docker / packageName).value,
+      tag = Some("latest")
+    ),
     libraryDependencies ++= Seq(
       Libraries.fs2.core,
       Libraries.fs2.kafka,
@@ -126,9 +147,10 @@ lazy val `data-generator`: Project = (project in file("02-i-data-generator"))
       Libraries.kafka.kafkaSchemaRegistry,
       Libraries.kafka.kafkaSchemaSerializer,
       Libraries.kafka.kafkaSerializer,
-      Libraries.logging.catsSlf4j % Test,
+      Libraries.logging.catsSlf4j,
       Libraries.logging.logback,
-      Libraries.test.munitCatsEffect
+      Libraries.test.munitCatsEffect,
+      Libraries.test.munitScalacheck
     )
   )
 
@@ -178,11 +200,12 @@ lazy val `processor-flink`: Project =
     )
 
 lazy val `processor-flink-integration`: Project =
-  project.in(file("02-o-processor-flink/integration"))
+  project
+    .in(file("02-o-processor-flink/integration"))
     .dependsOn(`processor-flink`)
     .settings(commonSettings)
     .settings(
-      name := "flink-integration-test",
+      name           := "flink-integration-test",
       publish / skip := true,
       libraryDependencies ++= Seq(
         Libraries.testContainers.kafka,
@@ -195,8 +218,9 @@ lazy val `processor-flink-integration`: Project =
       javacOptions ++= Seq("-source", "11", "-target", "11")
     )
 
-lazy val `processor-spark`: Project = project.in(file("02-o-processor-spark"))
-  .dependsOn(`core-headers`)
+lazy val `processor-spark`: Project = project
+  .in(file("02-o-processor-spark"))
+  .dependsOn(`core-headers`, `configuration-typesafe`)
   .settings(commonSettings)
   .settings(
     name := "processor-spark",
@@ -207,14 +231,12 @@ lazy val `processor-spark`: Project = project.in(file("02-o-processor-spark"))
       Libraries.spark.streaming,
       Libraries.spark.`sql-kafka`
     ).map(_.cross(CrossVersion.for3Use2_13)),
-    libraryDependencies ++= Seq(
-      Libraries.cats.effect
-    ),
-    Compile / run := Defaults.runTask(
-      Compile / fullClasspath,
-      Compile / run / mainClass,
-      Compile / run / runner
-    ).evaluated,
+    Compile / run := Defaults
+      .runTask(
+        Compile / fullClasspath,
+        Compile / run / mainClass,
+        Compile / run / runner
+      ).evaluated,
     javacOptions ++= Seq("-source", "17", "-target", "17")
   )
 
@@ -245,7 +267,11 @@ lazy val main: Project =
 
 lazy val commonSettings = commonScalacOptions ++ Seq(
   resolvers += "confluent" at "https://packages.confluent.io/maven/",
-  update / evictionWarningOptions := EvictionWarningOptions.empty
+  update / evictionWarningOptions := EvictionWarningOptions.empty,
+  assemblyMergeStrategy := {
+    case PathList("META-INF") => MergeStrategy.discard
+    case x                    => MergeStrategy.first
+  }
 )
 
 lazy val commonScalacOptions = Seq(

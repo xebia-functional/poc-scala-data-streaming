@@ -20,11 +20,10 @@ import scala.jdk.CollectionConverters.*
 import scala.util.Try
 import scala.util.control.NoStackTrace
 
-import org.apache.kafka.common.serialization.{Deserializer, Serde, Serdes, Serializer}
-
 import io.confluent.kafka.schemaregistry.avro.AvroSchema
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient
 import io.confluent.kafka.serializers.{KafkaAvroDeserializer, KafkaAvroSerializer}
+import org.apache.kafka.common.serialization.{Deserializer, Serde, Serdes, Serializer}
 import vulcan.{AvroError, Codec}
 
 object VulcanSerdes:
@@ -41,7 +40,7 @@ object VulcanSerdes:
     new Serializer[T]:
 
       private val serializer = (codec.schema, config.useMockedClient) match
-        case (Left(_), _)                      => KafkaAvroSerializer()
+        case (Left(_), _) => KafkaAvroSerializer()
         case (Right(schema), Some(mockClient)) =>
           val parsedSchema = new AvroSchema(schema.toString)
           new KafkaAvroSerializer(mockClient):
@@ -51,7 +50,7 @@ object VulcanSerdes:
                 record,
                 parsedSchema
               )
-        case (Right(schema), None)             =>
+        case (Right(schema), None) =>
           val parsedSchema = new AvroSchema(schema.toString)
           new KafkaAvroSerializer:
             this.configure(avroSerdesConf(config).asJava, includeKey)
@@ -76,7 +75,7 @@ object VulcanSerdes:
       private val deserializer = (codec.schema, config.useMockedClient) match
         case (Right(_), Some(mockClient)) =>
           new KafkaAvroDeserializer(mockClient)
-        case _                            =>
+        case _ =>
           new KafkaAvroDeserializer():
 
             this.configure(avroSerdesConf(config).asJava, includeKey)

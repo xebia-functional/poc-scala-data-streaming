@@ -18,57 +18,46 @@ package com.fortyseven.datagenerator
 
 import scala.concurrent.duration.*
 
-import org.apache.kafka.clients.producer.ProducerConfig
-
 import cats.Parallel
 import cats.effect.kernel.Async
 import cats.implicits.*
+
 import com.fortyseven.core.codecs.iot.IotCodecs.given
-import com.fortyseven.coreheaders.configuration.DataGeneratorConfiguration
 import com.fortyseven.coreheaders.model.iot.model.{GPSPosition, PneumaticPressure}
-import com.fortyseven.coreheaders.{ConfigurationLoaderHeader, DataGeneratorHeader}
+import com.fortyseven.datagenerator.config.DataGeneratorConfiguration
 import fs2.kafka.*
+import org.apache.kafka.clients.producer.ProducerConfig
 
-final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorHeader[F]:
+final class DataGenerator[F[_]: Async: Parallel]:
 
-  override def generate(conf: ConfigurationLoaderHeader[F, DataGeneratorConfiguration]): F[Unit] =
-    for
-      dgc <- conf.load()
-      _   <- runWithConfiguration(dgc)
-    yield ()
-
-  private def runWithConfiguration(dgc: DataGeneratorConfiguration): F[Unit] =
+  def generate(dgc: DataGeneratorConfiguration): F[Unit] =
 
     import VulcanSerdes.*
 
     val generators = new ModelGenerators[F](100.milliseconds)
 
-    val producerConfig = dgc.kafkaConfiguration.producer.getOrElse(
-      throw new RuntimeException("No producer config available")
-    )
-
-    val gpsPositionTopicName       = s"${producerConfig.topicName}-gps"
-    val pneumaticPressureTopicName = s"${producerConfig.topicName}-pp"
+    val gpsPositionTopicName       = s"${dgc.kafka.producer.topicName}-gps"
+    val pneumaticPressureTopicName = s"${dgc.kafka.producer.topicName}-pp"
 
     val producerSettings = ProducerSettings[F, String, Array[Byte]]
-      .withBootstrapServers(dgc.kafkaConfiguration.broker.brokerAddress.asString)
-      .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, producerConfig.compressionType.toString)
-      .withProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, producerConfig.valueSerializerClass.asString)
+      .withBootstrapServers(dgc.kafka.broker.bootstrapServers.asString)
+      .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, dgc.kafka.producer.compressionType.toString)
+      .withProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, dgc.kafka.producer.valueSerializerClass.asString)
 
     val pneumaticPressureSerializer = avroSerializer[PneumaticPressure](
-      Config(dgc.schemaRegistryConfiguration.schemaRegistryURL.asString),
+      Config(dgc.schemaRegistry.schemaRegistryURL.asString),
       includeKey = false
     )
 
     val gpsPositionSerializer = avroSerializer[GPSPosition](
-      Config(dgc.schemaRegistryConfiguration.schemaRegistryURL.asString),
+      Config(dgc.schemaRegistry.schemaRegistryURL.asString),
       includeKey = false
     )
 
     KafkaProducer
       .stream(producerSettings)
       .flatMap { producer =>
-        val gpsPositionStream       =
+        val gpsPositionStream =
           generators.generateGPSPosition.mapRecords(gpsPositionTopicName)(using gpsPositionSerializer)
         val pneumaticPressureStream =
           generators.generatePneumaticPressure.mapRecords(pneumaticPressureTopicName)(using pneumaticPressureSerializer)
@@ -77,8 +66,8 @@ final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorHeader[F]:
           .flatMap { case (s1, s2) => fs2.Stream.emit(s1) ++ fs2.Stream.emit(s2) }
           .evalMap(producer.produce)
           .groupWithin(
-            producerConfig.commitBatchWithinSize.asInt,
-            producerConfig.commitBatchWithinTime
+            dgc.kafka.producer.commitBatchWithinSize.asInt,
+            dgc.kafka.producer.commitBatchWithinTime
           )
           .evalMap(_.sequence)
       }
@@ -86,10 +75,9 @@ final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorHeader[F]:
       .drain
 
   extension [T](inputStream: fs2.Stream[F, T])
-
     private def mapRecords(
         topic: String
-      )(using serializer: KafkaSerializer[T]): fs2.Stream[F, ProducerRecords[String, Array[Byte]]] =
+    )(using serializer: KafkaSerializer[T]): fs2.Stream[F, ProducerRecords[String, Array[Byte]]] =
       inputStream.map { committable =>
         val key   = committable.getClass.getSimpleName
         val value = serializer.serialize(topic, committable)

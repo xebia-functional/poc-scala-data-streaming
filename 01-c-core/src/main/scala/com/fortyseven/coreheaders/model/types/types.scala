@@ -14,23 +14,25 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.model.iot
+package com.fortyseven.coreheaders.model.types
 
 import com.fortyseven.coreheaders.model.iot.errors.*
 
 object types:
 
-  opaque type Latitude <: Double = Double // Should be limited to earth coordinates
+  opaque type Latitude = Double
 
-  opaque type Longitude <: Double = Double // Should be limited to earth coordinates
+  opaque type Longitude = Double
 
-  opaque type Percentage <: Double = Double // Should be limited to 0.00 and 100.00
+  opaque type Percentage = Double
 
-  opaque type Speed <: Double = Double // Should be typed better. Meters/second or Km/h?
+  opaque type Speed = Double // Should be typed better. Meters/second or Km/h?
 
-  opaque type Hz <: Double = Double // IS measure for frequency 1/60 Hz would be 1 RPM
+  opaque type Hz = Double // IS measure for frequency 1/60 Hz would be 1 RPM
 
-  opaque type Bar <: Double = Double // Should be positive
+  opaque type Bar = Double
+
+  opaque type Meters = Int
 
   object Latitude:
 
@@ -50,19 +52,25 @@ object types:
 
   object Percentage:
 
-    def apply(percentage: Double): Percentage = percentage
+    def apply(percentage: Double): Either[OutOfBoundsError, Percentage] = percentage match
+      case p if p < 0.0 || p > 100.0 => Left(OutOfBoundsError(s"Invalid percentage value $p"))
+      case percentage                => Right(percentage)
 
     extension (percentage: Percentage) def value: Double = percentage
 
   object Speed:
 
-    def apply(speed: Double): Speed = speed
+    def apply(speed: Double): Either[OutOfBoundsError, Speed] = speed match
+      case speed if speed < 0.0 => Left(OutOfBoundsError(s"Invalid speed value $speed"))
+      case speed                => Right(speed)
 
     extension (speed: Speed) def value: Double = speed
 
   object Hz:
 
-    def apply(hertz: Double): Hz = hertz
+    def apply(hertz: Double): Either[OutOfBoundsError, Hz] = hertz match
+      case hz if hz < 0.0 => Left(OutOfBoundsError(s"Invalid frequency value $hz"))
+      case hz             => Right(hz)
 
     extension (hertz: Hz) def value: Double = hertz
 
@@ -72,6 +80,12 @@ object types:
       case p if p < 0.0 => Left(OutOfBoundsError(s"Invalid pressure value $p"))
       case p            => Right(p)
 
-    def unsafeApply(bar: Double): Bar = bar
-
     extension (bar: Bar) def value: Double = bar
+
+  object Meters:
+
+    def apply(meters: Int): Either[OutOfBoundsError, Meters] = meters match
+      case meters if meters < 0 => Left(OutOfBoundsError(s"Invalid meters value $meters"))
+      case meters               => Right(meters)
+
+    extension (meters: Meters) def value: Int = meters

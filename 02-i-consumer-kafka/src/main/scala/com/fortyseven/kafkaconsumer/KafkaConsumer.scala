@@ -18,20 +18,19 @@ package com.fortyseven.kafkaconsumer
 
 import scala.util.matching.Regex
 
-import org.apache.kafka.clients.producer.ProducerConfig
-
 import cats.*
 import cats.effect.kernel.Async
 import cats.implicits.*
+
 import com.fortyseven.coreheaders.configuration.KafkaConsumerConfiguration
 import com.fortyseven.coreheaders.configuration.internal.types.KafkaAutoOffsetReset
 import com.fortyseven.coreheaders.{ConfigurationLoaderHeader, KafkaConsumerHeader}
 import fs2.kafka.*
+import org.apache.kafka.clients.producer.ProducerConfig
 
 final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
 
   extension (kaor: KafkaAutoOffsetReset)
-
     def asKafka: AutoOffsetReset = kaor match
       case KafkaAutoOffsetReset.Earliest => AutoOffsetReset.Earliest
       case KafkaAutoOffsetReset.Latest   => AutoOffsetReset.Latest

@@ -20,4 +20,4 @@ import com.fortyseven.coreheaders.configuration.internal.types.*
 
 final case class SchemaRegistryConfiguration(
     schemaRegistryURL: NonEmptyString
-  )
+)

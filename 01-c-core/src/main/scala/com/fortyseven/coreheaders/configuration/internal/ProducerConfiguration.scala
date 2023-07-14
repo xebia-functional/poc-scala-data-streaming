@@ -27,4 +27,4 @@ final case class ProducerConfiguration(
     compressionType: KafkaCompressionType,
     commitBatchWithinSize: PositiveInt,
     commitBatchWithinTime: FiniteDuration
-  )
+)

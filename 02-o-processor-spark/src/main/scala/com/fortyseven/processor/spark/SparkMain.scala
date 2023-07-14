@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-package com.fortyseven.pureconfig
+package com.fortyseven.processor.spark
 
-import cats.effect.kernel.Async
-import com.fortyseven.coreheaders.configuration.DataGeneratorConfiguration
-import com.fortyseven.pureconfig.instances.given
+object SparkMain:
 
-private[pureconfig] final class DataGeneratorConfigurationLoader[F[_]: Async]
-    extends PureConfiguration[F, DataGeneratorConfiguration]("DataGeneratorConfiguration")
-
-object DataGeneratorConfigurationLoader:
-
-  def apply[F[_]: Async]: DataGeneratorConfigurationLoader[F] = new DataGeneratorConfigurationLoader[F]
+  @main def run(): Unit =
+    val processor = new DataProcessor
+    processor.process()

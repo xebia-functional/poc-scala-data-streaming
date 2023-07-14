@@ -14,14 +14,32 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.model.app
+package com.fortyseven.coreheaders.model.types
 
-object types:
+import java.util.UUID
 
-  opaque type Meters <: Int = Int
+object ids:
 
-  object Meters:
+  opaque type BicycleId = UUID
 
-    def apply(meters: Int): Meters = meters
+  opaque type UserId = UUID
 
-    extension (meters: Meters) def value: Int = meters
+  opaque type TripId = UUID
+
+  object BicycleId:
+
+    def apply(id: UUID): BicycleId = id
+
+    extension (bicycleId: BicycleId) def value: UUID = bicycleId
+
+  object UserId:
+
+    def apply(id: UUID): UserId = id
+
+    extension (userId: UserId) def value: UUID = userId
+
+  object TripId:
+
+    def apply(tripID: UUID): TripId = tripID
+
+    extension (tripId: TripId) def value: UUID = tripId

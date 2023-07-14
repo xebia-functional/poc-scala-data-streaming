@@ -16,9 +16,8 @@
 
 package com.fortyseven.coreheaders.model.app
 
-import com.fortyseven.coreheaders.model.app.types.Meters
-import com.fortyseven.coreheaders.model.ids.{BicycleId, TripId, UserId}
-import com.fortyseven.coreheaders.model.iot.types.Speed
+import com.fortyseven.coreheaders.model.types.ids.{BicycleId, TripId, UserId}
+import com.fortyseven.coreheaders.model.types.types.{Meters, Speed}
 
 object model:
 

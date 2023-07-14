@@ -1,5 +1,7 @@
 import CustomSbt.*
 
+addCommandAlias("ci-test", "scalafmtCheckAll; scalafmtSbtCheck; scalafixAll --check; ++test")
+
 addCommandAlias("l", "projects")
 
 addCommandAlias("ll", "projects")
@@ -24,12 +26,12 @@ addCommandAlias("s", "reStop")
 
 addCommandAlias(
   "styleCheck",
-  "scalafmtSbtCheck; scalafmtCheckAll"
+  "scalafixAll --check; scalafmtSbtCheck; scalafmtCheckAll"
 )
 
 addCommandAlias(
   "styleFix",
-  "scalafix; scalafmtSbt; scalafmtAll"
+  "scalafixAll; scalafmtSbt; scalafmtAll"
 )
 
 addCommandAlias(

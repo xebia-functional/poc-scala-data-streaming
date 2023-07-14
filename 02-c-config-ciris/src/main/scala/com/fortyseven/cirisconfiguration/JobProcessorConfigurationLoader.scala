@@ -19,7 +19,8 @@ package com.fortyseven.cirisconfiguration
 import scala.concurrent.duration.*
 
 import cats.effect.kernel.Async
-import ciris.{default, ConfigValue, Effect}
+
+import ciris.{ConfigValue, Effect, default}
 import com.fortyseven.cirisconfiguration.CommonConfiguration.{kafkaBrokerAddress, schemaRegistryUrl}
 import com.fortyseven.cirisconfiguration.decoders.given
 import com.fortyseven.coreheaders.ConfigurationLoaderHeader
