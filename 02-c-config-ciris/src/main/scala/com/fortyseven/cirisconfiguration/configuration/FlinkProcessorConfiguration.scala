@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders
+package com.fortyseven.cirisconfiguration.configuration
 
-trait ConfigurationLoaderHeader[Effect[_], ConfigurationLoader]:
+import com.fortyseven.cirisconfiguration.configuration.internal.{KafkaConfiguration, SchemaRegistryConfiguration}
 
-  def load(configurationPath: Option[String] = None): Effect[ConfigurationLoader]
+final case class FlinkProcessorConfiguration(
+    kafkaConfiguration: KafkaConfiguration,
+    schemaRegistryConfiguration: SchemaRegistryConfiguration
+)

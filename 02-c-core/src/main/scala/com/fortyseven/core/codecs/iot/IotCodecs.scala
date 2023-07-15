@@ -25,6 +25,9 @@ import com.fortyseven.coreheaders.model.iot.model.*
 import com.fortyseven.coreheaders.model.types.types.*
 import vulcan.Codec
 
+/**
+ * It contains the Vulcan codecs for the types (enums, case classes...) defined in the object [[com.fortyseven.coreheaders.model.iot.model]].
+ */
 object IotCodecs:
 
   private val _namespace = "iot"

@@ -22,13 +22,13 @@ import cats.effect.kernel.Async
 
 import ciris.{ConfigValue, Effect, default}
 import com.fortyseven.cirisconfiguration.CommonConfiguration.{kafkaBrokerAddress, schemaRegistryUrl}
+import com.fortyseven.cirisconfiguration.configuration.FlinkProcessorConfiguration
+import com.fortyseven.cirisconfiguration.configuration.internal.*
 import com.fortyseven.cirisconfiguration.decoders.given
-import com.fortyseven.coreheaders.ConfigurationLoaderHeader
-import com.fortyseven.coreheaders.configuration.FlinkProcessorConfiguration
-import com.fortyseven.coreheaders.configuration.internal.*
-import com.fortyseven.coreheaders.configuration.internal.types.*
+import com.fortyseven.coreheaders.ConfigurationHeader
+import com.fortyseven.coreheaders.configuration.refinedTypes.*
 
-class JobProcessorConfigurationLoader[F[_]: Async] extends ConfigurationLoaderHeader[F, FlinkProcessorConfiguration]:
+class JobProcessorConfigurationLoader[F[_]: Async] extends ConfigurationHeader[F, FlinkProcessorConfiguration]:
 
   lazy private val config: ConfigValue[Effect, FlinkProcessorConfiguration] =
     for
@@ -70,4 +70,4 @@ class JobProcessorConfigurationLoader[F[_]: Async] extends ConfigurationLoaderHe
       SchemaRegistryConfiguration(schemaRegistryUrl)
     )
 
-  override def load(configurationPath: Option[String]): F[FlinkProcessorConfiguration] = config.load[F]
+  override def loadConfiguration(): F[FlinkProcessorConfiguration] = config.load[F]

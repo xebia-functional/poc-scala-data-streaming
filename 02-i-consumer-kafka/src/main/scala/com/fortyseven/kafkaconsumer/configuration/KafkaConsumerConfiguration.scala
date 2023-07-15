@@ -14,20 +14,29 @@
  * limitations under the License.
  */
 
-package com.fortyseven.datagenerator.config
+package com.fortyseven.kafkaconsumer.configuration
 
 import scala.concurrent.duration.FiniteDuration
 
-import com.fortyseven.coreheaders.configuration.internal.types.*
-import com.fortyseven.pureconfig.instances.given
+import com.fortyseven.coreheaders.configuration.refinedTypes.*
+import com.fortyseven.pureconfig.refinedTypesGivens.given
 import pureconfig.ConfigReader
 import pureconfig.generic.derivation.default.*
 
-final case class DataGeneratorConfiguration(kafka: KafkaConfiguration, schemaRegistry: SchemaRegistryConfiguration) derives ConfigReader
+final case class KafkaConsumerConfiguration(
+    broker: BrokerConfiguration,
+    consumer: Option[ConsumerConfiguration],
+    producer: Option[ProducerConfiguration]
+) derives ConfigReader
 
-final case class KafkaConfiguration(broker: BrokerConfiguration, producer: ProducerConfiguration) derives ConfigReader
+final case class BrokerConfiguration(brokerAddress: NonEmptyString) derives ConfigReader
 
-final case class BrokerConfiguration(bootstrapServers: NonEmptyString) derives ConfigReader
+final case class ConsumerConfiguration(
+    topicName: NonEmptyString,
+    autoOffsetReset: KafkaAutoOffsetReset,
+    groupId: NonEmptyString,
+    maxConcurrent: PositiveInt
+) derives ConfigReader
 
 final case class ProducerConfiguration(
     topicName: NonEmptyString,
@@ -36,8 +45,4 @@ final case class ProducerConfiguration(
     compressionType: KafkaCompressionType,
     commitBatchWithinSize: PositiveInt,
     commitBatchWithinTime: FiniteDuration
-) derives ConfigReader
-
-final case class SchemaRegistryConfiguration(
-    schemaRegistryURL: NonEmptyString
 ) derives ConfigReader

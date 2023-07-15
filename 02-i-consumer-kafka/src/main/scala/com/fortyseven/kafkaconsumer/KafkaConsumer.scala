@@ -22,13 +22,13 @@ import cats.*
 import cats.effect.kernel.Async
 import cats.implicits.*
 
-import com.fortyseven.coreheaders.configuration.KafkaConsumerConfiguration
-import com.fortyseven.coreheaders.configuration.internal.types.KafkaAutoOffsetReset
-import com.fortyseven.coreheaders.{ConfigurationLoaderHeader, KafkaConsumerHeader}
+import com.fortyseven.coreheaders.configuration.refinedTypes.KafkaAutoOffsetReset
+import com.fortyseven.coreheaders.{ConfigurationHeader, KafkaConsumerHeader}
+import com.fortyseven.kafkaconsumer.configuration.KafkaConsumerConfiguration
 import fs2.kafka.*
 import org.apache.kafka.clients.producer.ProducerConfig
 
-final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
+final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F, KafkaConsumerConfiguration]:
 
   extension (kaor: KafkaAutoOffsetReset)
     def asKafka: AutoOffsetReset = kaor match
@@ -36,18 +36,18 @@ final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
       case KafkaAutoOffsetReset.Latest   => AutoOffsetReset.Latest
       case KafkaAutoOffsetReset.None     => AutoOffsetReset.None
 
-  override def consume(conf: ConfigurationLoaderHeader[F, KafkaConsumerConfiguration]): F[Unit] = for
-    kc <- conf.load()
+  override def consume(conf: ConfigurationHeader[F, KafkaConsumerConfiguration]): F[Unit] = for
+    kc <- conf.loadConfiguration()
     _  <- runWithConfiguration(kc)
   yield ()
 
   private def runWithConfiguration(kc: KafkaConsumerConfiguration): F[Unit] =
 
-    val producerConfig = kc.kafkaConfiguration.producer.getOrElse(
+    val producerConfig = kc.producer.getOrElse(
       throw new RuntimeException("No producer config available")
     )
 
-    val consumerConfig = kc.kafkaConfiguration.consumer.getOrElse(
+    val consumerConfig = kc.consumer.getOrElse(
       throw new RuntimeException("No consumer config available")
     )
 
@@ -57,12 +57,12 @@ final class KafkaConsumer[F[_]: Async] extends KafkaConsumerHeader[F]:
     val consumerSettings =
       ConsumerSettings[F, String, Array[Byte]]
         .withAutoOffsetReset(consumerConfig.autoOffsetReset.asKafka)
-        .withBootstrapServers(kc.kafkaConfiguration.broker.brokerAddress.asString)
+        .withBootstrapServers(kc.broker.brokerAddress.asString)
         .withGroupId(consumerConfig.groupId.asString)
 
     val producerSettings =
       ProducerSettings[F, String, Array[Byte]]
-        .withBootstrapServers(kc.kafkaConfiguration.broker.brokerAddress.asString)
+        .withBootstrapServers(kc.broker.brokerAddress.asString)
         .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, producerConfig.compressionType.toString)
 
     val stream =

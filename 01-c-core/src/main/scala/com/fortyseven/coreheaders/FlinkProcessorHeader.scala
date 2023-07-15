@@ -16,8 +16,17 @@
 
 package com.fortyseven.coreheaders
 
-import com.fortyseven.coreheaders.configuration.FlinkProcessorConfiguration
-
-trait FlinkProcessorHeader[F[_]]:
-
-  def process(config: ConfigurationLoaderHeader[F, FlinkProcessorConfiguration]): F[Unit]
+/**
+ * @tparam F
+ *   The effect in with Flink is executed.
+ * @tparam ConfigurationLoader
+ *   The type of the Flink Processor Configurator.
+ */
+trait FlinkProcessorHeader[F[_], ConfigurationLoader]:
+  /**
+   * @param config
+   *   An instance of a class that extends [[ConfigurationHeader]].
+   * @return
+   *   It executes the effects of the Flink Processor and returns Unit.
+   */
+  def process(config: ConfigurationHeader[F, ConfigurationLoader]): F[Unit]

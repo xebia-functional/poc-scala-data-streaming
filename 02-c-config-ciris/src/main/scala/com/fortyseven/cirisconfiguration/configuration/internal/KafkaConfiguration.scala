@@ -14,16 +14,10 @@
  * limitations under the License.
  */
 
-package com.fortyseven.pureconfig
+package com.fortyseven.cirisconfiguration.configuration.internal
 
-import cats.effect.kernel.Async
-
-import com.fortyseven.coreheaders.configuration.FlinkProcessorConfiguration
-import com.fortyseven.pureconfig.instances.given
-
-private[pureconfig] final class FlinkProcessorConfigurationLoader[F[_]: Async]
-    extends PureConfiguration[F, FlinkProcessorConfiguration]("FlinkProcessorConfiguration")
-
-object FlinkProcessorConfigurationLoader:
-
-  def apply[F[_]: Async]: FlinkProcessorConfigurationLoader[F] = new FlinkProcessorConfigurationLoader[F]
+case class KafkaConfiguration(
+    broker: BrokerConfiguration,
+    consumer: Option[ConsumerConfiguration],
+    producer: Option[ProducerConfiguration]
+)

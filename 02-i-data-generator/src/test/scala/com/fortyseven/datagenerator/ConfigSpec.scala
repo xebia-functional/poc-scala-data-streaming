@@ -18,7 +18,7 @@ package com.fortyseven.datagenerator
 
 import cats.effect.IO
 
-import com.fortyseven.datagenerator.config.DataGeneratorConfiguration
+import com.fortyseven.datagenerator.configuration.DataGeneratorConfiguration
 import munit.CatsEffectSuite
 import pureconfig.ConfigSource
 import pureconfig.module.catseffect.syntax.*

@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.configuration.internal
+package com.fortyseven.cirisconfiguration.configuration
 
-import com.fortyseven.coreheaders.configuration.internal.types.*
+import com.fortyseven.cirisconfiguration.configuration.internal.KafkaConfiguration
 
-final case class SchemaRegistryConfiguration(
-    schemaRegistryURL: NonEmptyString
-)
+final case class KafkaConsumerConfiguration(kafkaConfiguration: KafkaConfiguration)

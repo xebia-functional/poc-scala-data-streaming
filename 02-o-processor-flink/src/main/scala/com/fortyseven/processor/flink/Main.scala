@@ -14,11 +14,19 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.configuration
+package com.fortyseven.processor.flink
 
-import com.fortyseven.coreheaders.configuration.internal.{KafkaConfiguration, SchemaRegistryConfiguration}
+import cats.effect.{IO, IOApp}
 
-final case class FlinkProcessorConfiguration(
-    kafkaConfiguration: KafkaConfiguration,
-    schemaRegistryConfiguration: SchemaRegistryConfiguration
-)
+import com.fortyseven.processor.flink.configuration.FlinkProcessorConfigurationLoader
+import org.typelevel.log4cats.slf4j.Slf4jLogger
+
+object Main extends IOApp.Simple:
+
+  override def run: IO[Unit] = for
+    logger <- Slf4jLogger.create[IO]
+    _      <- logger.info("Reading Flink Processor Configuration")
+    conf = new FlinkProcessorConfigurationLoader[IO]
+    _ <- logger.info("Start Flink")
+    _ <- new DataProcessor[IO].process(conf)
+  yield ()

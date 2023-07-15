@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package com.fortyseven.pureconfig
+package com.fortyseven.cirisconfiguration.configuration.internal
 
-import cats.effect.kernel.Async
+import scala.concurrent.duration.FiniteDuration
 
-import com.fortyseven.coreheaders.configuration.KafkaConsumerConfiguration
-import com.fortyseven.pureconfig.instances.given
+import com.fortyseven.coreheaders.configuration.refinedTypes.*
 
-private[pureconfig] final class KafkaConsumerConfigurationLoader[F[_]: Async]
-    extends PureConfiguration[F, KafkaConsumerConfiguration]("KafkaConsumerConfiguration")
-
-object KafkaConsumerConfigurationLoader:
-
-  def apply[F[_]: Async]: KafkaConsumerConfigurationLoader[F] = new KafkaConsumerConfigurationLoader[F]
+final case class ProducerConfiguration(
+    topicName: NonEmptyString,
+    valueSerializerClass: NonEmptyString,
+    maxConcurrent: PositiveInt,
+    compressionType: KafkaCompressionType,
+    commitBatchWithinSize: PositiveInt,
+    commitBatchWithinTime: FiniteDuration
+)

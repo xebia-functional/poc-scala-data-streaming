@@ -16,7 +16,7 @@
 
 package com.fortyseven.processor.spark
 
-import com.fortyseven.processor.spark.config.{ProcessorSparkConfiguration, ReaderConfiguration, WriterConfiguration}
+import com.fortyseven.processor.spark.configuration.{ProcessorSparkConfiguration, ReaderConfiguration, WriterConfiguration}
 import org.apache.spark.sql.{DataFrame, DataFrameReader, DataFrameWriter, Row, SparkSession}
 
 private[spark] final class SparkDataProcessor(sparkSession: SparkSession):

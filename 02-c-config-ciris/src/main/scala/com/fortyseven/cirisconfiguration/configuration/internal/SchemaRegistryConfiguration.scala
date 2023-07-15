@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.configuration.internal
+package com.fortyseven.cirisconfiguration.configuration.internal
 
-import com.fortyseven.coreheaders.configuration.internal.types.NonEmptyString
+import com.fortyseven.coreheaders.configuration.refinedTypes.*
 
-final case class BrokerConfiguration(brokerAddress: NonEmptyString)
+final case class SchemaRegistryConfiguration(
+    schemaRegistryURL: NonEmptyString
+)
