@@ -24,6 +24,9 @@ import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.types.types.Meters
 import vulcan.Codec
 
+/**
+ * It contains the Vulcan codecs for the types (enums, case classes...) defined in the object [[com.fortyseven.coreheaders.model.app.model]].
+ */
 object AppCodecs:
 
   private val _namespace = "app"

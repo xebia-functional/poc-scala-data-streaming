@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.fortyseven.processor.spark.config
+package com.fortyseven.processor.spark.configuration
 
 import scala.concurrent.duration.FiniteDuration
 
-import com.fortyseven.coreheaders.configuration.internal.types.NonEmptyString
-import com.fortyseven.pureconfig.instances.given_ConfigReader_NonEmptyString
+import com.fortyseven.coreheaders.configuration.refinedTypes.NonEmptyString
+import com.fortyseven.pureconfig.refinedTypesGivens.given_ConfigReader_NonEmptyString
 import pureconfig.ConfigReader
 import pureconfig.generic.derivation.default.*
 

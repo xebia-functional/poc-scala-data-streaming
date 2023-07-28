@@ -32,7 +32,6 @@ ThisBuild / scalacOptions ++=
 ThisBuild / assemblyMergeStrategy := {
   case PathList(ps @ _*) if ps.lastOption.contains("module-info.class") => MergeStrategy.discard
   case x if x.endsWith(".properties")                                   => MergeStrategy.filterDistinctLines
-  case x if x.endsWith("application.conf")                              => MergeStrategy.concat
   case x =>
     val oldStrategy = (ThisBuild / assemblyMergeStrategy).value
     oldStrategy(x)
@@ -47,7 +46,7 @@ lazy val `poc-scala-data-streaming`: Project =
       // Layer 2
       // Common and Utils
       `configuration-ciris`,
-      `configuration-typesafe`,
+      `configuration-pureconfig`,
       core,
       `data-generator`,
       // Input
@@ -86,7 +85,7 @@ lazy val `configuration-ciris`: Project = (project in file("02-c-config-ciris"))
     )
   )
 
-lazy val `configuration-typesafe`: Project = (project in file("02-c-config-pureconfig"))
+lazy val `configuration-pureconfig`: Project = (project in file("02-c-config-pureconfig"))
   .dependsOn(`core-headers`)
   .settings(commonSettings)
   .settings(
@@ -118,7 +117,7 @@ lazy val core: Project =
 
 // Input
 lazy val `data-generator`: Project = (project in file("02-i-data-generator"))
-  .dependsOn(`core-headers`, core, `configuration-typesafe`)
+  .dependsOn(`core-headers`, core, `configuration-pureconfig`)
   .enablePlugins(DockerPlugin)
   .enablePlugins(JavaAppPackaging)
   .settings(commonSettings)
@@ -158,6 +157,7 @@ lazy val `consumer-kafka`: Project =
   project
     .in(file("02-i-consumer-kafka"))
     .dependsOn(`core-headers` % Cctt)
+    .dependsOn(`configuration-pureconfig` % Cctt)
     .settings(commonSettings)
     .settings(
       name := "kafka-consumer",
@@ -176,6 +176,7 @@ lazy val `processor-flink`: Project =
     .in(file("02-o-processor-flink"))
     .dependsOn(`core-headers` % Cctt)
     .dependsOn(core % Cctt) // This should be avoided
+    .dependsOn(`configuration-pureconfig` % Cctt)
     .settings(commonSettings)
     .settings(
       name := "processor-flink",
@@ -220,7 +221,8 @@ lazy val `processor-flink-integration`: Project =
 
 lazy val `processor-spark`: Project = project
   .in(file("02-o-processor-spark"))
-  .dependsOn(`core-headers`, `configuration-typesafe`)
+  .dependsOn(`core-headers` % Cctt)
+  .dependsOn(`configuration-pureconfig` % Cctt)
   .settings(commonSettings)
   .settings(
     name := "processor-spark",
@@ -237,7 +239,8 @@ lazy val `processor-spark`: Project = project
         Compile / run / mainClass,
         Compile / run / runner
       ).evaluated,
-    javacOptions ++= Seq("-source", "17", "-target", "17")
+    javacOptions ++= Seq("-source", "17", "-target", "17"),
+    assembly / assemblyJarName := "spark-app.jar"
   )
 
 // Layer 3
@@ -245,7 +248,7 @@ lazy val main: Project =
   project
     .in(file("03-c-main"))
     .dependsOn(`configuration-ciris` % Cctt)
-    .dependsOn(`configuration-typesafe` % Cctt)
+    .dependsOn(`configuration-pureconfig` % Cctt)
     .dependsOn(core % Cctt)
     .dependsOn(`consumer-kafka` % Cctt)
     .dependsOn(`data-generator` % Cctt)
@@ -263,6 +266,16 @@ lazy val main: Project =
         Libraries.logging.catsSlf4j,
         Libraries.logging.logback
       )
+    )
+    .settings(
+      assembly / assemblyMergeStrategy := {
+        case PathList(ps @ _*) if ps.lastOption.contains("module-info.class") => MergeStrategy.discard
+        case x if x.endsWith(".conf")                                         => MergeStrategy.filterDistinctLines
+        case x if x.endsWith(".xml")                                          => MergeStrategy.filterDistinctLines
+        case x =>
+          val oldStrategy = (ThisBuild / assemblyMergeStrategy).value
+          oldStrategy(x)
+      }
     )
 
 lazy val commonSettings = commonScalacOptions ++ Seq(

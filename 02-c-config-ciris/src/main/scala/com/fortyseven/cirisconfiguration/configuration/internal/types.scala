@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.configuration.internal
+package com.fortyseven.cirisconfiguration.configuration.internal
 
 import scala.compiletime.requireConst
 import scala.concurrent.duration.FiniteDuration

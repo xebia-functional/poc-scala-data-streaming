@@ -70,8 +70,31 @@ The actual state of the Poc is:
 
 #### Integration checks
 
-* Start docker images -> `docker-compose up -d`
-* Inspect Kafka topics -> `kcat -b localhost:9092 -L`
+* Start docker images:
+```shell
+docker-compose \
+-f ./02-i-consumer-kafka/docker-compose.yml \
+up -d
+```
+
+* Inspect Kafka topics:
+```shell
+kcat -b localhost:9092 -L
+```
+* Stop docker:
+```shell
+docker-compose \
+-f ./02-i-consumer-kafka/docker-compose.yml \
+down
+```
+
+#### Run the application
+
+There are two implementations for the application, Apache Flink and Apache Spark. They work in different ways.
+Read each of their readme files to run the application.
+
+* [Apache Flink](02-o-processor-flink/README.md)
+* [Apache Spark](02-o-processor-spark/README.md)
 
 ### License
 

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.configuration
+package com.fortyseven.cirisconfiguration.configuration.internal
 
-import com.fortyseven.coreheaders.configuration.internal.KafkaConfiguration
+import com.fortyseven.coreheaders.configuration.refinedTypes.NonEmptyString
 
-final case class KafkaConsumerConfiguration(kafkaConfiguration: KafkaConfiguration)
+final case class BrokerConfiguration(brokerAddress: NonEmptyString)

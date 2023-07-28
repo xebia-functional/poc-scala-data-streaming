@@ -14,27 +14,26 @@
  * limitations under the License.
  */
 
-package com.fortyseven
+package com.fortyseven.main
 
 import cats.effect.{IO, IOApp}
 
 import com.fortyseven.kafkaconsumer.KafkaConsumer
+import com.fortyseven.kafkaconsumer.configuration.KafkaConsumerConfigurationLoader
 import com.fortyseven.processor.flink.DataProcessor
-import com.fortyseven.pureconfig.{FlinkProcessorConfigurationLoader, KafkaConsumerConfigurationLoader}
+import com.fortyseven.processor.flink.configuration.FlinkProcessorConfigurationLoader
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
-object Main extends IOApp.Simple:
+object FlinkMain extends IOApp.Simple:
 
   override def run: IO[Unit] = for
-    logger         <- Slf4jLogger.create[IO]
-    consumerConf   <- KafkaConsumerConfigurationLoader[IO].load()
-    _              <- logger.info(s"KafkaConsumerConfiguration: $consumerConf")
-    processorConf  <- FlinkProcessorConfigurationLoader[IO].load()
-    _              <- logger.info(s"JobProcessorConfiguration: $processorConf")
+    logger <- Slf4jLogger.create[IO]
+    kafkaConf = new KafkaConsumerConfigurationLoader[IO]
+    flinkConf = new FlinkProcessorConfigurationLoader[IO]
     _              <- logger.info("Start kafka consumer")
-    consumerFiber  <- new KafkaConsumer[IO].consume(KafkaConsumerConfigurationLoader[IO]).start
+    consumerFiber  <- new KafkaConsumer[IO].consume(kafkaConf).start
     _              <- logger.info("Start flink processor")
-    processorFiber <- new DataProcessor[IO].process(FlinkProcessorConfigurationLoader[IO]).start
+    processorFiber <- new DataProcessor[IO].process(flinkConf).start
     _              <- consumerFiber.join
     _              <- processorFiber.join
   yield ()

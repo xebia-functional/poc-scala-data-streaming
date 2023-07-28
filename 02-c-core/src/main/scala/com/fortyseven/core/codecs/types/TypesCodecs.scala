@@ -21,6 +21,9 @@ import cats.implicits.*
 import com.fortyseven.coreheaders.model.types.types.*
 import vulcan.{AvroError, Codec}
 
+/**
+ * It contains the Vulcan codecs for the types (enums, case classes...) defined in the object [[com.fortyseven.coreheaders.model.types.types]].
+ */
 object TypesCodecs:
 
   given latitudeCodec: Codec[Latitude] =

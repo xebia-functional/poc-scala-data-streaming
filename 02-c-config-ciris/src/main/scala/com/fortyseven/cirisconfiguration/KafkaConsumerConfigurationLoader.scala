@@ -22,13 +22,13 @@ import cats.effect.kernel.Async
 
 import ciris.*
 import com.fortyseven.cirisconfiguration.CommonConfiguration.*
+import com.fortyseven.cirisconfiguration.configuration.KafkaConsumerConfiguration
+import com.fortyseven.cirisconfiguration.configuration.internal.*
 import com.fortyseven.cirisconfiguration.decoders.given
-import com.fortyseven.coreheaders.ConfigurationLoaderHeader
-import com.fortyseven.coreheaders.configuration.KafkaConsumerConfiguration
-import com.fortyseven.coreheaders.configuration.internal.*
-import com.fortyseven.coreheaders.configuration.internal.types.*
+import com.fortyseven.coreheaders.ConfigurationHeader
+import com.fortyseven.coreheaders.configuration.refinedTypes.*
 
-final class KafkaConsumerConfigurationLoader[F[_]: Async] extends ConfigurationLoaderHeader[F, KafkaConsumerConfiguration]:
+final class KafkaConsumerConfigurationLoader[F[_]: Async] extends ConfigurationHeader[F, KafkaConsumerConfiguration]:
 
   lazy val config: ConfigValue[Effect, KafkaConsumerConfiguration] =
     for
@@ -67,4 +67,4 @@ final class KafkaConsumerConfigurationLoader[F[_]: Async] extends ConfigurationL
       )
     )
 
-  override def load(configurationPath: Option[String]): F[KafkaConsumerConfiguration] = config.load[F]
+  override def loadConfiguration(): F[KafkaConsumerConfiguration] = config.load[F]

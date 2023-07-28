@@ -68,41 +68,29 @@ If you wish to run Spark on Docker, you can execute the shell script runSpark.sh
 ```
 
 The following script does these steps:
-1) Generates the Spark-app jar file
+
+1) Build the docker image based on the Dockerfile available in the Spark module
+```bash
+docker build ../02-o-processor-spark/docker/ -t cluster-apache-spark:3.4.1
+```
+
+2) Calls docker-compose with two nodes: one master node and one worker node
+```bash
+docker compose -f ../docker/docker-compose-spark.yml up -d
+```
+
+3) Generates the Spark-app jar file
 ```bash
 cd ..
 sbt "processor-spark / assembly;"
 ```
-2) Creates a folder were the jar can be copied
-```bash
-cd ..
-mkdir -p ./02-o-processor-spark/app-jar
-```
-3) Copies the generated jar into the new folder
-```bash
-cd ..
-cp "./02-o-processor-spark/target/scala-3.3.0/processor-spark-assembly-0.1.0-SNAPSHOT.jar" "./02-o-processor-spark/app-jar"
-```
-4) Renames the jar, so it is easier to handle on the container
-```bash
-cd ..
-mv "./02-o-processor-spark/app-jar/processor-spark-assembly-0.1.0-SNAPSHOT.jar" "./02-o-processor-spark/app-jar/spark-app.jar"
-```
-5) Build the docker image based on the Dockerfile available in the Spark module
-```bash
-docker build ../02-o-processor-spark/docker/ -t cluster-apache-spark:3.4.1
-```
-6) Calls docker-compose with two nodes: one master node and one worker node
-```bash
-docker compose -f ../docker/docker-compose-spark.yml up -d
 
-```
-7) Copies the jar file from the folder to the container
+4) Copies the jar file from the folder to the container
 ```bash
-docker cp "../02-o-processor-spark/app-jar/spark-app.jar" "docker-spark-master-1:/opt/spark/app-jar"
-
+docker cp "../02-o-processor-spark/target/scala-3.3.0/spark-app.jar" "docker-spark-master-1:/opt/spark/app-jar"
 ```
-8) Executes the spark-submit command
+
+5) Executes the spark-submit command
 ```bash
 docker exec docker-spark-master-1 /opt/spark/bin/spark-submit \
   --packages org.apache.spark:spark-sql-kafka-0-10_2.13:3.4.1 \

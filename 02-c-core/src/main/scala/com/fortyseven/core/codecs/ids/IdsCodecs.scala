@@ -19,6 +19,9 @@ package com.fortyseven.core.codecs.ids
 import com.fortyseven.coreheaders.model.types.ids.{BicycleId, TripId, UserId}
 import vulcan.Codec
 
+/**
+ * It contains the Vulcan codecs for the types (enums, case classes...) defined in the object [[com.fortyseven.coreheaders.model.types.ids]].
+ */
 object IdsCodecs:
 
   given bicycleIdCodec: Codec[BicycleId] = Codec.uuid.imap(BicycleId.apply)(_.value)

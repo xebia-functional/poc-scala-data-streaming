@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package com.fortyseven.coreheaders.configuration.internal
+package com.fortyseven.cirisconfiguration.configuration.internal
 
-import scala.concurrent.duration.FiniteDuration
+import com.fortyseven.coreheaders.configuration.refinedTypes.*
 
-import com.fortyseven.coreheaders.configuration.internal.types.*
-
-final case class ProducerConfiguration(
+final case class ConsumerConfiguration(
     topicName: NonEmptyString,
-    valueSerializerClass: NonEmptyString,
-    maxConcurrent: PositiveInt,
-    compressionType: KafkaCompressionType,
-    commitBatchWithinSize: PositiveInt,
-    commitBatchWithinTime: FiniteDuration
+    autoOffsetReset: KafkaAutoOffsetReset,
+    groupId: NonEmptyString,
+    maxConcurrent: PositiveInt
 )

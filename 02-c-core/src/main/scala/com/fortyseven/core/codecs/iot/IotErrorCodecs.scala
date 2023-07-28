@@ -19,6 +19,9 @@ package com.fortyseven.core.codecs.iot
 import com.fortyseven.coreheaders.model.iot.errors.OutOfBoundsError
 import vulcan.Codec
 
+/**
+ * It contains the Vulcan codecs for the types (enums, case classes...) defined in the object [[com.fortyseven.coreheaders.model.iot.errors]].
+ */
 object IotErrorCodecs:
 
   private val _namespace = "iot-error"

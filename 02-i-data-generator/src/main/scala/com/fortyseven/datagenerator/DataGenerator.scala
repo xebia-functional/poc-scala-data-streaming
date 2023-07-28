@@ -24,7 +24,7 @@ import cats.implicits.*
 
 import com.fortyseven.core.codecs.iot.IotCodecs.given
 import com.fortyseven.coreheaders.model.iot.model.{GPSPosition, PneumaticPressure}
-import com.fortyseven.datagenerator.config.DataGeneratorConfiguration
+import com.fortyseven.datagenerator.configuration.DataGeneratorConfiguration
 import fs2.kafka.*
 import org.apache.kafka.clients.producer.ProducerConfig
 

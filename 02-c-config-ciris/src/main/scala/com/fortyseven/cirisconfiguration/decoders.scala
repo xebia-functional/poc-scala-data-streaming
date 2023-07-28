@@ -17,7 +17,7 @@
 package com.fortyseven.cirisconfiguration
 
 import ciris.{ConfigDecoder, ConfigError}
-import com.fortyseven.coreheaders.configuration.internal.types.{NonEmptyString, PositiveInt}
+import com.fortyseven.coreheaders.configuration.refinedTypes.{NonEmptyString, PositiveInt}
 
 object decoders:
 

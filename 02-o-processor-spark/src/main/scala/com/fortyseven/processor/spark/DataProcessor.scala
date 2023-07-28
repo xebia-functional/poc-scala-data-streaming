@@ -17,7 +17,7 @@
 package com.fortyseven.processor.spark
 
 import com.fortyseven.coreheaders.SparkProcessorHeader
-import com.fortyseven.processor.spark.config.ProcessorSparkConfiguration
+import com.fortyseven.processor.spark.configuration.ProcessorSparkConfiguration
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 import pureconfig.ConfigSource

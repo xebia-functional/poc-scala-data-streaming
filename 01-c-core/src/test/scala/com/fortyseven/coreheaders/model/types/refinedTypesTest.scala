@@ -22,7 +22,7 @@ import org.scalacheck
 import org.scalacheck.Gen
 import org.scalacheck.Prop.forAll
 
-class typesTest extends ScalaCheckSuite:
+class refinedTypesTest extends ScalaCheckSuite:
 
   property("Latitudes grater than 90 are not allowed"):
     forAll(Gen.chooseNum(90.0, Double.MaxValue).suchThat(_ > 90.0)): latitude =>
