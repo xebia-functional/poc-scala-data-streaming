@@ -41,7 +41,7 @@ object IotCodecs:
     }
 
   given wheelRotationCodec: Codec[WheelRotation] =
-    Codec.record(name = "WheelRotation", namespace = _namespace)(_("s", _.s).map(WheelRotation.apply))
+    Codec.record(name = "WheelRotation", namespace = _namespace)(_("s", _.frequency).map(WheelRotation.apply))
 
   given batteryChargeCodec: Codec[BatteryCharge] =
     Codec.record(name = "BatteryCharge", namespace = _namespace)(_("percentage", _.percentage).map(BatteryCharge.apply))

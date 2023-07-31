@@ -27,20 +27,20 @@ import vulcan.{AvroError, Codec}
 object TypesCodecs:
 
   given latitudeCodec: Codec[Latitude] =
-    Codec.double.imapError(Latitude(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
+    Codec.double.imapError(Latitude(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
 
   given longitudeCodec: Codec[Longitude] =
-    Codec.double.imapError(Longitude(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
+    Codec.double.imapError(Longitude(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
 
   given percentageCodec: Codec[Percentage] =
-    Codec.double.imapError(Percentage(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
+    Codec.double.imapError(Percentage(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
 
   given speedCodec: Codec[Speed] =
-    Codec.double.imapError(Speed(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
+    Codec.double.imapError(Speed(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
 
-  given hertzCodec: Codec[Hz] = Codec.double.imapError(Hz(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
+  given hertzCodec: Codec[Hz] = Codec.double.imapError(Hz(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
 
-  given barCodec: Codec[Bar] = Codec.double.imapError(Bar(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
+  given barCodec: Codec[Bar] = Codec.double.imapError(Bar(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
 
   given metersCodec: Codec[Meters] =
-    Codec.int.imapError(Meters(_).leftMap(e => AvroError(s"AvroError: ${e.msg}")))(_.value)
+    Codec.int.imapError(Meters(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
