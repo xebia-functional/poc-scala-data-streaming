@@ -44,22 +44,23 @@ object refinedTypes:
 
     /**
      * Tries to build a valid value of type KafkaCompressionType from the given string.
-     * @param s
+     * @param kafkaCompressionTypeCandidate
      *   the given String that could be a KafkaCompressionType.
      * @return
      *   Either a throwable of type IllegalStateException or a valid instance of type KafkaCompressionType.
      */
-    def from(s: String): Either[Throwable, KafkaCompressionType] =
-      if KafkaCompressionType.values.map(_.toString).contains(s) then Right(safeApply(s))
+    def from(kafkaCompressionTypeCandidate: String): Either[Throwable, KafkaCompressionType] =
+      if KafkaCompressionType.values.map(_.toString).contains(kafkaCompressionTypeCandidate)
+      then Right(safeApply(kafkaCompressionTypeCandidate))
       else
         Left(
           new IllegalStateException(
-            s"The provided value $s does not correspond with the valid values ${values.mkString("(", ",", ")")}"
+            s"The provided value $kafkaCompressionTypeCandidate does not correspond with the valid values ${values.mkString("(", ",", ")")}"
           )
         )
 
-    private def safeApply(s: String): KafkaCompressionType =
-      s match
+    private def safeApply(kafkaCompressionType: String): KafkaCompressionType =
+      kafkaCompressionType match
         case "none"   => none
         case "gzip"   => gzip
         case "snappy" => snappy
@@ -69,17 +70,18 @@ object refinedTypes:
     /**
      * Method that builds a KafkaCompressionType from a string at compile time. This method is used when working with fixed values (''magic numbers'')
      * in the code. The compiler will warn us if the value is invalid at compile time.
-     * @param s
+     * @param kafkaCompressionType
      *   the given String.
      * @return
      *   A valid KafkaCompressionType or a compiler error.
      * @see
      *   More info at [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
      */
-    inline def apply(s: String): KafkaCompressionType =
-      requireConst(s)
-      inline if KafkaCompressionType.values.map(_.toString).contains(s) then safeApply(s)
-      else error(s"The valid values are ${values.mkString("(", ",", ")")}.")
+    inline def apply(kafkaCompressionType: String): KafkaCompressionType =
+      requireConst(kafkaCompressionType)
+      inline if KafkaCompressionType.values.map(_.toString).contains(kafkaCompressionType)
+      then safeApply(kafkaCompressionType)
+      else error("The valid values are none, gzip, snappy, lz4 and zstd.")
 
   enum KafkaAutoOffsetReset:
 
@@ -93,22 +95,23 @@ object refinedTypes:
     /**
      * Tries to build a valid value of type KafkaAutoOffsetReset from the given string.
      *
-     * @param s
+     * @param kafkaAutoOffsetResetCandidate
      *   the given String that could be a KafkaAutoOffsetReset.
      * @return
      *   Either a throwable of type IllegalStateException or a valid instance of type KafkaAutoOffsetReset.
      */
-    def from(s: String): Either[Throwable, KafkaAutoOffsetReset] =
-      if KafkaAutoOffsetReset.values.map(_.toString).contains(s) then Right(safeApply(s))
+    def from(kafkaAutoOffsetResetCandidate: String): Either[Throwable, KafkaAutoOffsetReset] =
+      if KafkaAutoOffsetReset.values.map(_.toString).contains(kafkaAutoOffsetResetCandidate)
+      then Right(safeApply(kafkaAutoOffsetResetCandidate))
       else
         Left(
           new IllegalStateException(
-            s"The provided value $s does not correspond with the valid values ${values.mkString("(", ",", ")")}"
+            s"The provided value $kafkaAutoOffsetResetCandidate does not correspond with the valid values ${values.mkString("(", ",", ")")}"
           )
         )
 
-    private def safeApply(s: String): KafkaAutoOffsetReset =
-      s match
+    private def safeApply(kafkaAtoOffsetReset: String): KafkaAutoOffsetReset =
+      kafkaAtoOffsetReset match
         case "Earliest" => Earliest
         case "Latest"   => Latest
         case "None"     => None
@@ -117,17 +120,18 @@ object refinedTypes:
      * Method that builds a KafkaAutoOffsetReset from a string at compile time. This method is used when working with fixed values (''magic numbers'')
      * in the code. The compiler will warn us if the value is invalid at compile time.
      *
-     * @param s
+     * @param kafkaAutoOffsetReset
      *   the given String.
      * @return
      *   A valid KafkaAutoOffsetReset or a compiler error.
      * @see
      *   More info at [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
      */
-    inline def apply(s: String): KafkaAutoOffsetReset =
-      requireConst(s)
-      inline if KafkaAutoOffsetReset.values.map(_.toString).contains(s) then safeApply(s)
-      else error(s"The valid values are ${values.mkString("(", ",", ")")}.")
+    inline def apply(kafkaAutoOffsetReset: String): KafkaAutoOffsetReset =
+      requireConst(kafkaAutoOffsetReset)
+      inline if KafkaAutoOffsetReset.values.map(_.toString).contains(kafkaAutoOffsetReset)
+      then safeApply(kafkaAutoOffsetReset)
+      else error("The valid values are Earliest, Latest and None.")
 
   opaque type NonEmptyString = String
 
@@ -139,31 +143,34 @@ object refinedTypes:
     /**
      * Tries to build a valid value of type NonEmptyString from the given string.
      *
-     * @param s
+     * @param nonEmptyStringCandidate
      *   the given String that could be a NonEmptyString.
      * @return
      *   Either a throwable of type IllegalStateException or a valid instance of type NonEmptyString.
      */
-    def from(s: String): Either[Throwable, NonEmptyString] =
-      if s.trim.isEmpty then Left(new IllegalStateException(s"The provided string $s is empty."))
-      else Right(s)
+    def from(nonEmptyStringCandidate: String): Either[Throwable, NonEmptyString] =
+      if nonEmptyStringCandidate.trim.isEmpty
+      then Left(new IllegalStateException(s"The provided string $nonEmptyStringCandidate is empty."))
+      else Right(nonEmptyStringCandidate)
 
     /**
      * Method that builds a NonEmptyString from a string at compile time. This method is used when working with fixed values (''magic numbers'') in
      * the code. The compiler will warn us if the value is invalid at compile time.
      *
-     * @param s
+     * @param nonEmptyString
      *   the given String.
      * @return
      *   A valid NonEmptyString or a compiler error.
      * @see
      *   More info at [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
      */
-    inline def apply(s: String): NonEmptyString =
-      requireConst(s)
-      inline if s == "" then error("Empty String is not allowed here.") else s
+    inline def apply(nonEmptyString: String): NonEmptyString =
+      requireConst(nonEmptyString)
+      inline if nonEmptyString == ""
+      then error("Empty String is not allowed here.")
+      else nonEmptyString
 
-    extension (nes: NonEmptyString)
+    extension (nonEmptyString: NonEmptyString)
       /**
        * Casts the types while keeping the value.
        *
@@ -172,7 +179,7 @@ object refinedTypes:
        * @see
        *   More info at [[https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html]].
        */
-      def asString: String = nes
+      def asString: String = nonEmptyString
 
   opaque type PositiveInt = Int
 
@@ -184,31 +191,34 @@ object refinedTypes:
     /**
      * Tries to build a valid value of type PositiveInt from the given int.
      *
-     * @param i
+     * @param positiveIntCandidate
      *   the given Int that could be a PositiveInt.
      * @return
      *   Either a throwable of type [[java.lang.IllegalStateException]] or a valid instance of type PositiveInt.
      */
-    def from(i: Int): Either[Throwable, PositiveInt] =
-      if i < 0 then Left(new IllegalStateException(s"The provided int $i is not positive."))
-      else Right(i)
+    def from(positiveIntCandidate: Int): Either[Throwable, PositiveInt] =
+      if positiveIntCandidate < 0
+      then Left(new IllegalStateException(s"The provided int $positiveIntCandidate is not positive."))
+      else Right(positiveIntCandidate)
 
     /**
      * Method that builds a PositiveInt from a int at compile time. This method is used when working with fixed values (''magic numbers'') in the
      * code. The compiler will warn us if the value is invalid at compile time.
      *
-     * @param i
+     * @param positiveInt
      *   the given Int.
      * @return
      *   A valid PositiveInt or a compiler error.
      * @see
      *   More info at [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
      */
-    inline def apply(i: Int): PositiveInt =
-      requireConst(i)
-      inline if i >= 0 then error("Int must be positive.") else i
+    inline def apply(positiveInt: Int): PositiveInt =
+      requireConst(positiveInt)
+      inline if positiveInt >= 0
+      then error("Int must be positive.")
+      else positiveInt
 
-    extension (posInt: PositiveInt)
+    extension (positiveInt: PositiveInt)
 
       /**
        * Casts the types while keeping the value.
@@ -217,7 +227,7 @@ object refinedTypes:
        * @see
        *   More info at [[https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html]].
        */
-      def asInt: Int = posInt
+      def asInt: Int = positiveInt
 
       /**
        * Casts the types while keeping the value.
@@ -227,4 +237,4 @@ object refinedTypes:
        * @see
        *   More info at [[https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html]].
        */
-      def asSeconds: FiniteDuration = FiniteDuration.apply(posInt.asInt, "seconds")
+      def asSeconds: FiniteDuration = FiniteDuration.apply(positiveInt.asInt, "seconds")

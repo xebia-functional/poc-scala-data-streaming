@@ -22,7 +22,7 @@ import cats.effect.Temporal
 
 import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
-import com.fortyseven.coreheaders.model.types.types.*
+import com.fortyseven.coreheaders.model.types.refinedTypes.*
 import fs2.Stream
 
 class ModelGenerators[F[_]: Temporal](meteredInterval: FiniteDuration):
@@ -35,7 +35,7 @@ class ModelGenerators[F[_]: Temporal](meteredInterval: FiniteDuration):
     def emitLoop(latValue: Double, lonValue: Double): fs2.Stream[F, GPSPosition] =
       def getValue(value: Double) = value - math.random() * 1e-3
 
-      (Latitude(getValue(latValue)), Longitude(getValue(lonValue))) match
+      (Latitude.from(getValue(latValue)), Longitude.from(getValue(lonValue))) match
         case (Right(lat), Right(lon)) =>
           fs2.Stream.emit(GPSPosition(lat, lon)).metered(meteredInterval) ++ emitLoop(lat.value, lon.value)
         case _ => emitLoop(latValue, lonValue)
@@ -45,7 +45,7 @@ class ModelGenerators[F[_]: Temporal](meteredInterval: FiniteDuration):
   def generatePneumaticPressure: fs2.Stream[F, PneumaticPressure] =
 
     def emitLoop(pValue: Double): fs2.Stream[F, PneumaticPressure] =
-      Bar(pValue - math.random() * 1e-3) match
+      Bar.from(pValue - math.random() * 1e-3) match
         case Right(p) => fs2.Stream.emit(PneumaticPressure(p)).metered(meteredInterval) ++ emitLoop(p.value)
         case _        => emitLoop(pValue)
 

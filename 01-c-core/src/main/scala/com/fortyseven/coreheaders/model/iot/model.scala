@@ -18,7 +18,7 @@ package com.fortyseven.coreheaders.model.iot
 
 import scala.concurrent.duration.FiniteDuration
 
-import com.fortyseven.coreheaders.model.types.types.*
+import com.fortyseven.coreheaders.model.types.refinedTypes.*
 
 /**
  * NameSpace for the following case classes:
