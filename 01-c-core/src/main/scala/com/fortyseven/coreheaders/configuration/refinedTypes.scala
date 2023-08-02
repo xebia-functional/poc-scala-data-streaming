@@ -21,33 +21,44 @@ import scala.concurrent.duration.FiniteDuration
 import scala.sys.error
 
 /**
- * NameSpace for the following instances:
+ * Before running the whole program or a part of it, the involved configuration must be loaded. Refining the types of the configuration's values
+ * reduces the cardinality and helps catching an invalid configuration's value while loading.
  *
- *   - [[com.fortyseven.coreheaders.configuration.refinedTypes.KafkaCompressionType]]
+ * __Factories of the refined types:__
  *
- *   - [[com.fortyseven.coreheaders.configuration.refinedTypes.KafkaAutoOffsetReset]]
+ * The companion objects of the types have two constructors: `from` and `apply`.
  *
- *   - [[com.fortyseven.coreheaders.configuration.refinedTypes.NonEmptyString]]
+ *   - `from` is used for unknown values and it catches an exception at runtime if the values are not valid.
  *
- *   - [[com.fortyseven.coreheaders.configuration.refinedTypes.PositiveInt]]
+ *   - `apply` is used for ''magic numbers'' and it verifies the validity of the value at compile time using inlining.
+ *
+ * @see
+ *   inline internals at [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
  */
 object refinedTypes:
 
+  /**
+   * Set of allowed compression types for Kafka producers.
+   *
+   * @see
+   *   [[https://docs.confluent.io/platform/current/installation/configuration/producer-configs.html#compression-type]]
+   */
   enum KafkaCompressionType:
 
     case none, gzip, snappy, lz4, zstd
 
   /**
-   * Factory for [[com.fortyseven.coreheaders.configuration.refinedTypes.KafkaCompressionType]] instances.
+   * Factory for [[KafkaCompressionType]] instances.
    */
   object KafkaCompressionType:
 
     /**
-     * Tries to build a valid value of type KafkaCompressionType from the given string.
+     * Smart constructor for unknown strings at compile time.
+     *
      * @param kafkaCompressionTypeCandidate
-     *   the given String that could be a KafkaCompressionType.
+     *   An unknown string.
      * @return
-     *   Either a throwable of type IllegalStateException or a valid instance of type KafkaCompressionType.
+     *   An Either with a Right KafkaCompressionType or a Left IllegalStateException.
      */
     def from(kafkaCompressionTypeCandidate: String): Either[Throwable, KafkaCompressionType] =
       if KafkaCompressionType.values.map(_.toString).contains(kafkaCompressionTypeCandidate)
@@ -68,10 +79,10 @@ object refinedTypes:
         case "zstd"   => zstd
 
     /**
-     * Method that builds a KafkaCompressionType from a string at compile time. This method is used when working with fixed values (''magic numbers'')
-     * in the code. The compiler will warn us if the value is invalid at compile time.
+     * Smart constructor for known strings at compile time. Use this method and not [[from]] when working with fixed values (''magic numbers'').
+     *
      * @param kafkaCompressionType
-     *   the given String.
+     *   A known string.
      * @return
      *   A valid KafkaCompressionType or a compiler error.
      * @see
@@ -83,22 +94,28 @@ object refinedTypes:
       then safeApply(kafkaCompressionType)
       else error("The valid values are none, gzip, snappy, lz4 and zstd.")
 
+  /**
+   * Set of allowed auto offset reset types for Kafka consumers.
+   *
+   * @see
+   *   [[https://docs.confluent.io/platform/current/installation/configuration/consumer-configs.html#auto-offset-reset]]
+   */
   enum KafkaAutoOffsetReset:
 
     case Earliest, Latest, None
 
   /**
-   * Factory for [[com.fortyseven.coreheaders.configuration.refinedTypes.KafkaAutoOffsetReset]] instances.
+   * Factory for [[KafkaAutoOffsetReset]] instances.
    */
   object KafkaAutoOffsetReset:
 
     /**
-     * Tries to build a valid value of type KafkaAutoOffsetReset from the given string.
+     * Smart constructor for unknown strings at compile time.
      *
      * @param kafkaAutoOffsetResetCandidate
-     *   the given String that could be a KafkaAutoOffsetReset.
+     *   An unknown string.
      * @return
-     *   Either a throwable of type IllegalStateException or a valid instance of type KafkaAutoOffsetReset.
+     *   An Either with a Right KafkaAutoOffsetReset or a Left IllegalStateException.
      */
     def from(kafkaAutoOffsetResetCandidate: String): Either[Throwable, KafkaAutoOffsetReset] =
       if KafkaAutoOffsetReset.values.map(_.toString).contains(kafkaAutoOffsetResetCandidate)
@@ -117,11 +134,10 @@ object refinedTypes:
         case "None"     => None
 
     /**
-     * Method that builds a KafkaAutoOffsetReset from a string at compile time. This method is used when working with fixed values (''magic numbers'')
-     * in the code. The compiler will warn us if the value is invalid at compile time.
+     * Smart constructor for known strings at compile time. Use this method and not [[from]] when working with fixed values (''magic numbers'').
      *
      * @param kafkaAutoOffsetReset
-     *   the given String.
+     *   A known string.
      * @return
      *   A valid KafkaAutoOffsetReset or a compiler error.
      * @see
@@ -133,20 +149,23 @@ object refinedTypes:
       then safeApply(kafkaAutoOffsetReset)
       else error("The valid values are Earliest, Latest and None.")
 
+  /**
+   * Type alias for String. The validation happens in the factory methods of the companion object.
+   */
   opaque type NonEmptyString = String
 
   /**
-   * Factory for [[com.fortyseven.coreheaders.configuration.refinedTypes.NonEmptyString]] instances.
+   * Factory for [[NonEmptyString]] instances.
    */
   object NonEmptyString:
 
     /**
-     * Tries to build a valid value of type NonEmptyString from the given string.
+     * Smart constructor for unknown strings at compile time.
      *
      * @param nonEmptyStringCandidate
-     *   the given String that could be a NonEmptyString.
+     *   An unknown string.
      * @return
-     *   Either a throwable of type IllegalStateException or a valid instance of type NonEmptyString.
+     *   An Either with a Right NonEmptyString or a Left IllegalStateException.
      */
     def from(nonEmptyStringCandidate: String): Either[Throwable, NonEmptyString] =
       if nonEmptyStringCandidate.trim.isEmpty
@@ -154,11 +173,10 @@ object refinedTypes:
       else Right(nonEmptyStringCandidate)
 
     /**
-     * Method that builds a NonEmptyString from a string at compile time. This method is used when working with fixed values (''magic numbers'') in
-     * the code. The compiler will warn us if the value is invalid at compile time.
+     * Smart constructor for known strings at compile time. Use this method and not [[from]] when working with fixed values (''magic numbers'').
      *
      * @param nonEmptyString
-     *   the given String.
+     *   A known string.
      * @return
      *   A valid NonEmptyString or a compiler error.
      * @see
@@ -172,29 +190,30 @@ object refinedTypes:
 
     extension (nonEmptyString: NonEmptyString)
       /**
-       * Casts the types while keeping the value.
+       * Changes the type of the value from NonEmptyString to String.
        *
        * @return
-       *   value as [[java.lang.String]].
-       * @see
-       *   More info at [[https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html]].
+       *   Value as String.
        */
       def asString: String = nonEmptyString
 
+  /**
+   * Type alias for Int. The validation happens in the factory methods of the companion object.
+   */
   opaque type PositiveInt = Int
 
   /**
-   * Factory for [[com.fortyseven.coreheaders.configuration.refinedTypes.PositiveInt]] instances.
+   * Factory for [[PositiveInt]] instances.
    */
   object PositiveInt:
 
     /**
-     * Tries to build a valid value of type PositiveInt from the given int.
+     * Smart constructor for unknown integers at compile time.
      *
      * @param positiveIntCandidate
-     *   the given Int that could be a PositiveInt.
+     *   An unknown integer.
      * @return
-     *   Either a throwable of type [[java.lang.IllegalStateException]] or a valid instance of type PositiveInt.
+     *   An Either with a Right PositiveInt or a Left IllegalStateException.
      */
     def from(positiveIntCandidate: Int): Either[Throwable, PositiveInt] =
       if positiveIntCandidate < 0
@@ -202,11 +221,10 @@ object refinedTypes:
       else Right(positiveIntCandidate)
 
     /**
-     * Method that builds a PositiveInt from a int at compile time. This method is used when working with fixed values (''magic numbers'') in the
-     * code. The compiler will warn us if the value is invalid at compile time.
+     * Smart constructor for known integers at compile time. Use this method and not [[from]] when working with fixed values (''magic numbers'').
      *
      * @param positiveInt
-     *   the given Int.
+     *   A known integer.
      * @return
      *   A valid PositiveInt or a compiler error.
      * @see
@@ -221,20 +239,17 @@ object refinedTypes:
     extension (positiveInt: PositiveInt)
 
       /**
-       * Casts the types while keeping the value.
+       * Changes the type of the value from PositiveInt to Int.
+       *
        * @return
-       *   Value as PositiveInt as [[scala.Int]] type.
-       * @see
-       *   More info at [[https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html]].
+       *   Value as Int.
        */
       def asInt: Int = positiveInt
 
       /**
-       * Casts the types while keeping the value.
+       * Changes the type of the value from PositiveInt to FiniteDuration.
        *
        * @return
-       *   value as [[scala.concurrent.duration.FiniteDuration]] seconds.
-       * @see
-       *   More info at [[https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html]].
+       *   Value as FiniteDuration in seconds.
        */
       def asSeconds: FiniteDuration = FiniteDuration.apply(positiveInt.asInt, "seconds")
