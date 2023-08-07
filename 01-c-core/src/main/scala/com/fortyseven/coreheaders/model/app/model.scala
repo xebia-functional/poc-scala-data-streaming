@@ -29,8 +29,10 @@ object model:
    *
    * @constructor
    *   Create a TotalDistanceByTrip with a specified `tripId` and `distance`.
-   * @param tripId key of the aggregation.
-   * @param distance value of the aggregation, in meters.
+   * @param tripId
+   *   key of the aggregation.
+   * @param distance
+   *   value of the aggregation, in meters.
    */
   case class TotalDistanceByTrip(tripId: TripId, distance: Meters)
 

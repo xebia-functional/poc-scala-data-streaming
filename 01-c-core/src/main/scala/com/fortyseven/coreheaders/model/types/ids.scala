@@ -45,13 +45,13 @@ object ids:
     def apply(id: UUID): BicycleId = id
 
     extension (bicycleId: BicycleId)
-
       /**
        * Exposes the bicycle ID as the underlying UUID type.
        *
-       * @return an UUID.
+       * @return
+       *   an UUID.
        * @see
-       * [[https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html]].
+       *   [[https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html]].
        */
       def value: UUID = bicycleId
 
@@ -71,14 +71,13 @@ object ids:
     def apply(id: UUID): UserId = id
 
     extension (userId: UserId)
-
       /**
        * Exposes the user ID as the underlying UUID type.
        *
        * @return
        *   un UUID.
        * @see
-       *  [[https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html]].
+       *   [[https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html]].
        */
       def value: UUID = userId
 
@@ -98,13 +97,12 @@ object ids:
     def apply(tripID: UUID): TripId = tripID
 
     extension (tripId: TripId)
-
       /**
        * Exposes the trip ID as the underlying UUID type.
        *
        * @return
        *   an UUID.
        * @see
-       * [[https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html]].
+       *   [[https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html]].
        */
       def value: UUID = tripId

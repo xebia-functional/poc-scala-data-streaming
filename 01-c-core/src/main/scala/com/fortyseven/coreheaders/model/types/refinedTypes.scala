@@ -59,9 +59,9 @@ object refinedTypes:
      * Smart constructor for unknown doubles at compile time.
      *
      * @param coordinateCandidate
-     * An unknown double.
+     *   An unknown double.
      * @return
-     * An Either with a Right Latitude or a Left OutOfBoundsError.
+     *   An Either with a Right Latitude or a Left OutOfBoundsError.
      */
     def from(coordinateCandidate: Double): Either[OutOfBoundsError, Latitude] = coordinateCandidate match
       case c if c < -90.0 || c > 90.0 => Left(OutOfBoundsError(s"Invalid latitude value $c"))
@@ -71,10 +71,11 @@ object refinedTypes:
      * Smart constructor for known doubles at compile time. Use this method and not [[from]] when working with fixed values (''magic numbers'').
      *
      * @param coordinate
-     * A known double.
+     *   A known double.
      * @return
-     * A valid Latitude or a compiler error.
-     * @see [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
+     *   A valid Latitude or a compiler error.
+     * @see
+     *   [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
      */
     inline def apply(coordinate: Double): Latitude =
       requireConst(coordinate)
@@ -93,9 +94,9 @@ object refinedTypes:
      * Smart constructor for unknown doubles at compile time.
      *
      * @param coordinateCandidate
-     * An unknown double.
+     *   An unknown double.
      * @return
-     * An Either with a Right Longitude or a Left OutOfBoundsError.
+     *   An Either with a Right Longitude or a Left OutOfBoundsError.
      */
     def from(coordinateCandidate: Double): Either[OutOfBoundsError, Longitude] = coordinateCandidate match
       case c if c < -180.0 || c > 180.0 => Left(OutOfBoundsError(s"Invalid longitude value $c"))
@@ -105,11 +106,11 @@ object refinedTypes:
      * Smart constructor for known doubles at compile time. Use this method and not [[from]] when working with fixed values (''magic numbers'').
      *
      * @param coordinate
-     * A known double.
+     *   A known double.
      * @return
-     * A valid Longitude or a compiler error.
+     *   A valid Longitude or a compiler error.
      * @see
-     * [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
+     *   [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
      */
     inline def apply(coordinate: Double): Longitude =
       requireConst(coordinate)
@@ -128,9 +129,9 @@ object refinedTypes:
      * Smart constructor for unknown doubles at compile time.
      *
      * @param percentageCandidate
-     * An unknown double.
+     *   An unknown double.
      * @return
-     * An Either with a Right Percentage or a Left OutOfBoundsError.
+     *   An Either with a Right Percentage or a Left OutOfBoundsError.
      */
     def from(percentageCandidate: Double): Either[OutOfBoundsError, Percentage] = percentageCandidate match
       case p if p < 0.0 || p > 100.0 => Left(OutOfBoundsError(s"Invalid percentage value $p"))
@@ -140,11 +141,11 @@ object refinedTypes:
      * Smart constructor for known doubles at compile time. Use this method and not [[from]] when working with fixed values (''magic numbers'').
      *
      * @param percentage
-     * A known double.
+     *   A known double.
      * @return
-     * A valid Percentage or a compiler error.
+     *   A valid Percentage or a compiler error.
      * @see
-     * [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
+     *   [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
      */
     inline def apply(percentage: Double): Percentage =
       requireConst(percentage)
@@ -163,9 +164,9 @@ object refinedTypes:
      * Smart constructor for unknown doubles at compile time.
      *
      * @param speedCandidate
-     * An unknown double.
+     *   An unknown double.
      * @return
-     * An Either with a Right Speed or a Left OutOfBoundsError.
+     *   An Either with a Right Speed or a Left OutOfBoundsError.
      */
     def from(speedCandidate: Double): Either[OutOfBoundsError, Speed] = speedCandidate match
       case speed if speed < 0.0 => Left(OutOfBoundsError(s"Invalid speed value $speed"))
@@ -175,11 +176,11 @@ object refinedTypes:
      * Smart constructor for known doubles at compile time. Use this method and not [[from]] when working with fixed values (''magic numbers'').
      *
      * @param speed
-     * A known double.
+     *   A known double.
      * @return
-     * A valid Speed or a compiler error.
+     *   A valid Speed or a compiler error.
      * @see
-     * [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
+     *   [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
      */
     inline def apply(speed: Double): Speed =
       requireConst(speed)
@@ -198,9 +199,9 @@ object refinedTypes:
      * Smart constructor for unknown doubles at compile time.
      *
      * @param hertzCandidate
-     * An unknown double.
+     *   An unknown double.
      * @return
-     * An Either with a Right Hz or a Left OutOfBoundsError.
+     *   An Either with a Right Hz or a Left OutOfBoundsError.
      */
     def from(hertzCandidate: Double): Either[OutOfBoundsError, Hz] = hertzCandidate match
       case hz if hz < 0.0 => Left(OutOfBoundsError(s"Invalid frequency value $hz"))
@@ -210,11 +211,11 @@ object refinedTypes:
      * Smart constructor for known doubles at compile time. Use this method and not [[from]] when working with fixed values (''magic numbers'').
      *
      * @param hertz
-     * A known double.
+     *   A known double.
      * @return
-     * A valid Hz or a compiler error.
+     *   A valid Hz or a compiler error.
      * @see
-     *  [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
+     *   [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
      */
     inline def apply(hertz: Double): Hz =
       inline if hertz < 0.0
@@ -232,9 +233,9 @@ object refinedTypes:
      * Smart constructor for unknown doubles at compile time.
      *
      * @param barCandidate
-     * An unknown double.
+     *   An unknown double.
      * @return
-     * An Either with a Right Bar or a Left OutOfBoundsError.
+     *   An Either with a Right Bar or a Left OutOfBoundsError.
      */
     def from(barCandidate: Double): Either[OutOfBoundsError, Bar] = barCandidate match
       case p if p < 0.0 => Left(OutOfBoundsError(s"Invalid pressure value $p"))
@@ -244,11 +245,11 @@ object refinedTypes:
      * Smart constructor for known doubles at compile time. Use this method and not [[from]] when working with fixed values (''magic numbers'').
      *
      * @param bar
-     * A known double.
+     *   A known double.
      * @return
-     * A valid Bar or a compiler error.
+     *   A valid Bar or a compiler error.
      * @see
-     * [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
+     *   [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
      */
     inline def apply(bar: Double): Bar =
       requireConst(bar)
@@ -267,9 +268,9 @@ object refinedTypes:
      * Smart constructor for unknown integers at compile time.
      *
      * @param metersCandidate
-     * An unknown integer.
+     *   An unknown integer.
      * @return
-     * An Either with a Right Meters or a Left OutOfBoundsError.
+     *   An Either with a Right Meters or a Left OutOfBoundsError.
      */
     def from(metersCandidate: Int): Either[OutOfBoundsError, Meters] = metersCandidate match
       case meters if meters < 0 => Left(OutOfBoundsError(s"Invalid meters value $meters"))
@@ -279,11 +280,11 @@ object refinedTypes:
      * Smart constructor for known integers at compile time. Use this method and not [[from]] when working with fixed values (''magic numbers'').
      *
      * @param meters
-     * A known integer.
+     *   A known integer.
      * @return
-     * A valid Meters or a compiler error.
+     *   A valid Meters or a compiler error.
      * @see
-     * [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
+     *   [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
      */
     inline def apply(meters: Int): Meters =
       requireConst(meters)
