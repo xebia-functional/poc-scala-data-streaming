@@ -20,66 +20,56 @@ import com.fortyseven.coreheaders.model.types.ids.{BicycleId, TripId, UserId}
 import com.fortyseven.coreheaders.model.types.refinedTypes.{Meters, Speed}
 
 /**
- * NameSpace for the following case classes:
- *
- *   - [[com.fortyseven.coreheaders.model.app.model.TotalDistanceByTrip]]
- *
- *   - [[com.fortyseven.coreheaders.model.app.model.TotalDistanceByUser]]
- *
- *   - [[com.fortyseven.coreheaders.model.app.model.CurrentSpeed]]
- *
- *   - [[com.fortyseven.coreheaders.model.app.model.TotalRange]]
+ * Contains case classes that represent aggregated data.
  */
 object model:
 
   /**
-   * Represents the total distance by trip ID.
+   * Total distance of a given trip ID expressed in meters.
    *
    * @constructor
    *   Create a TotalDistanceByTrip with a specified `tripId` and `distance`.
-   * @param tripId
-   *   The key of the tuple that will allow joins and aggregations.
-   * @param distance
-   *   The distance cycled for the given trip ID, in meters.
+   * @param tripId key of the aggregation.
+   * @param distance value of the aggregation, in meters.
    */
   case class TotalDistanceByTrip(tripId: TripId, distance: Meters)
 
   /**
-   * Represents the total distance by user ID.
+   * Total distance cycled by a given user.
    *
    * @constructor
-   *   Create a TotalDistanceByUser with a specified `tripId` and `distance`
+   *   Create a TotalDistanceByUser with a specified `userId` and `distance`.
    * @param userId
-   *   The key of the tuple that will allow joins and aggregations.
+   *   Key of the aggregation.
    * @param distance
-   *   The distance cycled for the given user ID, in meters.
+   *   Distance cycled in meters for the given user ID.
    */
   case class TotalDistanceByUser(userId: UserId, distance: Meters)
 
   /**
-   * Represents the current speed of the given trip ID.
+   * Current speed of the given trip ID.
    *
    * @constructor
    *   Create a CurrentSpeed with a specified `tripId` and `speed`
    * @param tripId
-   *   The key of the tuple that will allow joins and aggregations.
+   *   Key of the aggregation.
    * @param speed
-   *   The speed at the given moment for the given tripId.
+   *   Speed at the given moment for the given tripId.
    * @todo
    *   maybe a new parameter with a timestamp should be added to capture the time of the speed in the bicycle.
    */
   case class CurrentSpeed(tripId: TripId, speed: Speed)
 
   /**
-   * Represents the total range of the given bicycle for the given trip.
+   * Total range of the given bicycle for the given trip.
    *
    * @constructor
    *   Create a TotalRange with a specified `tripId`, `bicycleId` and `remainingRange`.
    * @param tripId
-   *   The key of the tuple that will allow joins and aggregations.
+   *   Key of the aggregation.
    * @param bicycleId
-   *   The identifier of the bicycle.
+   *   Bicycle identifier.
    * @param remainingRange
-   *   The remaining range calculated from the remaining energy in the battery.
+   *   Remaining range in meters calculated from the remaining energy in the battery.
    */
   case class TotalRange(tripId: TripId, bicycleId: BicycleId, remainingRange: Meters)
