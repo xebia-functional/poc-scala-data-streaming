@@ -21,98 +21,84 @@ import scala.concurrent.duration.FiniteDuration
 import com.fortyseven.coreheaders.model.types.refinedTypes.*
 
 /**
- * NameSpace for the following case classes:
- *
- *   - [[com.fortyseven.coreheaders.model.iot.model.GPSPosition]]
- *
- *   - [[com.fortyseven.coreheaders.model.iot.model.WheelRotation]]
- *
- *   - [[com.fortyseven.coreheaders.model.iot.model.BatteryCharge]]
- *
- *   - [[com.fortyseven.coreheaders.model.iot.model.BatteryHealth]]
- *
- *   - [[com.fortyseven.coreheaders.model.iot.model.PneumaticPressure]]
- *
- *   - [[com.fortyseven.coreheaders.model.iot.model.BreaksUsage]]
- *
- *   - [[com.fortyseven.coreheaders.model.iot.model.BreaksHealth]]
+ * Contains case classes that represent atomic information captured by sensors.
  */
 object model:
 
   /**
-   * Represents the GPSPosition.
+   * GPSPosition.
    *
    * @constructor
    *   Create a GPSPosition with a specified `latitude` and `longitude`.
    *
    * @param latitude
-   *   The value of the latitude expressed in a Latitude refined type, that is a valid Double.
+   *   Expressed in a refined type that is a subset of Double (-90.0, 90.0).
    * @param longitude
-   *   The value of the longitude expressed in a Longitude refined type, that is a valid Double.
+   *   Expressed in a refined type that is a subset of Double (-180.0, 180.0).
    */
   case class GPSPosition(latitude: Latitude, longitude: Longitude)
 
   /**
-   * Represents the WheelRotation
+   * WheelRotation
    *
    * @constructor
    *   Create a WheelRotation with a specified `frequency`.
    * @param frequency
-   *   The value of the rotation expressed in a Hertz refined type, that is a valid Double.
+   *   Expressed in a refined type, that is a subset of Double (>=0.0).
    */
   case class WheelRotation(frequency: Hz)
 
   /**
-   * Represents the BatteryCharge.
+   * BatteryCharge.
    *
    * @constructor
    *   Create a BatteryCharge with a specified `percentage`.
    *
    * @param percentage
-   *   The value of the percentage expressed in a Percentage refined type, that is a valid Double.
+   *   Expressed in a refined type that is a subset of Double (0.00, 100.00).
    */
   case class BatteryCharge(percentage: Percentage)
 
   /**
-   * Represents the BatteryHealth.
+   * BatteryHealth.
    *
    * @constructor
    *   Create a BatteryHealth with a specified `remaining`.
    *
    * @param remaining
-   *   The value of the remaining battery expressed in a Percentage refined type, that is a valid Double.
+   *   Expressed in a refined type that is a subset of Double (0.0, 100.0).
    */
   case class BatteryHealth(remaining: Percentage)
 
   /**
-   * Represents the PneumaticPressure with a cause in the message.
+   * PneumaticPressure.
    *
    * @constructor
    *   Create a PneumaticPressure with a specified `pressure`.
    *
    * @param pressure
-   *   The value of the pressure expressed in a Bar refined type, that is a valid Double.
+   *   Expressed in a refined type that is a subset of Double (>=0.0).
    */
   case class PneumaticPressure(pressure: Bar)
 
   /**
-   * Represents the BreaksUsage.
+   * BreaksUsage.
    *
    * @constructor
    *   Create a BreaksUsage with a specified `finiteDuration`.
    *
    * @param finiteDuration
-   *   The value of how long the break was used expressed in seconds [[scala.concurrent.duration.FiniteDuration]].
+   *   Expressed in seconds [[scala.concurrent.duration.FiniteDuration]].
    */
   case class BreaksUsage(finiteDuration: FiniteDuration)
 
   /**
-   * Represents the BreaksHealth.
+   * BreaksHealth.
    *
    * @constructor
    *   Create a BreaksHealth with a specified `remaining`.
    *
    * @param remaining
-   *   The value of how much health is left for the breaks expressed in a Percentage refined type, that is a valid Double.
+   *   Expressed in a refined type that is a subset of Double (0.0, 100.0).
    */
   case class BreaksHealth(remaining: Percentage)
