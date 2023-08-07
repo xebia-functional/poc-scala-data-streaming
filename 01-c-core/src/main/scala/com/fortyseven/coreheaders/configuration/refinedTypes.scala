@@ -127,8 +127,8 @@ object refinedTypes:
           )
         )
 
-    private def safeApply(kafkaAtoOffsetReset: String): KafkaAutoOffsetReset =
-      kafkaAtoOffsetReset match
+    private def safeApply(kafkaAutoOffsetReset: String): KafkaAutoOffsetReset =
+      kafkaAutoOffsetReset match
         case "Earliest" => Earliest
         case "Latest"   => Latest
         case "None"     => None
@@ -210,33 +210,33 @@ object refinedTypes:
     /**
      * Smart constructor for unknown integers at compile time.
      *
-     * @param positiveIntCandidate
+     * @param intCandidate
      *   An unknown integer.
      * @return
      *   An Either with a Right PositiveInt or a Left IllegalStateException.
      */
-    def from(positiveIntCandidate: Int): Either[Throwable, PositiveInt] =
-      if positiveIntCandidate < 0
-      then Left(new IllegalStateException(s"The provided int $positiveIntCandidate is not positive."))
-      else Right(positiveIntCandidate)
+    def from(intCandidate: Int): Either[Throwable, PositiveInt] =
+      if intCandidate < 0
+      then Left(new IllegalStateException(s"The provided int $intCandidate is not positive."))
+      else Right(intCandidate)
 
     /**
      * Smart constructor for known integers at compile time. Use this method and not [[from]] when working with fixed values (''magic numbers'').
      *
-     * @param positiveInt
+     * @param int
      *   A known integer.
      * @return
      *   A valid PositiveInt or a compiler error.
      * @see
      *   More info at [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
      */
-    inline def apply(positiveInt: Int): PositiveInt =
-      requireConst(positiveInt)
-      inline if positiveInt >= 0
+    inline def apply(int: Int): PositiveInt =
+      requireConst(int)
+      inline if int >= 0
       then error("Int must be positive.")
-      else positiveInt
+      else int
 
-    extension (positiveInt: PositiveInt)
+    extension (int: PositiveInt)
 
       /**
        * Changes the type of the value from PositiveInt to Int.
@@ -244,7 +244,7 @@ object refinedTypes:
        * @return
        *   Value as Int.
        */
-      def asInt: Int = positiveInt
+      def asInt: Int = int
 
       /**
        * Changes the type of the value from PositiveInt to FiniteDuration.
@@ -252,4 +252,4 @@ object refinedTypes:
        * @return
        *   Value as FiniteDuration in seconds.
        */
-      def asSeconds: FiniteDuration = FiniteDuration.apply(positiveInt.asInt, "seconds")
+      def asSeconds: FiniteDuration = FiniteDuration.apply(int.asInt, "seconds")
