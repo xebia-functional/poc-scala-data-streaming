@@ -19,13 +19,7 @@ package com.fortyseven.coreheaders.model.types
 import java.util.UUID
 
 /**
- * NameSpace for the following types:
- *
- *   - [[com.fortyseven.coreheaders.model.types.ids.BicycleId]]
- *
- *   - [[com.fortyseven.coreheaders.model.types.ids.UserId]]
- *
- *   - [[com.fortyseven.coreheaders.model.types.ids.TripId]]
+ * Contains the ids for the business domain.
  */
 object ids:
 
@@ -36,76 +30,81 @@ object ids:
   opaque type TripId = UUID
 
   /**
-   * Factory for [[com.fortyseven.coreheaders.model.types.ids.BicycleId]] instances.
+   * Factory for [[BicycleId]] instances.
    */
   object BicycleId:
+
     /**
-     * Method that builds a BicycleId from an UUID value.
+     * Builds a BicycleId from an UUID value.
      *
      * @param id
-     *   an UUID value to be returned as a BicycleId type.
+     *   an UUID.
      * @return
-     *   a BicycleId value.
+     *   the id typed as BicycleId.
      */
     def apply(id: UUID): BicycleId = id
 
     extension (bicycleId: BicycleId)
+
       /**
-       * Casts the types while keeping the value.
+       * Exposes the bicycle ID as the underlying UUID type.
        *
-       * @return
-       *   Value of type BicycleId as [[java.util.UUID]] type.
+       * @return an UUID.
        * @see
-       *   More info at [[https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html]].
+       * [[https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html]].
        */
       def value: UUID = bicycleId
 
   /**
-   * Factory for [[com.fortyseven.coreheaders.model.types.ids.UserId]] instances.
+   * Factory for [[UserId]] instances.
    */
   object UserId:
+
     /**
-     * Method that builds a UserId from an UUID value.
+     * Builds a UserId from an UUID value.
      *
      * @param id
-     *   an UUID value to be returned as a UserId type.
+     *   an UUID.
      * @return
-     *   a UserId value.
+     *   the id typed as UserId.
      */
     def apply(id: UUID): UserId = id
 
     extension (userId: UserId)
+
       /**
-       * Casts the types while keeping the value.
+       * Exposes the user ID as the underlying UUID type.
        *
        * @return
-       *   Value of type UserId as [[java.util.UUID]] type.
+       *   un UUID.
        * @see
-       *   More info at [[https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html]].
+       *  [[https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html]].
        */
       def value: UUID = userId
 
   /**
-   * Factory for [[com.fortyseven.coreheaders.model.types.ids.TripId]] instances.
+   * Factory for [[TripId]] instances.
    */
   object TripId:
+
     /**
-     * Method that builds a TripId from an UUID value.
+     * Builds a TripId from an UUID value.
      *
      * @param tripID
-     *   an UUID value to be returned as a TripId type.
+     *   an UUID.
      * @return
-     *   a TripId value.
+     *   the trip ID typed as TripId.
      */
     def apply(tripID: UUID): TripId = tripID
 
     extension (tripId: TripId)
+
       /**
-       * Casts the types while keeping the value.
+       * Exposes the trip ID as the underlying UUID type.
        *
        * @return
-       *   Value of type TripId as [[java.util.UUID]] type.
+       *   an UUID.
        * @see
-       *   More info at [[https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html]].
+       * [[https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html]].
        */
       def value: UUID = tripId
