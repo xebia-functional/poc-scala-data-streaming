@@ -18,6 +18,21 @@ package com.fortyseven.coreheaders.model.iot
 
 import scala.util.control.NoStackTrace
 
+/**
+ * Contains possible errors for the application domain.
+ */
 object errors:
 
-  final case class OutOfBoundsError(msg: String) extends RuntimeException(msg) with NoStackTrace
+  /**
+   * Represents the OutOfBoundsError with a cause in the message.
+   *
+   * Extends [[java.lang.RuntimeException]].
+   *
+   * Extends [[scala.util.control.NoStackTrace]].
+   *
+   * @constructor
+   *   Creates an OutOfBoundsError with a specified `message`.
+   * @param message
+   *   Reason for the OutOfBoundsError.
+   */
+  final case class OutOfBoundsError(message: String) extends RuntimeException(message) with NoStackTrace

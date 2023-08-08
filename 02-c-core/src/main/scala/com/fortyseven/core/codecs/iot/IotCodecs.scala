@@ -22,7 +22,6 @@ import cats.implicits.*
 
 import com.fortyseven.core.codecs.types.TypesCodecs.given
 import com.fortyseven.coreheaders.model.iot.model.*
-import com.fortyseven.coreheaders.model.types.types.*
 import vulcan.Codec
 
 /**
@@ -41,7 +40,7 @@ object IotCodecs:
     }
 
   given wheelRotationCodec: Codec[WheelRotation] =
-    Codec.record(name = "WheelRotation", namespace = _namespace)(_("s", _.s).map(WheelRotation.apply))
+    Codec.record(name = "WheelRotation", namespace = _namespace)(_("s", _.frequency).map(WheelRotation.apply))
 
   given batteryChargeCodec: Codec[BatteryCharge] =
     Codec.record(name = "BatteryCharge", namespace = _namespace)(_("percentage", _.percentage).map(BatteryCharge.apply))

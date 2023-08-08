@@ -21,7 +21,7 @@ import scala.reflect.{ClassTag, classTag}
 import com.fortyseven.core.TestUtils.codeAndDecode
 import com.fortyseven.core.TestUtils.given
 import com.fortyseven.core.codecs.types.TypesCodecs.given
-import com.fortyseven.coreheaders.model.types.types.*
+import com.fortyseven.coreheaders.model.types.refinedTypes.*
 import munit.ScalaCheckSuite
 import org.scalacheck.Arbitrary
 import org.scalacheck.Prop.forAll

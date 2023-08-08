@@ -27,4 +27,4 @@ object IotErrorCodecs:
   private val _namespace = "iot-error"
 
   given outOfBoundsErrorCodec: Codec[OutOfBoundsError] =
-    Codec.record(name = "OutOfBoundsError", namespace = _namespace)(_("msg", _.msg).map(OutOfBoundsError.apply))
+    Codec.record(name = "OutOfBoundsError", namespace = _namespace)(_("msg", _.message).map(OutOfBoundsError.apply))

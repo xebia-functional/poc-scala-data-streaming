@@ -21,7 +21,6 @@ import cats.implicits.*
 import com.fortyseven.core.codecs.ids.IdsCodecs.given
 import com.fortyseven.core.codecs.types.TypesCodecs.given
 import com.fortyseven.coreheaders.model.app.model.*
-import com.fortyseven.coreheaders.model.types.types.Meters
 import vulcan.Codec
 
 /**

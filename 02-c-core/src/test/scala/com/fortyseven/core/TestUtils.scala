@@ -22,7 +22,7 @@ import scala.concurrent.duration.FiniteDuration
 import com.fortyseven.coreheaders.model.app.model.*
 import com.fortyseven.coreheaders.model.iot.model.*
 import com.fortyseven.coreheaders.model.types.ids.*
-import com.fortyseven.coreheaders.model.types.types.*
+import com.fortyseven.coreheaders.model.types.refinedTypes.*
 import org.scalacheck.{Arbitrary, Gen}
 import vulcan.{AvroError, Codec}
 
@@ -37,24 +37,24 @@ object TestUtils:
   given Arbitrary[BicycleId] = Arbitrary(Gen.uuid.map(BicycleId.apply))
 
   given Arbitrary[Latitude] = Arbitrary(
-    Gen.chooseNum[Double](-90.0, 90.0).flatMap(Latitude(_).fold(_ => Gen.fail, Gen.const))
+    Gen.chooseNum[Double](-90.0, 90.0).flatMap(Latitude.from(_).fold(_ => Gen.fail, Gen.const))
   )
 
   given Arbitrary[Longitude] = Arbitrary(
-    Gen.chooseNum[Double](-180.0, 180.0).flatMap(Longitude(_).fold(_ => Gen.fail, Gen.const))
+    Gen.chooseNum[Double](-180.0, 180.0).flatMap(Longitude.from(_).fold(_ => Gen.fail, Gen.const))
   )
 
   given Arbitrary[Percentage] = Arbitrary(
-    Gen.chooseNum[Double](0.0, 100.0).flatMap(Percentage(_).fold(_ => Gen.fail, Gen.const))
+    Gen.chooseNum[Double](0.0, 100.0).flatMap(Percentage.from(_).fold(_ => Gen.fail, Gen.const))
   )
 
-  given Arbitrary[Speed] = Arbitrary(Gen.posNum[Double].flatMap(Speed(_).fold(_ => Gen.fail, Gen.const)))
+  given Arbitrary[Speed] = Arbitrary(Gen.posNum[Double].flatMap(Speed.from(_).fold(_ => Gen.fail, Gen.const)))
 
-  given Arbitrary[Hz] = Arbitrary(Gen.posNum[Double].flatMap(Hz(_).fold(_ => Gen.fail, Gen.const)))
+  given Arbitrary[Hz] = Arbitrary(Gen.posNum[Double].flatMap(Hz.from(_).fold(_ => Gen.fail, Gen.const)))
 
-  given Arbitrary[Bar] = Arbitrary(Gen.posNum[Double].flatMap(Bar(_).fold(_ => Gen.fail, Gen.const)))
+  given Arbitrary[Bar] = Arbitrary(Gen.posNum[Double].flatMap(Bar.from(_).fold(_ => Gen.fail, Gen.const)))
 
-  given Arbitrary[Meters] = Arbitrary(Gen.posNum[Int].flatMap(Meters(_).fold(_ => Gen.fail, Gen.const)))
+  given Arbitrary[Meters] = Arbitrary(Gen.posNum[Int].flatMap(Meters.from(_).fold(_ => Gen.fail, Gen.const)))
 
   given Arbitrary[TotalDistanceByTrip] = Arbitrary(
     Gen.resultOf(TotalDistanceByTrip.apply)

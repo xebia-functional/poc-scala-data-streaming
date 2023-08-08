@@ -17,14 +17,61 @@
 package com.fortyseven.coreheaders.model.app
 
 import com.fortyseven.coreheaders.model.types.ids.{BicycleId, TripId, UserId}
-import com.fortyseven.coreheaders.model.types.types.{Meters, Speed}
+import com.fortyseven.coreheaders.model.types.refinedTypes.{Meters, Speed}
 
+/**
+ * Contains case classes that represent aggregated data.
+ */
 object model:
 
+  /**
+   * Total distance of a given trip ID expressed in meters.
+   *
+   * @constructor
+   *   Create a TotalDistanceByTrip with a specified `tripId` and `distance`.
+   * @param tripId
+   *   key of the aggregation.
+   * @param distance
+   *   value of the aggregation, in meters.
+   */
   case class TotalDistanceByTrip(tripId: TripId, distance: Meters)
 
+  /**
+   * Total distance cycled by a given user.
+   *
+   * @constructor
+   *   Create a TotalDistanceByUser with a specified `userId` and `distance`.
+   * @param userId
+   *   Key of the aggregation.
+   * @param distance
+   *   Distance cycled in meters for the given user ID.
+   */
   case class TotalDistanceByUser(userId: UserId, distance: Meters)
 
+  /**
+   * Current speed of the given trip ID.
+   *
+   * @constructor
+   *   Create a CurrentSpeed with a specified `tripId` and `speed`
+   * @param tripId
+   *   Key of the aggregation.
+   * @param speed
+   *   Speed at the given moment for the given tripId.
+   * @todo
+   *   maybe a new parameter with a timestamp should be added to capture the time of the speed in the bicycle.
+   */
   case class CurrentSpeed(tripId: TripId, speed: Speed)
 
+  /**
+   * Total range of the given bicycle for the given trip.
+   *
+   * @constructor
+   *   Create a TotalRange with a specified `tripId`, `bicycleId` and `remainingRange`.
+   * @param tripId
+   *   Key of the aggregation.
+   * @param bicycleId
+   *   Bicycle identifier.
+   * @param remainingRange
+   *   Remaining range in meters calculated from the remaining energy in the battery.
+   */
   case class TotalRange(tripId: TripId, bicycleId: BicycleId, remainingRange: Meters)
