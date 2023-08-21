@@ -49,6 +49,7 @@ lazy val `poc-scala-data-streaming`: Project =
       `configuration-pureconfig`,
       core,
       `data-generator`,
+
       // Input
       `consumer-kafka`,
       // Output
@@ -115,8 +116,10 @@ lazy val core: Project =
       )
     )
 
+// LAyer 3
+
 // Input
-lazy val `data-generator`: Project = (project in file("02-i-data-generator"))
+lazy val `data-generator`: Project = (project in file("03-i-data-generator"))
   .dependsOn(`core-headers`, core, `configuration-pureconfig`)
   .enablePlugins(DockerPlugin)
   .enablePlugins(JavaAppPackaging)
@@ -155,7 +158,7 @@ lazy val `data-generator`: Project = (project in file("02-i-data-generator"))
 
 lazy val `consumer-kafka`: Project =
   project
-    .in(file("02-i-consumer-kafka"))
+    .in(file("03-i-consumer-kafka"))
     .dependsOn(`core-headers` % Cctt)
     .dependsOn(`configuration-pureconfig` % Cctt)
     .settings(commonSettings)
@@ -173,7 +176,7 @@ lazy val `consumer-kafka`: Project =
 // Output
 lazy val `processor-flink`: Project =
   project
-    .in(file("02-o-processor-flink"))
+    .in(file("03-o-processor-flink"))
     .dependsOn(`core-headers` % Cctt)
     .dependsOn(core % Cctt) // This should be avoided
     .dependsOn(`configuration-pureconfig` % Cctt)
@@ -202,7 +205,7 @@ lazy val `processor-flink`: Project =
 
 lazy val `processor-flink-integration`: Project =
   project
-    .in(file("02-o-processor-flink/integration"))
+    .in(file("03-o-processor-flink/integration"))
     .dependsOn(`processor-flink`)
     .settings(commonSettings)
     .settings(
@@ -220,7 +223,7 @@ lazy val `processor-flink-integration`: Project =
     )
 
 lazy val `processor-spark`: Project = project
-  .in(file("02-o-processor-spark"))
+  .in(file("03-o-processor-spark"))
   .dependsOn(`core-headers` % Cctt)
   .dependsOn(`configuration-pureconfig` % Cctt)
   .settings(commonSettings)
@@ -243,10 +246,12 @@ lazy val `processor-spark`: Project = project
     assembly / assemblyJarName := "spark-app.jar"
   )
 
-// Layer 3
+// Layer 4
+
+// Program
 lazy val main: Project =
   project
-    .in(file("03-c-main"))
+    .in(file("04-c-main"))
     .dependsOn(`configuration-ciris` % Cctt)
     .dependsOn(`configuration-pureconfig` % Cctt)
     .dependsOn(core % Cctt)
