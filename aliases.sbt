@@ -55,8 +55,18 @@ addCommandAlias(
 )
 
 addCommandAlias(
-  "runMain",
-  "main / run"
+  "runFlink",
+  "main/runMain com.fortyseven.main.FlinkMain;"
+)
+
+addCommandAlias(
+  "generateData",
+  "main/runMain com.fortyseven.main.DataGeneratorMain;"
+)
+
+addCommandAlias(
+  "runSpark",
+  "processor-spark/run;"
 )
 
 onLoadMessage +=
@@ -77,7 +87,9 @@ onLoadMessage +=
       |│ ${styled("styleFix")}    │ scala fix & fmt             │
       || ${styled("explicit")}    | transitive dependency check |
       |│ ${styled("up2date")}     │ dependency updates          │
-      |│ ${styled("runCoverage")} │ coverage report             │
+      |│ ${styled("runCoverage")} │ coverage report
+      |│ ${styled("generateData")}│ start sending dummy data
       |│ ${styled("flinkIT")}     │ run flink integration tests │
-      |│ ${styled("runMain")}     │ run main (entry-point)      │
+      |│ ${styled("runFlink")}    │ run flink                   │
+      |│ ${styled("runSpark")}    │ run spark                   │
       |╰─────────────┴─────────────────────────────╯""".stripMargin
