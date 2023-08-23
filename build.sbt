@@ -90,7 +90,7 @@ lazy val domain: Project =
 lazy val `common-api`: Project =
   project
     .in(file("02-c-api"))
-    .dependsOn(domain)
+    .dependsOn(domain % Cctt)
     .settings(commonSettings)
     .settings(
       name := "common-api",
@@ -100,7 +100,6 @@ lazy val `common-api`: Project =
 lazy val `input-api`: Project =
   project
     .in(file("02-i-api"))
-    .dependsOn(domain % Cctt)
     .dependsOn(`common-api` % Cctt)
     .settings(commonSettings)
     .settings(
@@ -111,7 +110,6 @@ lazy val `input-api`: Project =
 lazy val `output-api`: Project =
   project
     .in(file("02-o-api"))
-    .dependsOn(domain % Cctt)
     .dependsOn(`common-api` % Cctt)
     .settings(commonSettings)
     .settings(
@@ -139,8 +137,7 @@ lazy val `business-logic`: Project =
 lazy val `configuration-ciris`: Project =
   project
     .in(file("03-c-config-ciris"))
-    .dependsOn(domain)
-    .dependsOn(`common-api`)
+    .dependsOn(`common-api` % Cctt)
     .settings(commonSettings)
     .settings(
       name := "configuration-ciris",
@@ -153,8 +150,7 @@ lazy val `configuration-ciris`: Project =
 lazy val `configuration-pureconfig`: Project =
   project
     .in(file("03-c-config-pureconfig"))
-    .dependsOn(domain)
-    .dependsOn(`common-api`)
+    .dependsOn(`common-api` % Cctt)
     .settings(commonSettings)
     .settings(
       name := "configuration-pureconfig",
@@ -170,7 +166,6 @@ lazy val `configuration-pureconfig`: Project =
 lazy val `data-generator`: Project =
   project
     .in(file("03-c-data-generator"))
-    .dependsOn(domain % Cctt)
     .dependsOn(`configuration-pureconfig` % Cctt)
     .enablePlugins(DockerPlugin)
     .enablePlugins(JavaAppPackaging)
@@ -214,7 +209,6 @@ lazy val `data-generator`: Project =
 lazy val `consumer-kafka`: Project =
   project
     .in(file("04-i-consumer-kafka"))
-    .dependsOn(`business-logic` % Cctt)
     .dependsOn(`configuration-pureconfig` % Cctt)
     .dependsOn(`input-api` % Cctt)
     .settings(commonSettings)
@@ -236,7 +230,6 @@ lazy val `consumer-kafka`: Project =
 lazy val `processor-flink`: Project =
   project
     .in(file("04-o-processor-flink"))
-    .dependsOn(`business-logic` % Cctt)
     .dependsOn(`configuration-pureconfig` % Cctt)
     .dependsOn(`output-api` % Cctt)
     .settings(commonSettings)
@@ -285,7 +278,6 @@ lazy val `processor-flink-integration`: Project =
 
 lazy val `processor-spark`: Project = project
   .in(file("04-o-processor-spark"))
-  .dependsOn(`business-logic` % Cctt)
   .dependsOn(`output-api` % Cctt)
   .dependsOn(`configuration-pureconfig` % Cctt)
   .settings(commonSettings)
@@ -313,11 +305,9 @@ lazy val `processor-spark`: Project = project
 lazy val main: Project =
   project
     .in(file("05-c-main"))
-    .dependsOn(`configuration-pureconfig` % Cctt)
     .dependsOn(`consumer-kafka` % Cctt)
     .dependsOn(`data-generator` % Cctt)
     .dependsOn(`processor-flink` % Cctt)
-    .dependsOn(`processor-spark` % Cctt)
     .settings(commonSettings)
     .settings(
       name := "main",
