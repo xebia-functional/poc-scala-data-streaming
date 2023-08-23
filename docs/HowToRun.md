@@ -10,7 +10,7 @@ class, which means it can be executed as a regular Java app.
 
 ## Publish Docker app image
 
-In order to generate a docker image for an specific app you need to follow these steps:
+In order to generate a docker image for a specific app you need to follow these steps:
 
 1. Log into SBT console: `sbt`
 2. Select the app: ie `project data-generator`
