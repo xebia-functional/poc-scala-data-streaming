@@ -140,7 +140,7 @@ lazy val `configuration-ciris`: Project =
     .dependsOn(`common-api` % Cctt)
     .settings(commonSettings)
     .settings(
-      name := "configuration-ciris",
+      name := "ciris",
       libraryDependencies ++= Seq(
         Libraries.config.ciris,
         Libraries.cats.effectKernel
@@ -153,7 +153,7 @@ lazy val `configuration-pureconfig`: Project =
     .dependsOn(`common-api` % Cctt)
     .settings(commonSettings)
     .settings(
-      name := "configuration-pureconfig",
+      name := "pureconfig",
       libraryDependencies ++= Seq(
         Libraries.config.pureConfig,
         Libraries.cats.core,
@@ -234,7 +234,7 @@ lazy val `processor-flink`: Project =
     .dependsOn(`output-api` % Cctt)
     .settings(commonSettings)
     .settings(
-      name := "processor-flink",
+      name := "flink",
       libraryDependencies ++= Seq(
         Libraries.avro.avro,
         Libraries.avro.vulcan,
@@ -263,7 +263,7 @@ lazy val `processor-flink-integration`: Project =
     .dependsOn(`processor-flink`)
     .settings(commonSettings)
     .settings(
-      name           := "flink-integration-test",
+      name           := "integration-test",
       publish / skip := true,
       libraryDependencies ++= Seq(
         Libraries.testContainers.kafka,
@@ -282,7 +282,7 @@ lazy val `processor-spark`: Project = project
   .dependsOn(`configuration-pureconfig` % Cctt)
   .settings(commonSettings)
   .settings(
-    name := "processor-spark",
+    name := "spark",
     libraryDependencies ++= Seq(
       Libraries.spark.catalyst,
       Libraries.spark.core,
@@ -310,7 +310,7 @@ lazy val main: Project =
     .dependsOn(`processor-flink` % Cctt)
     .settings(commonSettings)
     .settings(
-      name := "main",
+      name := "app",
       libraryDependencies ++= Seq(
         Libraries.cats.core,
         Libraries.cats.effect,
