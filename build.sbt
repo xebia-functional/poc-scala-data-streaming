@@ -41,71 +41,39 @@ lazy val `poc-scala-data-streaming`: Project =
   project
     .in(file("."))
     .aggregate(
-      // Layer 1
-      `core-headers`,
-      // Layer 2
-      // Common and Utils
+      // Layer 1 - Domain
+      `domain`,
+      // Layer 2 - APIs
+      // APIs
+      `common-api`,
+      `input-api`,
+      `output-api`,
+      // Layer 3 - Business Logic, Common and Utils
+      // Business Logic
+      `business-logic`,
+      // Common
       `configuration-ciris`,
       `configuration-pureconfig`,
-      core,
+      // Utils
       `data-generator`,
+      // Layer 4 - Implementations
       // Input
       `consumer-kafka`,
       // Output
       `processor-flink`,
       `processor-spark`,
-      // Layer 3
+      // Layer 5 - Program
       main
     )
 
-// Layer 1
+// Layer 1 - Domain
 
-lazy val `core-headers`: Project =
+lazy val domain: Project =
   project
-    .in(file("01-c-core"))
+    .in(file("01-c-domain"))
     .settings(commonSettings)
     .settings(
-      name := "core-headers",
-      libraryDependencies ++= Seq(
-        Libraries.test.munitScalacheck
-      )
-    )
-
-// Layer 2
-
-// Common and Utils
-lazy val `configuration-ciris`: Project = (project in file("02-c-config-ciris"))
-  .dependsOn(`core-headers`)
-  .settings(commonSettings)
-  .settings(
-    name := "configuration-ciris",
-    libraryDependencies ++= Seq(
-      Libraries.config.ciris,
-      Libraries.cats.effectKernel
-    )
-  )
-
-lazy val `configuration-pureconfig`: Project = (project in file("02-c-config-pureconfig"))
-  .dependsOn(`core-headers`)
-  .settings(commonSettings)
-  .settings(
-    name := "configuration-pureconfig",
-    libraryDependencies ++= Seq(
-      Libraries.config.pureConfig,
-      Libraries.config.pureConfigCE,
-      Libraries.cats.effectKernel,
-      Libraries.cats.core,
-      Libraries.test.munitCatsEffect
-    )
-  )
-
-lazy val core: Project =
-  project
-    .in(file("02-c-core"))
-    .dependsOn(`core-headers` % Cctt)
-    .settings(commonSettings)
-    .settings(
-      name := "core",
+      name := "domain",
       libraryDependencies ++= Seq(
         Libraries.avro.vulcan,
         Libraries.avro.avro,
@@ -115,49 +83,134 @@ lazy val core: Project =
       )
     )
 
-// Input
-lazy val `data-generator`: Project = (project in file("02-i-data-generator"))
-  .dependsOn(`core-headers`, core, `configuration-pureconfig`)
-  .enablePlugins(DockerPlugin)
-  .enablePlugins(JavaAppPackaging)
-  .settings(commonSettings)
-  .settings(
-    name                 := "data-generator",
-    assembly / mainClass := Some("com.fortyseven.datagenerator.Main"),
-    Docker / packageName := "data-generator",
-    dockerBaseImage      := "openjdk:11-jre-slim-buster",
-    dockerExposedPorts ++= Seq(8080),
-    dockerUpdateLatest := true,
-    dockerAlias := DockerAlias(
-      registryHost = Some("ghcr.io"),
-      username = Some((ThisBuild / organization).value),
-      name = (Docker / packageName).value,
-      tag = Some("latest")
-    ),
-    libraryDependencies ++= Seq(
-      Libraries.fs2.core,
-      Libraries.fs2.kafka,
-      Libraries.kafka.kafkaClients,
-      Libraries.cats.core,
-      Libraries.cats.effect,
-      Libraries.cats.effectKernel,
-      Libraries.avro.vulcan,
-      Libraries.avro.avro,
-      Libraries.kafka.kafkaSchemaRegistry,
-      Libraries.kafka.kafkaSchemaSerializer,
-      Libraries.kafka.kafkaSerializer,
-      Libraries.logging.catsSlf4j,
-      Libraries.logging.logback,
-      Libraries.test.munitCatsEffect,
-      Libraries.test.munitScalacheck
+// Layer 2 - APIs, Common and Utils
+
+// APIs
+
+lazy val `common-api`: Project =
+  project
+    .in(file("02-c-api"))
+    .dependsOn(domain % Cctt)
+    .settings(commonSettings)
+    .settings(
+      name := "common-api",
+      libraryDependencies ++= Seq()
     )
-  )
+
+lazy val `input-api`: Project =
+  project
+    .in(file("02-i-api"))
+    .dependsOn(`common-api` % Cctt)
+    .settings(commonSettings)
+    .settings(
+      name := "input-api",
+      libraryDependencies ++= Seq()
+    )
+
+lazy val `output-api`: Project =
+  project
+    .in(file("02-o-api"))
+    .dependsOn(`common-api` % Cctt)
+    .settings(commonSettings)
+    .settings(
+      name := "output-api",
+      libraryDependencies ++= Seq()
+    )
+
+// Layer 3 - Business Logic, Common and Utils
+
+// Business Logic
+
+lazy val `business-logic`: Project =
+  project
+    .in(file("03-c-business-logic"))
+    .dependsOn(domain % Cctt)
+    .settings(commonSettings)
+    .settings(
+      name := "business-logic",
+      libraryDependencies ++= Seq(
+      )
+    )
+
+// Common
+
+lazy val `configuration-ciris`: Project =
+  project
+    .in(file("03-c-config-ciris"))
+    .dependsOn(`common-api` % Cctt)
+    .settings(commonSettings)
+    .settings(
+      name := "ciris",
+      libraryDependencies ++= Seq(
+        Libraries.config.ciris,
+        Libraries.cats.effectKernel
+      )
+    )
+
+lazy val `configuration-pureconfig`: Project =
+  project
+    .in(file("03-c-config-pureconfig"))
+    .dependsOn(`common-api` % Cctt)
+    .settings(commonSettings)
+    .settings(
+      name := "pureconfig",
+      libraryDependencies ++= Seq(
+        Libraries.config.pureConfig,
+        Libraries.cats.core,
+        Libraries.test.munitCatsEffect
+      )
+    )
+
+// Utils
+
+lazy val `data-generator`: Project =
+  project
+    .in(file("03-u-data-generator"))
+    .dependsOn(`configuration-pureconfig` % Cctt)
+    .enablePlugins(DockerPlugin)
+    .enablePlugins(JavaAppPackaging)
+    .settings(commonSettings)
+    .settings(
+      name                 := "data-generator",
+      assembly / mainClass := Some("com.fortyseven.datagenerator.Main"),
+      Docker / packageName := "data-generator",
+      dockerBaseImage      := "openjdk:11-jre-slim-buster",
+      dockerExposedPorts ++= Seq(8080),
+      dockerUpdateLatest := true,
+      dockerAlias := DockerAlias(
+        registryHost = Some("ghcr.io"),
+        username = Some((ThisBuild / organization).value),
+        name = (Docker / packageName).value,
+        tag = Some("latest")
+      ),
+      libraryDependencies ++= Seq(
+        Libraries.fs2.core,
+        Libraries.fs2.kafka,
+        Libraries.kafka.kafkaClients,
+        Libraries.cats.core,
+        Libraries.cats.effect,
+        Libraries.cats.effectKernel,
+        Libraries.avro.vulcan,
+        Libraries.avro.avro,
+        Libraries.kafka.kafkaSchemaRegistry,
+        Libraries.kafka.kafkaSchemaSerializer,
+        Libraries.kafka.kafkaSerializer,
+        Libraries.test.munitCatsEffect,
+        Libraries.test.munitScalacheck,
+        Libraries.config.pureConfig,
+        Libraries.config.pureConfigCE
+      )
+    )
+
+// Layer 4 - Implementations
+
+// Input
 
 lazy val `consumer-kafka`: Project =
   project
-    .in(file("02-i-consumer-kafka"))
-    .dependsOn(`core-headers` % Cctt)
+    .in(file("04-i-consumer-kafka"))
     .dependsOn(`configuration-pureconfig` % Cctt)
+    .dependsOn(`input-api` % Cctt)
     .settings(commonSettings)
     .settings(
       name := "kafka-consumer",
@@ -166,20 +219,22 @@ lazy val `consumer-kafka`: Project =
         Libraries.cats.effectKernel,
         Libraries.kafka.kafkaClients,
         Libraries.fs2.kafka,
-        Libraries.fs2.core
+        Libraries.fs2.core,
+        Libraries.config.pureConfig,
+        Libraries.config.pureConfigCE
       )
     )
 
 // Output
+
 lazy val `processor-flink`: Project =
   project
-    .in(file("02-o-processor-flink"))
-    .dependsOn(`core-headers` % Cctt)
-    .dependsOn(core % Cctt) // This should be avoided
+    .in(file("04-o-processor-flink"))
     .dependsOn(`configuration-pureconfig` % Cctt)
+    .dependsOn(`output-api` % Cctt)
     .settings(commonSettings)
     .settings(
-      name := "processor-flink",
+      name := "flink",
       libraryDependencies ++= Seq(
         Libraries.avro.avro,
         Libraries.avro.vulcan,
@@ -196,17 +251,19 @@ lazy val `processor-flink`: Project =
         Libraries.kafka.kafkaClients,
         Libraries.logging.catsCore,
         Libraries.logging.catsSlf4j,
-        Libraries.logging.logback
+        Libraries.logging.logback,
+        Libraries.config.pureConfig,
+        Libraries.config.pureConfigCE
       )
     )
 
 lazy val `processor-flink-integration`: Project =
   project
-    .in(file("02-o-processor-flink/integration"))
+    .in(file("04-o-processor-flink/integration"))
     .dependsOn(`processor-flink`)
     .settings(commonSettings)
     .settings(
-      name           := "flink-integration-test",
+      name           := "integration-test",
       publish / skip := true,
       libraryDependencies ++= Seq(
         Libraries.testContainers.kafka,
@@ -220,12 +277,12 @@ lazy val `processor-flink-integration`: Project =
     )
 
 lazy val `processor-spark`: Project = project
-  .in(file("02-o-processor-spark"))
-  .dependsOn(`core-headers` % Cctt)
+  .in(file("04-o-processor-spark"))
+  .dependsOn(`output-api` % Cctt)
   .dependsOn(`configuration-pureconfig` % Cctt)
   .settings(commonSettings)
   .settings(
-    name := "processor-spark",
+    name := "spark",
     libraryDependencies ++= Seq(
       Libraries.spark.catalyst,
       Libraries.spark.core,
@@ -243,22 +300,18 @@ lazy val `processor-spark`: Project = project
     assembly / assemblyJarName := "spark-app.jar"
   )
 
-// Layer 3
+// Layer 5 - Program
+
 lazy val main: Project =
   project
-    .in(file("03-c-main"))
-    .dependsOn(`configuration-ciris` % Cctt)
-    .dependsOn(`configuration-pureconfig` % Cctt)
-    .dependsOn(core % Cctt)
+    .in(file("05-c-main"))
     .dependsOn(`consumer-kafka` % Cctt)
     .dependsOn(`data-generator` % Cctt)
     .dependsOn(`processor-flink` % Cctt)
-    .dependsOn(`processor-spark` % Cctt)
     .settings(commonSettings)
     .settings(
-      name := "main",
+      name := "app",
       libraryDependencies ++= Seq(
-        Libraries.avro.vulcan,
         Libraries.cats.core,
         Libraries.cats.effect,
         Libraries.cats.effectKernel,
