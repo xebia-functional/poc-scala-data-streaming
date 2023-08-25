@@ -18,7 +18,7 @@ package com.fortyseven.datagenerator.configuration
 
 import scala.concurrent.duration.FiniteDuration
 
-import com.fortyseven.domain.configuration.refinedTypes.*
+import com.fortyseven.common.configuration.refinedTypes.*
 import com.fortyseven.pureconfig.refinedTypesGivens.given
 import pureconfig.ConfigReader
 import pureconfig.generic.derivation.default.*

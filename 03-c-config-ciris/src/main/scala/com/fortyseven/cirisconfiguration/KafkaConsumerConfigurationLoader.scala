@@ -26,7 +26,7 @@ import com.fortyseven.cirisconfiguration.configuration.KafkaConsumerConfiguratio
 import com.fortyseven.cirisconfiguration.configuration.internal.*
 import com.fortyseven.cirisconfiguration.decoders.given
 import com.fortyseven.common.api.ConfigurationAPI
-import com.fortyseven.domain.configuration.refinedTypes.*
+import com.fortyseven.common.configuration.refinedTypes.*
 
 final class KafkaConsumerConfigurationLoader[F[_]: Async] extends ConfigurationAPI[F, KafkaConsumerConfiguration]:
 

@@ -18,8 +18,8 @@ package com.fortyseven.pureconfig
 
 import cats.syntax.all.*
 
-import com.fortyseven.domain.configuration.*
-import com.fortyseven.domain.configuration.refinedTypes.*
+import com.fortyseven.common.configuration.*
+import com.fortyseven.common.configuration.refinedTypes.*
 import pureconfig.ConfigReader
 import pureconfig.error.ExceptionThrown
 

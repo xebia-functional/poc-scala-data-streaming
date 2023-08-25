@@ -35,8 +35,8 @@ class DataProcessor extends SparkProcessorAPI[Result, ProcessorConfiguration]:
   private def runWithConfiguration(processorConfiguration: ProcessorConfiguration): Unit =
 
     val sparkConf: SparkConf = new SparkConf()
-      .setAppName(processorConfiguration.app.appName.asString)
-      .setMaster(processorConfiguration.app.masterURL.asString)
+      .setAppName(processorConfiguration.app.appName)
+      .setMaster(processorConfiguration.app.masterURL)
       .set("spark.streaming.backpressure.enabled", processorConfiguration.streaming.backpressureEnabled.toString)
       .set("spark.streaming.blockInterval", processorConfiguration.streaming.blockInterval.toString)
       .set(

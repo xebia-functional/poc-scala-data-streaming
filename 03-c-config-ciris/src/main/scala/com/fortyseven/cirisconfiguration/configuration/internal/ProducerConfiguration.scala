@@ -18,7 +18,7 @@ package com.fortyseven.cirisconfiguration.configuration.internal
 
 import scala.concurrent.duration.FiniteDuration
 
-import com.fortyseven.domain.configuration.refinedTypes.*
+import com.fortyseven.common.configuration.refinedTypes.*
 
 final case class ProducerConfiguration(
     topicName: NonEmptyString,

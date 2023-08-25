@@ -29,26 +29,26 @@ private[spark] final class SparkDataProcessor(sparkSession: SparkSession):
           .format("kafka")
           .option(
             "kafka.bootstrap.servers",
-            reader.kafka.bootstrapServers.asString
+            reader.kafka.bootstrapServers
           )
           .option(
             "subscribePattern",
-            reader.kafka.topic.asString
+            reader.kafka.topic
           )
           .option(
             "startingOffsets",
-            reader.kafka.startingOffsets.asString
+            reader.kafka.startingOffsets
           )
           .option(
             "endingOffsets",
-            reader.kafka.endingOffsets.asString
+            reader.kafka.endingOffsets
           )
 
     extension (dataFrameReader: DataFrameReader) def applyLogic(): DataFrame = dataFrameReader.load()
 
     extension (dataFrame: DataFrame)
       def buildWriter(writer: WriterConfiguration): DataFrameWriter[Row] =
-        dataFrame.write.format(writer.format.asString)
+        dataFrame.write.format(writer.format)
 
     sparkSession
       .buildReader(processorConfiguration.reader)

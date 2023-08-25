@@ -16,6 +16,6 @@
 
 package com.fortyseven.cirisconfiguration.configuration.internal
 
-import com.fortyseven.domain.configuration.refinedTypes.NonEmptyString
+import com.fortyseven.common.configuration.refinedTypes.NonEmptyString
 
 final case class BrokerConfiguration(brokerAddress: NonEmptyString)

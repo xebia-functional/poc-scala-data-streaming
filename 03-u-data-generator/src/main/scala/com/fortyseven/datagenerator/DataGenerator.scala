@@ -46,17 +46,17 @@ final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorAPI[F, Dat
     val pneumaticPressureTopicName = s"${configuration.kafka.producer.topicName}-pp"
 
     val producerSettings = ProducerSettings[F, String, Array[Byte]]
-      .withBootstrapServers(configuration.kafka.broker.bootstrapServers.asString)
+      .withBootstrapServers(configuration.kafka.broker.bootstrapServers)
       .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, configuration.kafka.producer.compressionType.toString)
-      .withProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, configuration.kafka.producer.valueSerializerClass.asString)
+      .withProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, configuration.kafka.producer.valueSerializerClass)
 
     val pneumaticPressureSerializer = avroSerializer[PneumaticPressure](
-      Configuration(configuration.schemaRegistry.schemaRegistryURL.asString),
+      Configuration(configuration.schemaRegistry.schemaRegistryURL),
       includeKey = false
     )
 
     val gpsPositionSerializer = avroSerializer[GPSPosition](
-      Configuration(configuration.schemaRegistry.schemaRegistryURL.asString),
+      Configuration(configuration.schemaRegistry.schemaRegistryURL),
       includeKey = false
     )
 
@@ -72,7 +72,7 @@ final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorAPI[F, Dat
           .flatMap { case (s1, s2) => fs2.Stream.emit(s1) ++ fs2.Stream.emit(s2) }
           .evalMap(producer.produce)
           .groupWithin(
-            configuration.kafka.producer.commitBatchWithinSize.asInt,
+            configuration.kafka.producer.commitBatchWithinSize,
             configuration.kafka.producer.commitBatchWithinTime
           )
           .evalMap(_.sequence)

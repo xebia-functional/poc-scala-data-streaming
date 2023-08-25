@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package com.fortyseven.domain.configuration
+package com.fortyseven.common.configuration
 
 import scala.compiletime.requireConst
-import scala.concurrent.duration.FiniteDuration
 import scala.sys.error
 
 /**
@@ -188,14 +187,14 @@ object refinedTypes:
       then error("Empty String is not allowed here.")
       else nonEmptyString
 
-    extension (nonEmptyString: NonEmptyString)
-      /**
-       * Changes the type of the value from NonEmptyString to String.
-       *
-       * @return
-       *   Value as String.
-       */
-      def asString: String = nonEmptyString
+    /**
+     * When the compiler expects a value of type String but it finds a value of type NonEmptyString, it executes this.
+     *
+     * @return
+     *   Value of type NonEmptyString as type String.
+     */
+    given Conversion[NonEmptyString, String] with
+      override def apply(x: NonEmptyString): String = x
 
   /**
    * Type alias for Int. The validation happens in the factory methods of the companion object.
@@ -236,20 +235,11 @@ object refinedTypes:
       then error("Int must be positive.")
       else int
 
-    extension (int: PositiveInt)
-
-      /**
-       * Changes the type of the value from PositiveInt to Int.
-       *
-       * @return
-       *   Value as Int.
-       */
-      def asInt: Int = int
-
-      /**
-       * Changes the type of the value from PositiveInt to FiniteDuration.
-       *
-       * @return
-       *   Value as FiniteDuration in seconds.
-       */
-      def asSeconds: FiniteDuration = FiniteDuration.apply(int.asInt, "seconds")
+    /**
+     * When the compiler expects a value of type Int but it finds a value of type PositiveInt, it executes this.
+     *
+     * @return
+     *   Value of type PositiveInt as type Int.
+     */
+    given Conversion[PositiveInt, Int] with
+      override def apply(x: PositiveInt): Int = x

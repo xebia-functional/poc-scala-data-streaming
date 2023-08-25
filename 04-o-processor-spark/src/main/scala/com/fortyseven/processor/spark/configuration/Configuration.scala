@@ -18,7 +18,7 @@ package com.fortyseven.processor.spark.configuration
 
 import scala.concurrent.duration.FiniteDuration
 
-import com.fortyseven.domain.configuration.refinedTypes.NonEmptyString
+import com.fortyseven.common.configuration.refinedTypes.NonEmptyString
 import com.fortyseven.pureconfig.refinedTypesGivens.given_ConfigReader_NonEmptyString
 import pureconfig.ConfigReader
 import pureconfig.generic.derivation.default.*
