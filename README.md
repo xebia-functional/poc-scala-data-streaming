@@ -38,7 +38,7 @@ For the motivation on using the Diamond Architecture or the Kappa Architecture, 
 - [Docker Compose](https://docs.docker.com/compose/install/linux/)
 - [Kafkacat](https://formulae.brew.sh/formula/kcat)
 
-[<p style="text-align: right;">Go back to Index</p>](#index)
+[Go back to Index](#index)
 
 <h2 id="how-to">How To</h2>
 
