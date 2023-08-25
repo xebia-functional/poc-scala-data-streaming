@@ -165,7 +165,7 @@ lazy val `configuration-pureconfig`: Project =
 
 lazy val `data-generator`: Project =
   project
-    .in(file("03-c-data-generator"))
+    .in(file("03-u-data-generator")) 
     .dependsOn(`configuration-pureconfig` % Cctt)
     .enablePlugins(DockerPlugin)
     .enablePlugins(JavaAppPackaging)
