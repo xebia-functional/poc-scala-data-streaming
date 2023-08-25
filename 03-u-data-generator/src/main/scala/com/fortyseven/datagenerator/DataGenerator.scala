@@ -51,12 +51,12 @@ final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorAPI[F, Dat
       .withProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, configuration.kafka.producer.valueSerializerClass.asString)
 
     val pneumaticPressureSerializer = avroSerializer[PneumaticPressure](
-      Config(configuration.schemaRegistry.schemaRegistryURL.asString),
+      Configuration(configuration.schemaRegistry.schemaRegistryURL.asString),
       includeKey = false
     )
 
     val gpsPositionSerializer = avroSerializer[GPSPosition](
-      Config(configuration.schemaRegistry.schemaRegistryURL.asString),
+      Configuration(configuration.schemaRegistry.schemaRegistryURL.asString),
       includeKey = false
     )
 
