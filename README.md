@@ -1,4 +1,4 @@
-<h1 id="data-streaming-proof-of-concept">Data streaming Proof of Concept (PoC)</h1>
+<h1 id="data-streaming-diamond-architecture">Data streaming Diamond Architecture</h1>
 
 <h2 id="index">Index</h2>
 
@@ -127,6 +127,10 @@ sbt data-generator/assembly; data-generator/docker:publishLocal;
 
 <h5 id="spark-image">Spark Image</h5>
 
+```bash
+sbt processor-spark/c;
+```
+
 The Spark image is build from a [Dockerfile](./03-o-processor-spark/docker/Dockerfile). 
 
 ```bash
@@ -191,6 +195,11 @@ docker cp "./04-o-processor-spark/target/scala-3.3.0/spark-app.jar" "docker-spar
 ```
 
 4. Execute Spark via spark-submit
+
+The spark-submit uses the default 'client' deploy mode here, so the driver will run on the master node and the job's 
+stdout will be printed to the terminal console. You can also do `--deploy-mode cluster`, which will cause the driver 
+to run on one of the worker nodes. For experimentation, client mode is slightly more convenient.
+
 ```bash
 docker exec docker-spark-master-1 /opt/spark/bin/spark-submit \
 --packages org.apache.spark:spark-sql-kafka-0-10_2.13:3.4.1 \
