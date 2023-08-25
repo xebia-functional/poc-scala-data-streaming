@@ -65,7 +65,7 @@ sbt t;
 sbt runCoverage;
 ```
 
-[<p style="text-align: right;">Go back to Index</p>](#index)
+[Go back to Index](#index)
 
 <h3 id="integration-checks">Integration checks</h3>
 
@@ -77,7 +77,7 @@ is no need to do anything else on docker (other than having an environment avail
 sbt flinkIT;
 ```
 
-[<p style="text-align: right;">Go back to Index</p>](#index)
+[Go back to Index](#index)
 
 <h3 id="run-with-sbt">Run with sbt</h3>
 
@@ -104,26 +104,22 @@ sbt runSpark;
 docker-compose -f ./docker/docker-compose-kafka.yml down;
 ```
 
-[<p style="text-align: right;">Go back to Index</p>](#index)
+[Go back to Index](#index)
 
 <h3 id="run-with-docker">Run with Docker</h3>
-
-[<p style="text-align: right;">Go back to Index</p>](#index)
 
 <h4 id="running-for-the-first-time">Running for the first time</h4>
 
 There are two custom images in this project: `data-generator` and `processor-spark`. These images have to be generated.
 If you have already generated the images, you can skip to the section [Start the flow of events](#start-the-flow-of-events) 
 
-[<p style="text-align: right;">Go back to Index</p>](#index)
+[Go back to Index](#index)
 
 <h5 id="data-generator-image">Data Generator Image</h5>
 
 ```bash
 sbt data-generator/assembly; data-generator/docker:publishLocal;
 ```
-
-[<p style="text-align: right;">Go back to Index</p>](#index)
 
 <h5 id="spark-image">Spark Image</h5>
 
@@ -137,7 +133,7 @@ The Spark image is build from a [Dockerfile](./03-o-processor-spark/docker/Docke
 docker build ./03-o-processor-spark/docker/ -t cluster-apache-spark:3.4.1;
 ```
 
-[<p style="text-align: right;">Go back to Index</p>](#index)
+[Go back to Index](#index)
 
 <h4 id="start-the-flow-of-events">Start the flow of events</h4>
 
@@ -174,7 +170,7 @@ Metadata for all topics (from broker 1: localhost:9092/1):
 [...]
 ```
 
-[<p style="text-align: right;">Go back to Index</p>](#index)
+[Go back to Index](#index)
 
 <h4 id="spark-submit">Spark Submit</h4>
 
@@ -221,7 +217,7 @@ docker-compose \
 -f ./docker/docker-compose-spark.yml \
 down
 ```
-[<p style="text-align: right;">Go back to Index</p>](#index)
+[Go back to Index](#index)
 
 <h2 id="license">License</h2>
 
