@@ -13,6 +13,39 @@
       - [Spark Image](#spark-image)
     - [Start the flow of events](#start-the-flow-of-events)
     - [Spark Submit](#spark-submit)
+- [Language](#language)
+  - [Scala 2](#scala-2)
+  - [Scala 3](#scala-3)
+    - [Compile-time operations](#compile-time-operations)
+    - [Context Bounds](#context-bounds)
+    - [Enumerations](#enumerations)
+    - [Export Clauses](#export-clauses)
+    - [Extension Methods](#extension-methods)
+    - [Given Instances](#given-instances)
+    - [Implicit Conversions](#implicit-conversions)
+    - [Inline](#inline)
+    - [New Control Syntax](#new-control-syntax)
+    - [Opaque Type Aliases](#opaque-type-aliases)
+    - [Using Clauses](#using-clauses)
+- [Frameworks](#frameworks)
+  - [Apache Flink](#apache-flink)
+  - [Apache Kafka](#apache-kafka)
+  - [Apache Spark](#apache-spark)
+- [Libraries](#libraries)
+  - [Apache Avro](#apache-avro)
+  - [Cats](#cats)
+  - [Ciris](#ciris)
+  - [FS2](#fs2)
+  - [Logback](#logback)
+  - [Munit](#munit)
+  - [Pureconfig](#pureconfig)
+  - [Test Containers](#test-containers)
+  - [Vulcan](#vulcan)
+- [Tooling](#tooling)
+  - [Assembly](#assembly)
+  - [Explicit Dependencies](#explicit-dependencies)
+  - [ScalaFix](#scalafix)
+  - [ScalaFmt](#scalafmt)
 - [License](#license)
 
 Building an end-to-end data streaming pipeline, with a dummy data generator, a kafka consumer and processor modules,
@@ -211,6 +244,165 @@ docker-compose \
 -f ./docker/docker-compose-spark.yml \
 down
 ```
+[Go back to Index](#index)
+
+<h2 id="language">Language</h2>
+
+<h3 id="scala-2">Scala 2</h3>
+
+More information at [Relationship with Scala 2 Implicits](https://docs.scala-lang.org/scala3/reference/contextual/relationship-implicits.html#).
+
+[Go back to Index](#index)
+
+<h3 id="scala-3">Scala 3</h3>
+
+<h4 id="compile-time-operations">Compile-time operations</h4>
+
+More information at [Compile-time operations](https://docs.scala-lang.org/scala3/reference/metaprogramming/compiletime-ops.html).
+
+<h4 id="context-bounds">Context Bounds</h4>
+
+More information at [Context Bounds](https://docs.scala-lang.org/scala3/reference/contextual/context-bounds.html).
+
+<h4 id="enumerations">Enumerations</h4>
+
+More information at [Enums](https://docs.scala-lang.org/scala3/reference/enums/index.html).
+
+<h4 id="export-clauses">Export Clauses</h4>
+
+More information at [Export Clauses](https://docs.scala-lang.org/scala3/reference/other-new-features/export.html).
+
+<h4 id="extension-methods">Extension Methods</h4>
+
+More information at [Extension Methods](https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html).
+
+<h4 id="given-instances">Given Instances</h4>
+
+More information at [Given Instances](https://docs.scala-lang.org/scala3/reference/contextual/givens.html).
+
+<h4 id="implicit-conversions">Implicit Conversions</h4>
+
+More information at [Implicit Conversions](https://docs.scala-lang.org/scala3/reference/contextual/conversions.html).
+
+<h4 id="inline">Inline</h4>
+
+More information at [Inline](https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html).
+
+<h4 id="new-control-syntax">New Control Syntax</h4>
+
+More information at [New Control Syntax](https://docs.scala-lang.org/scala3/reference/other-new-features/control-syntax.html).
+
+<h4 id="opaque-type-aliases">Opaque Type Aliases</h4>
+
+More information at [Opaque Type Aliases](https://docs.scala-lang.org/scala3/reference/other-new-features/opaques.html).
+
+<h4 id="using-clauses">Using Clauses</h4>
+
+More information at [Using Clauses](https://docs.scala-lang.org/scala3/reference/contextual/using-clauses.html).
+
+[Go back to Index](#index)
+
+
+<h2 id="frameworks">Frameworks</h2>
+
+<h3 id="apache-flink">Apache Flink</h3>
+
+More information at [Apache Flink](https://flink.apache.org/).
+
+[Go back to Index](#index)
+
+<h3 id="apache-kafka">Apache Kafka</h3>
+
+More information at [Apache Kafka](https://kafka.apache.org/).
+
+[Go back to Index](#index)
+
+<h3 id="apache-spark">Apache Spark</h3>
+
+More information at [Apache Spark](https://spark.apache.org/).
+
+[Go back to Index](#index)
+
+<h2 id="libraries">Libraries</h2>
+
+<h3 id="apache-avro">Apache Avro</h3>
+
+More information at [Apache Avro](https://avro.apache.org/).
+
+[Go back to Index](#index)
+
+<h3 id="cats">Cats</h3>
+
+More information at [Typelevel Cats](https://typelevel.org/cats/).
+
+[Go back to Index](#index)
+
+<h3 id="ciris">Ciris</h3>
+
+More information at [Ciris](https://cir.is/).
+
+[Go back to Index](#index)
+
+<h3 id="fs2">FS2</h3>
+
+More information at [FS2](https://fs2.io/#/).
+
+[Go back to Index](#index)
+
+<h3 id="logback">Logback</h3>
+
+More information at [QOS Logback](https://logback.qos.ch/).
+
+[Go back to Index](#index)
+
+<h3 id="munit">Munit</h3>
+
+More information at [Scalameta Munit](https://scalameta.org/munit/).
+
+[Go back to Index](#index)
+
+<h3 id="pureconfig">Pureconfig</h3>
+
+More information at [PureConfig](https://pureconfig.github.io/).
+
+[Go back to Index](#index)
+
+<h3 id="test-containers">Test Containers</h3>
+
+More information at [Testcontainers-scala](https://github.com/testcontainers/testcontainers-scala).
+
+[Go back to Index](#index)
+
+<h3 id="vulcan">Vulcan</h3>
+
+More information at [FD4S Vulcan](https://fd4s.github.io/vulcan/).
+
+[Go back to Index](#index)
+
+<h2 id="tooling">Tooling</h2>
+
+<h3 id="assembly">Assembly</h3>
+
+More information at [sbt-assembly](https://github.com/sbt/sbt-assembly). 
+
+[Go back to Index](#index)
+
+<h3 id="explicit-dependencies">Explicit Dependencies</h3>
+
+More information at [sbt-explicit-dependencies](https://github.com/cb372/sbt-explicit-dependencies).
+
+[Go back to Index](#index)
+
+<h3 id="scalafix">ScalaFix</h3>
+
+More information at [Scala Center](https://scalacenter.github.io/scalafix/docs/users/installation.html).
+
+[Go back to Index](#index)
+
+<h3 id="scalafmt">ScalaFmt</h3>
+
+More information at [Scalameta Scalafmt](https://scalameta.org/scalafmt/).
+
 [Go back to Index](#index)
 
 <h2 id="license">License</h2>
