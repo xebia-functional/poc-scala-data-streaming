@@ -111,9 +111,7 @@ docker-compose -f ./docker/docker-compose-kafka.yml down;
 <h4 id="running-for-the-first-time">Running for the first time</h4>
 
 There are two custom images in this project: `data-generator` and `processor-spark`. These images have to be generated.
-If you have already generated the images, you can skip to the section [Start the flow of events](#start-the-flow-of-events) 
-
-[Go back to Index](#index)
+If you have already generated the images, you can skip to the section [Start the flow of events](#start-the-flow-of-events)
 
 <h5 id="data-generator-image">Data Generator Image</h5>
 
@@ -132,8 +130,6 @@ The Spark image is build from a [Dockerfile](./03-o-processor-spark/docker/Docke
 ```bash
 docker build ./03-o-processor-spark/docker/ -t cluster-apache-spark:3.4.1;
 ```
-
-[Go back to Index](#index)
 
 <h4 id="start-the-flow-of-events">Start the flow of events</h4>
 
@@ -169,8 +165,6 @@ Metadata for all topics (from broker 1: localhost:9092/1):
     partition 0, leader 1, replicas: 1, isrs: 1
 [...]
 ```
-
-[Go back to Index](#index)
 
 <h4 id="spark-submit">Spark Submit</h4>
 
