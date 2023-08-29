@@ -18,6 +18,7 @@ package com.fortyseven.common.configuration
 
 import scala.compiletime.requireConst
 import scala.sys.error
+import scala.util.Try
 
 /**
  * Before running the whole program or a part of it, the involved configuration must be loaded. Refining the types of the configuration's values
@@ -57,25 +58,10 @@ object refinedTypes:
      * @param kafkaCompressionTypeCandidate
      *   An unknown string.
      * @return
-     *   An Either with a Right KafkaCompressionType or a Left IllegalStateException.
+     *   An Either with a Right KafkaCompressionType or a Left Throwable.
      */
     def from(kafkaCompressionTypeCandidate: String): Either[Throwable, KafkaCompressionType] =
-      if KafkaCompressionType.values.map(_.toString).contains(kafkaCompressionTypeCandidate)
-      then Right(safeApply(kafkaCompressionTypeCandidate))
-      else
-        Left(
-          new IllegalStateException(
-            s"The provided value $kafkaCompressionTypeCandidate does not correspond with the valid values ${values.mkString("(", ",", ")")}"
-          )
-        )
-
-    private def safeApply(kafkaCompressionType: String): KafkaCompressionType =
-      kafkaCompressionType match
-        case "none"   => none
-        case "gzip"   => gzip
-        case "snappy" => snappy
-        case "lz4"    => lz4
-        case "zstd"   => zstd
+      Try(valueOf(kafkaCompressionTypeCandidate)).toEither
 
     /**
      * Smart constructor for known strings at compile time. Use this method and not [[from]] when working with fixed values (''magic numbers'').
@@ -89,8 +75,8 @@ object refinedTypes:
      */
     inline def apply(kafkaCompressionType: String): KafkaCompressionType =
       requireConst(kafkaCompressionType)
-      inline if KafkaCompressionType.values.map(_.toString).contains(kafkaCompressionType)
-      then safeApply(kafkaCompressionType)
+      inline if values.map(_.toString).contains(kafkaCompressionType)
+      then valueOf(kafkaCompressionType)
       else error("The valid values are none, gzip, snappy, lz4 and zstd.")
 
   /**
@@ -117,20 +103,7 @@ object refinedTypes:
      *   An Either with a Right KafkaAutoOffsetReset or a Left IllegalStateException.
      */
     def from(kafkaAutoOffsetResetCandidate: String): Either[Throwable, KafkaAutoOffsetReset] =
-      if KafkaAutoOffsetReset.values.map(_.toString).contains(kafkaAutoOffsetResetCandidate)
-      then Right(safeApply(kafkaAutoOffsetResetCandidate))
-      else
-        Left(
-          new IllegalStateException(
-            s"The provided value $kafkaAutoOffsetResetCandidate does not correspond with the valid values ${values.mkString("(", ",", ")")}"
-          )
-        )
-
-    private def safeApply(kafkaAutoOffsetReset: String): KafkaAutoOffsetReset =
-      kafkaAutoOffsetReset match
-        case "Earliest" => Earliest
-        case "Latest"   => Latest
-        case "None"     => None
+      Try(valueOf(kafkaAutoOffsetResetCandidate)).toEither
 
     /**
      * Smart constructor for known strings at compile time. Use this method and not [[from]] when working with fixed values (''magic numbers'').
@@ -144,8 +117,8 @@ object refinedTypes:
      */
     inline def apply(kafkaAutoOffsetReset: String): KafkaAutoOffsetReset =
       requireConst(kafkaAutoOffsetReset)
-      inline if KafkaAutoOffsetReset.values.map(_.toString).contains(kafkaAutoOffsetReset)
-      then safeApply(kafkaAutoOffsetReset)
+      inline if values.map(_.toString).contains(kafkaAutoOffsetReset)
+      then valueOf(kafkaAutoOffsetReset)
       else error("The valid values are Earliest, Latest and None.")
 
   /**
@@ -167,7 +140,7 @@ object refinedTypes:
      *   An Either with a Right NonEmptyString or a Left IllegalStateException.
      */
     def from(nonEmptyStringCandidate: String): Either[Throwable, NonEmptyString] =
-      if nonEmptyStringCandidate.trim.isEmpty
+      if nonEmptyStringCandidate.isBlank
       then Left(new IllegalStateException(s"The provided string $nonEmptyStringCandidate is empty."))
       else Right(nonEmptyStringCandidate)
 
@@ -183,7 +156,7 @@ object refinedTypes:
      */
     inline def apply(nonEmptyString: String): NonEmptyString =
       requireConst(nonEmptyString)
-      inline if nonEmptyString == ""
+      inline if nonEmptyString.isBlank
       then error("Empty String is not allowed here.")
       else nonEmptyString
 
@@ -231,7 +204,7 @@ object refinedTypes:
      */
     inline def apply(int: Int): PositiveInt =
       requireConst(int)
-      inline if int >= 0
+      inline if int < 0
       then error("Int must be positive.")
       else int
 
