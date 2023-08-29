@@ -27,9 +27,9 @@ class refinedTypesTest extends ScalaCheckSuite:
     forAll(Gen.oneOf(IndexedSeq("", " ", "  ", "    "))): string =>
       NonEmptyString.from(string).isLeft
 
-  property("Any string that is not empty or blanck should return a valid NonEmptyString"):
+  property("Any string that is not empty or blank should return a valid NonEmptyString"):
     forAll(Gen.alphaStr.suchThat(string => string.nonEmpty)): string =>
-       NonEmptyString.from(string).isRight
+      NonEmptyString.from(string).isRight
 
   property("Any Integer that is negative should return Left"):
     forAll(Gen.negNum[Int]): negative =>
