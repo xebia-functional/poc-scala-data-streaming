@@ -25,7 +25,7 @@ import com.fortyseven.output.api.FlinkProcessorAPI
 import com.fortyseven.processor.flink.configuration.ProcessorConfiguration
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
 
-class DataProcessor[F[_]: Async] extends FlinkProcessorAPI[F, ProcessorConfiguration]:
+final class DataProcessor[F[_]: Async] extends FlinkProcessorAPI[F, ProcessorConfiguration]:
 
   /**
    * @param configuration

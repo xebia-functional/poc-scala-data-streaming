@@ -22,7 +22,7 @@ import com.fortyseven.common.api.ConfigurationAPI
 import pureconfig.ConfigSource
 import pureconfig.module.catseffect.syntax.*
 
-class KafkaConsumerConfigurationLoader[F[_]: Async] extends ConfigurationAPI[F, KafkaConsumerConfiguration]:
+final class KafkaConsumerConfigurationLoader[F[_]: Async] extends ConfigurationAPI[F, KafkaConsumerConfiguration]:
   /**
    * @return
    *   An instance of the the class [Configuration] wrapped into an effect of type [Effect]. The return type of the method is mappable or flatMappable

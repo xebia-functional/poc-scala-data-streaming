@@ -21,7 +21,7 @@ import scala.concurrent.duration.FiniteDuration
 import com.fortyseven.domain.model.types.refinedTypes.*
 
 /**
- * Contains case classes that represent atomic information captured by sensors.
+ * Contains final case classes that represent atomic information captured by sensors.
  */
 object model:
 
@@ -36,7 +36,7 @@ object model:
    * @param longitude
    *   Expressed in a refined type that is a subset of Double (-180.0, 180.0).
    */
-  case class GPSPosition(latitude: Latitude, longitude: Longitude)
+  final case class GPSPosition(latitude: Latitude, longitude: Longitude)
 
   /**
    * WheelRotation
@@ -46,7 +46,7 @@ object model:
    * @param frequency
    *   Expressed in a refined type, that is a subset of Double (>=0.0).
    */
-  case class WheelRotation(frequency: Hz)
+  final case class WheelRotation(frequency: Hz)
 
   /**
    * BatteryCharge.
@@ -57,7 +57,7 @@ object model:
    * @param percentage
    *   Expressed in a refined type that is a subset of Double (0.00, 100.00).
    */
-  case class BatteryCharge(percentage: Percentage)
+  final case class BatteryCharge(percentage: Percentage)
 
   /**
    * BatteryHealth.
@@ -68,7 +68,7 @@ object model:
    * @param remaining
    *   Expressed in a refined type that is a subset of Double (0.0, 100.0).
    */
-  case class BatteryHealth(remaining: Percentage)
+  final case class BatteryHealth(remaining: Percentage)
 
   /**
    * PneumaticPressure.
@@ -79,7 +79,7 @@ object model:
    * @param pressure
    *   Expressed in a refined type that is a subset of Double (>=0.0).
    */
-  case class PneumaticPressure(pressure: Bar)
+  final case class PneumaticPressure(pressure: Bar)
 
   /**
    * BreaksUsage.
@@ -90,7 +90,7 @@ object model:
    * @param finiteDuration
    *   Expressed in seconds [[scala.concurrent.duration.FiniteDuration]].
    */
-  case class BreaksUsage(finiteDuration: FiniteDuration)
+  final case class BreaksUsage(finiteDuration: FiniteDuration)
 
   /**
    * BreaksHealth.
@@ -101,4 +101,4 @@ object model:
    * @param remaining
    *   Expressed in a refined type that is a subset of Double (0.0, 100.0).
    */
-  case class BreaksHealth(remaining: Percentage)
+  final case class BreaksHealth(remaining: Percentage)
