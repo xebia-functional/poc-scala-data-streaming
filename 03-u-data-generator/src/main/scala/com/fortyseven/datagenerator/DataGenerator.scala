@@ -22,22 +22,19 @@ import cats.Parallel
 import cats.effect.kernel.Async
 import cats.implicits.*
 
-import com.fortyseven.common.api.{ConfigurationAPI, DataGeneratorAPI}
-import com.fortyseven.datagenerator.configuration.DataGeneratorConfiguration
+import com.fortyseven.common.api.DataGeneratorAPI
+import com.fortyseven.common.configuration.DataGeneratorConfigurationI
 import com.fortyseven.domain.codecs.iot.IotCodecs.given
 import com.fortyseven.domain.model.iot.model.{GPSPosition, PneumaticPressure}
 import fs2.kafka.*
 import org.apache.kafka.clients.producer.ProducerConfig
 
-final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorAPI[F, DataGeneratorConfiguration]:
+final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorAPI[F]:
 
-  override def generate(configuration: ConfigurationAPI[F, DataGeneratorConfiguration]): F[Unit] =
-    for
-      conf <- configuration.load()
-      _    <- runWithConfiguration(conf)
-    yield ()
+  override def generate[Configuration <: DataGeneratorConfigurationI](configuration: Configuration): F[Unit] =
+    runWithConfiguration(configuration)
 
-  private def runWithConfiguration(configuration: DataGeneratorConfiguration): F[Unit] =
+  private def runWithConfiguration(configuration: DataGeneratorConfigurationI): F[Unit] =
     import VulcanSerdes.*
 
     val generators = new ModelGenerators[F](100.milliseconds)
@@ -51,12 +48,12 @@ final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorAPI[F, Dat
       .withProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, configuration.kafka.producer.valueSerializerClass)
 
     val pneumaticPressureSerializer = avroSerializer[PneumaticPressure](
-      Configuration(configuration.schemaRegistry.schemaRegistryURL),
+      Configuration(configuration.schemaRegistry.schemaRegistryUrl),
       includeKey = false
     )
 
     val gpsPositionSerializer = avroSerializer[GPSPosition](
-      Configuration(configuration.schemaRegistry.schemaRegistryURL),
+      Configuration(configuration.schemaRegistry.schemaRegistryUrl),
       includeKey = false
     )
 

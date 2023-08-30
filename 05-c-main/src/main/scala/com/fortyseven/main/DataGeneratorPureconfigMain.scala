@@ -19,15 +19,15 @@ package com.fortyseven.main
 import cats.effect.{IO, IOApp}
 
 import com.fortyseven.datagenerator.DataGenerator
-import com.fortyseven.datagenerator.configuration.ConfigurationLoader
+import com.fortyseven.pureconfig.datagenerator.DataGeneratorConfigurationLoader
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
-object DataGeneratorMain extends IOApp.Simple:
+object DataGeneratorPureconfigMain extends IOApp.Simple:
 
   override def run: IO[Unit] = for
-    logger <- Slf4jLogger.create[IO]
-    _      <- logger.info(s"Loading Data Generator Configuration")
-    dataGenConf = ConfigurationLoader[IO]()
-    _ <- logger.info("Start data generator")
-    _ <- new DataGenerator[IO].generate(dataGenConf)
+    logger      <- Slf4jLogger.create[IO]
+    _           <- logger.info(s"Loading Data Generator Configuration")
+    dataGenConf <- DataGeneratorConfigurationLoader[IO].load()
+    _           <- logger.info("Start data generator")
+    _           <- new DataGenerator[IO].generate(dataGenConf)
   yield ()

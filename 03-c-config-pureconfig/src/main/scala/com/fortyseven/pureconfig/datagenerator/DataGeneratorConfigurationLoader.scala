@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.fortyseven.datagenerator.configuration
+package com.fortyseven.pureconfig.datagenerator
 
 import cats.effect.kernel.Async
 
@@ -22,7 +22,7 @@ import com.fortyseven.common.api.ConfigurationAPI
 import pureconfig.ConfigSource
 import pureconfig.module.catseffect.syntax.*
 
-final case class ConfigurationLoader[F[_]: Async]() extends ConfigurationAPI[F, DataGeneratorConfiguration]:
+final class DataGeneratorConfigurationLoader[F[_]: Async] extends ConfigurationAPI[F, DataGeneratorConfiguration]:
 
   /**
    * @return

@@ -24,7 +24,7 @@ import com.fortyseven.kafkaconsumer.KafkaConsumer
 import com.fortyseven.processor.flink.FlinkProcessor
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
-object FlinkCirceMain extends IOApp.Simple:
+object FlinkCirisMain extends IOApp.Simple:
 
   override def run: IO[Unit] = for
     logger         <- Slf4jLogger.create[IO]

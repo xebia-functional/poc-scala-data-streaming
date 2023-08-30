@@ -168,7 +168,7 @@ lazy val `configuration-pureconfig`: Project =
 lazy val `data-generator`: Project =
   project
     .in(file("03-u-data-generator"))
-    .dependsOn(`configuration-pureconfig` % Cctt) // TODO it has to depend on the API
+    .dependsOn(`common-api`)
     .enablePlugins(DockerPlugin)
     .enablePlugins(JavaAppPackaging)
     .settings(commonSettings)
@@ -198,9 +198,7 @@ lazy val `data-generator`: Project =
         Libraries.kafka.kafkaSchemaSerializer,
         Libraries.kafka.kafkaSerializer,
         Libraries.test.munitCatsEffect,
-        Libraries.test.munitScalacheck,
-        Libraries.config.pureConfig,
-        Libraries.config.pureConfigCE
+        Libraries.test.munitScalacheck
       )
     )
 
@@ -275,7 +273,7 @@ lazy val `processor-flink-integration`: Project =
 lazy val `processor-spark`: Project = project
   .in(file("04-o-processor-spark"))
   .dependsOn(`output-api` % Cctt)
-  .dependsOn(`configuration-pureconfig` % Cctt)
+  .dependsOn(`configuration-pureconfig` % Cctt) // We need it here since Spark runs from this module.
   .settings(commonSettings)
   .settings(
     name := "spark",
@@ -301,10 +299,10 @@ lazy val `processor-spark`: Project = project
 lazy val main: Project =
   project
     .in(file("05-c-main"))
+    .dependsOn(`configuration-ciris` % Cctt)
+    .dependsOn(`configuration-pureconfig` % Cctt)
     .dependsOn(`consumer-kafka` % Cctt)
     .dependsOn(`data-generator` % Cctt)
-    .dependsOn(`configuration-pureconfig` % Cctt)
-    .dependsOn(`configuration-ciris` % Cctt)
     .dependsOn(`processor-flink` % Cctt)
     .settings(commonSettings)
     .settings(
