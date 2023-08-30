@@ -24,7 +24,7 @@ import com.fortyseven.common.configuration.FlinkProcessorConfigurationI
 import com.fortyseven.output.api.FlinkProcessorAPI
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
 
-final class DataProcessor[F[_]: Async] extends FlinkProcessorAPI[F]:
+final class FlinkProcessor[F[_]: Async] extends FlinkProcessorAPI[F]:
 
   /**
    * @param configuration
@@ -32,10 +32,8 @@ final class DataProcessor[F[_]: Async] extends FlinkProcessorAPI[F]:
    * @return
    *   It executes the effects of the Flink Processor and returns Unit.
    */
-  override def process[Configuration <: FlinkProcessorConfigurationI](config: Configuration): F[Unit] =
-    runWithConfiguration(config)
-
-//override def process(configuration: FlinkProcessorConfigurationI): F[Unit] = runWithConfiguration(configuration)
+  override def process[Configuration <: FlinkProcessorConfigurationI](configuration: Configuration): F[Unit] =
+    runWithConfiguration(configuration)
 
   private def setAndGetEnvironment(): StreamExecutionEnvironment =
     val env = StreamExecutionEnvironment.getExecutionEnvironment()

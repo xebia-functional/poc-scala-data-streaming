@@ -19,7 +19,7 @@ package com.fortyseven.main
 import cats.effect.{IO, IOApp}
 
 import com.fortyseven.kafkaconsumer.KafkaConsumer
-import com.fortyseven.processor.flink.DataProcessor
+import com.fortyseven.processor.flink.FlinkProcessor
 import com.fortyseven.pureconfig.flink.FlinkProcessorConfigurationLoader
 import com.fortyseven.pureconfig.kafkaconsumer.KafkaConsumerConfigurationLoader
 import org.typelevel.log4cats.slf4j.Slf4jLogger
@@ -33,7 +33,7 @@ object FlinkPureconfigMain extends IOApp.Simple:
     _              <- logger.info("Start kafka consumer")
     consumerFiber  <- new KafkaConsumer[IO].consume(kafkaConf).start
     _              <- logger.info("Start flink processor")
-    processorFiber <- new DataProcessor[IO].process(flinkConf).start
+    processorFiber <- new FlinkProcessor[IO].process(flinkConf).start
     _              <- consumerFiber.join
     _              <- processorFiber.join
   yield ()

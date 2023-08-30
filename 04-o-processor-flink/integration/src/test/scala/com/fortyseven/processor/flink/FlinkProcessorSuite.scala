@@ -29,7 +29,7 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 import java.util.concurrent.TimeUnit
 import scala.concurrent.duration.*
 
-class DataProcessorSuite extends CatsEffectSuite with TestContainersForAll:
+class FlinkProcessorSuite extends CatsEffectSuite with TestContainersForAll:
 
   override def munitTimeout: Duration = new FiniteDuration(60, TimeUnit.SECONDS)
 
