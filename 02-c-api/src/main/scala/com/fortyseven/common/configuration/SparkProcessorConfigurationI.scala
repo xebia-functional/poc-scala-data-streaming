@@ -36,7 +36,7 @@ trait SparkProcessorStreamingConfigurationI:
   val stopGracefullyOnShutdown: Boolean
 
 trait SparkProcessorReaderConfigurationI:
-  val kafkaConfiguration: SparkProcessorKafkaConfigurationI
+  val kafka: SparkProcessorKafkaConfigurationI
 
 trait SparkProcessorWriterConfigurationI:
   val format: NonEmptyString
@@ -44,5 +44,5 @@ trait SparkProcessorWriterConfigurationI:
 trait SparkProcessorKafkaConfigurationI:
   val bootstrapServers: NonEmptyString
   val topic: NonEmptyString
-  val startingOffset: NonEmptyString
-  val endingOffset: NonEmptyString
+  val startingOffsets: NonEmptyString
+  val endingOffsets: NonEmptyString

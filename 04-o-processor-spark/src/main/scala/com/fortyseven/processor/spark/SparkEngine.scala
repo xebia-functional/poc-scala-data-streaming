@@ -16,15 +16,15 @@
 
 package com.fortyseven.processor.spark
 
-import com.fortyseven.processor.spark.configuration.{ProcessorConfiguration, ReaderConfiguration, WriterConfiguration}
+import com.fortyseven.common.configuration.{SparkProcessorConfigurationI, SparkProcessorReaderConfigurationI, SparkProcessorWriterConfigurationI}
 import org.apache.spark.sql.{DataFrame, DataFrameReader, DataFrameWriter, Row, SparkSession}
 
-private[spark] final class SparkDataProcessor(sparkSession: SparkSession):
+private[spark] final class SparkEngine(sparkSession: SparkSession):
 
-  def run(processorConfiguration: ProcessorConfiguration): Unit =
+  def run(sparkProcessorConfiguration: SparkProcessorConfigurationI): Unit =
 
     extension (sparkSession: SparkSession)
-      def buildReader(reader: ReaderConfiguration): DataFrameReader =
+      def buildReader(reader: SparkProcessorReaderConfigurationI): DataFrameReader =
         sparkSession.read
           .format("kafka")
           .option(
@@ -47,11 +47,11 @@ private[spark] final class SparkDataProcessor(sparkSession: SparkSession):
     extension (dataFrameReader: DataFrameReader) def applyLogic(): DataFrame = dataFrameReader.load()
 
     extension (dataFrame: DataFrame)
-      def buildWriter(writer: WriterConfiguration): DataFrameWriter[Row] =
+      def buildWriter(writer: SparkProcessorWriterConfigurationI): DataFrameWriter[Row] =
         dataFrame.write.format(writer.format)
 
     sparkSession
-      .buildReader(processorConfiguration.reader)
+      .buildReader(sparkProcessorConfiguration.reader)
       .applyLogic()
-      .buildWriter(processorConfiguration.writer)
+      .buildWriter(sparkProcessorConfiguration.writer)
       .save()

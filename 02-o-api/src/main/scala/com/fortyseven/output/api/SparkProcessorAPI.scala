@@ -16,8 +16,8 @@
 
 package com.fortyseven.output.api
 
-import com.fortyseven.common.api.ConfigurationAPI
+import com.fortyseven.common.configuration.SparkProcessorConfigurationI
 
-trait SparkProcessorAPI[F[_], SparkConfiguration]:
+trait SparkProcessorAPI:
 
-  def process(config: ConfigurationAPI[F, SparkConfiguration]): Unit
+  def process[Configuration <: SparkProcessorConfigurationI](config: Configuration): Unit

@@ -275,13 +275,10 @@ lazy val `processor-flink-integration`: Project =
 lazy val `processor-spark`: Project = project
   .in(file("04-o-processor-spark"))
   .dependsOn(`output-api` % Cctt)
-  .dependsOn(`configuration-pureconfig` % Cctt) // TODO remove when abstracting over configuration
+  .dependsOn(`configuration-pureconfig` % Cctt)
   .settings(commonSettings)
   .settings(
     name := "spark",
-    libraryDependencies ++= Seq(
-      Libraries.config.pureConfig // TODO remove when abstracting over configuration
-    ),
     libraryDependencies ++= Seq(
       Libraries.spark.catalyst,
       Libraries.spark.core,
