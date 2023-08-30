@@ -14,17 +14,33 @@
  * limitations under the License.
  */
 
-package com.fortyseven.cirisconfiguration.configuration.internal
+package com.fortyseven.cirisconfiguration.kafkaconsumer
 
 import scala.concurrent.duration.FiniteDuration
 
+import com.fortyseven.common.configuration.*
 import com.fortyseven.common.configuration.refinedTypes.*
 
-final case class ProducerConfiguration(
+private[kafkaconsumer] final case class KafkaConsumerConfiguration(
+    broker: BrokerConfiguration,
+    consumer: Option[ConsumerConfiguration],
+    producer: Option[ProducerConfiguration]
+) extends KafkaConsumerConfigurationI
+
+private[kafkaconsumer] final case class BrokerConfiguration(brokerAddress: NonEmptyString) extends KafkaConsumerBrokerConfigurationI
+
+private[kafkaconsumer] final case class ConsumerConfiguration(
+    topicName: NonEmptyString,
+    autoOffsetReset: KafkaAutoOffsetReset,
+    groupId: NonEmptyString,
+    maxConcurrent: PositiveInt
+) extends KafkaConsumerConsumerConfigurationI
+
+private[kafkaconsumer] final case class ProducerConfiguration(
     topicName: NonEmptyString,
     valueSerializerClass: NonEmptyString,
     maxConcurrent: PositiveInt,
     compressionType: KafkaCompressionType,
     commitBatchWithinSize: PositiveInt,
     commitBatchWithinTime: FiniteDuration
-)
+) extends KafkaConsumerProducerConfigurationI

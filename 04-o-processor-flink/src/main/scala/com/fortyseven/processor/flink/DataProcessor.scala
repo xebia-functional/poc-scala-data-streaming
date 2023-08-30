@@ -20,12 +20,11 @@ import cats.*
 import cats.effect.kernel.Async
 import cats.implicits.*
 
-import com.fortyseven.common.api.ConfigurationAPI
+import com.fortyseven.common.configuration.FlinkProcessorConfigurationI
 import com.fortyseven.output.api.FlinkProcessorAPI
-import com.fortyseven.processor.flink.configuration.ProcessorConfiguration
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
 
-final class DataProcessor[F[_]: Async] extends FlinkProcessorAPI[F, ProcessorConfiguration]:
+final class DataProcessor[F[_]: Async] extends FlinkProcessorAPI[F]:
 
   /**
    * @param configuration
@@ -33,10 +32,10 @@ final class DataProcessor[F[_]: Async] extends FlinkProcessorAPI[F, ProcessorCon
    * @return
    *   It executes the effects of the Flink Processor and returns Unit.
    */
-  override def process(configuration: ConfigurationAPI[F, ProcessorConfiguration]): F[Unit] = for
-    conf <- configuration.load()
-    _    <- runWithConfiguration(conf)
-  yield ()
+  override def process[Configuration <: FlinkProcessorConfigurationI](config: Configuration): F[Unit] =
+    runWithConfiguration(config)
+
+//override def process(configuration: FlinkProcessorConfigurationI): F[Unit] = runWithConfiguration(configuration)
 
   private def setAndGetEnvironment(): StreamExecutionEnvironment =
     val env = StreamExecutionEnvironment.getExecutionEnvironment()
@@ -44,5 +43,5 @@ final class DataProcessor[F[_]: Async] extends FlinkProcessorAPI[F, ProcessorCon
     env.getConfig.enableForceAvro()
     env
 
-  private def runWithConfiguration(jpc: ProcessorConfiguration): F[Unit] =
+  private def runWithConfiguration(jpc: FlinkProcessorConfigurationI): F[Unit] =
     new FlinkDataProcessor(setAndGetEnvironment()).run(jpc).void

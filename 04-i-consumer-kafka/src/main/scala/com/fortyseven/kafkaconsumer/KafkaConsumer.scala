@@ -22,14 +22,13 @@ import cats.*
 import cats.effect.kernel.Async
 import cats.implicits.*
 
-import com.fortyseven.common.api.ConfigurationAPI
+import com.fortyseven.common.configuration.KafkaConsumerConfigurationI
 import com.fortyseven.common.configuration.refinedTypes.KafkaAutoOffsetReset
 import com.fortyseven.input.api.KafkaConsumerAPI
-import com.fortyseven.kafkaconsumer.configuration.KafkaConsumerConfiguration
 import fs2.kafka.*
 import org.apache.kafka.clients.producer.ProducerConfig
 
-final class KafkaConsumer[F[_]: Async] extends KafkaConsumerAPI[F, KafkaConsumerConfiguration]:
+final class KafkaConsumer[F[_]: Async] extends KafkaConsumerAPI[F]:
 
   given Conversion[KafkaAutoOffsetReset, AutoOffsetReset] with
     def apply(x: KafkaAutoOffsetReset): AutoOffsetReset = x match
@@ -37,12 +36,9 @@ final class KafkaConsumer[F[_]: Async] extends KafkaConsumerAPI[F, KafkaConsumer
       case KafkaAutoOffsetReset.Latest   => AutoOffsetReset.Latest
       case KafkaAutoOffsetReset.None     => AutoOffsetReset.None
 
-  override def consume(conf: ConfigurationAPI[F, KafkaConsumerConfiguration]): F[Unit] = for
-    kc <- conf.load()
-    _  <- runWithConfiguration(kc)
-  yield ()
+  override def consume[Configuration <: KafkaConsumerConfigurationI](config: Configuration): F[Unit] = runWithConfiguration(config)
 
-  private def runWithConfiguration(kc: KafkaConsumerConfiguration): F[Unit] =
+  private def runWithConfiguration(kc: KafkaConsumerConfigurationI): F[Unit] =
 
     val producerConfig = kc.producer.getOrElse(
       throw new RuntimeException("No producer config available")

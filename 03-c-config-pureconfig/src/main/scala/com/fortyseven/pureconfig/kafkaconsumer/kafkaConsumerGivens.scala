@@ -14,10 +14,19 @@
  * limitations under the License.
  */
 
-package com.fortyseven.cirisconfiguration
+package com.fortyseven.pureconfig.kafkaconsumer
 
-object CommonConfiguration:
+//import com.fortyseven.pureconfig.refinedTypesGivens.given
+//import pureconfig.ConfigReader
+//import pureconfig.generic.derivation.default.derived
 
-  val kafkaBrokerAddress = "localhost:9092"
+object kafkaConsumerGivens
 
-  val schemaRegistryUrl = "http://localhost:8081"
+//given ConfigReader[BrokerConfiguration] = ConfigReader.derived[BrokerConfiguration]
+//
+//given ConfigReader[ConsumerConfiguration] = ConfigReader.derived[ConsumerConfiguration]
+//
+//given ConfigReader[ProducerConfiguration] = ConfigReader.derived[ProducerConfiguration]
+//
+//given ConfigReader[KafkaConsumerConfiguration] = ConfigReader.derived[KafkaConsumerConfiguration]
+//

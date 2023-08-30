@@ -14,44 +14,51 @@
  * limitations under the License.
  */
 
-package com.fortyseven.processor.flink.configuration
+package com.fortyseven.cirisconfiguration.flink
 
 import scala.concurrent.duration.FiniteDuration
 
 import com.fortyseven.common.configuration.refinedTypes.*
-import com.fortyseven.pureconfig.refinedTypesGivens.given
-import pureconfig.ConfigReader
-import pureconfig.generic.derivation.default.*
+import com.fortyseven.common.configuration.{
+  FlinkProcessorBrokerConfigurationI,
+  FlinkProcessorConfigurationI,
+  FlinkProcessorConsumerConfigurationI,
+  FlinkProcessorKafkaConfigurationI,
+  FlinkProcessorProducerConfigurationI,
+  FlinkProcessorSchemaRegistryConfigurationI
+}
 
-final case class ProcessorConfiguration(
+private[flink] final case class FlinkProcessorConfiguration(
     kafka: KafkaConfiguration,
     schemaRegistry: SchemaRegistryConfiguration
-) derives ConfigReader
+) extends FlinkProcessorConfigurationI
 
-final case class KafkaConfiguration(
+private[flink] final case class SchemaRegistryConfiguration(
+    schemaRegistryUrl: NonEmptyString
+) extends FlinkProcessorSchemaRegistryConfigurationI
+
+private[flink] final case class KafkaConfiguration(
     broker: BrokerConfiguration,
     consumer: Option[ConsumerConfiguration],
     producer: Option[ProducerConfiguration]
-) derives ConfigReader
+) extends FlinkProcessorKafkaConfigurationI
 
-final case class BrokerConfiguration(brokerAddress: NonEmptyString) derives ConfigReader
+private[flink] final case class BrokerConfiguration(
+    brokerAddress: NonEmptyString
+) extends FlinkProcessorBrokerConfigurationI
 
-final case class ConsumerConfiguration(
+private[flink] final case class ConsumerConfiguration(
     topicName: NonEmptyString,
     autoOffsetReset: KafkaAutoOffsetReset,
     groupId: NonEmptyString,
     maxConcurrent: PositiveInt
-) derives ConfigReader
+) extends FlinkProcessorConsumerConfigurationI
 
-final case class ProducerConfiguration(
+private[flink] final case class ProducerConfiguration(
     topicName: NonEmptyString,
     valueSerializerClass: NonEmptyString,
     maxConcurrent: PositiveInt,
     compressionType: KafkaCompressionType,
     commitBatchWithinSize: PositiveInt,
     commitBatchWithinTime: FiniteDuration
-) derives ConfigReader
-
-final case class SchemaRegistryConfiguration(
-    schemaRegistryURL: NonEmptyString
-) derives ConfigReader
+) extends FlinkProcessorProducerConfigurationI

@@ -16,7 +16,7 @@
 
 package com.fortyseven.output.api
 
-import com.fortyseven.common.api.ConfigurationAPI
+import com.fortyseven.common.configuration.FlinkProcessorConfigurationI
 
 /**
  * @tparam F
@@ -24,11 +24,11 @@ import com.fortyseven.common.api.ConfigurationAPI
  * @tparam FlinkConfiguration
  *   The type of the Flink Processor Configurator.
  */
-trait FlinkProcessorAPI[F[_], FlinkConfiguration]:
+trait FlinkProcessorAPI[F[_]]:
   /**
    * @param config
    *   An instance of a class that extends [[FlinkConfiguration]].
    * @return
    *   It executes the effects of the Flink Processor and returns Unit.
    */
-  def process(config: ConfigurationAPI[F, FlinkConfiguration]): F[Unit]
+  def process[Configuration <: FlinkProcessorConfigurationI](config: Configuration): F[Unit]

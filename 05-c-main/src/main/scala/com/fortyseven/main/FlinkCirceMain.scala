@@ -18,18 +18,18 @@ package com.fortyseven.main
 
 import cats.effect.{IO, IOApp}
 
+import com.fortyseven.cirisconfiguration.flink.FlinkProcessorConfigurationLoader
+import com.fortyseven.cirisconfiguration.kafkaconsumer.KafkaConsumerConfigurationLoader
 import com.fortyseven.kafkaconsumer.KafkaConsumer
-import com.fortyseven.kafkaconsumer.configuration.KafkaConsumerConfigurationLoader
 import com.fortyseven.processor.flink.DataProcessor
-import com.fortyseven.processor.flink.configuration.ProcessorConfigurationLoader
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
-object FlinkMain extends IOApp.Simple:
+object FlinkCirceMain extends IOApp.Simple:
 
   override def run: IO[Unit] = for
-    logger <- Slf4jLogger.create[IO]
-    kafkaConf = new KafkaConsumerConfigurationLoader[IO]
-    flinkConf = new ProcessorConfigurationLoader[IO]
+    logger         <- Slf4jLogger.create[IO]
+    kafkaConf      <- new KafkaConsumerConfigurationLoader[IO].load()
+    flinkConf      <- new FlinkProcessorConfigurationLoader[IO].load()
     _              <- logger.info("Start kafka consumer")
     consumerFiber  <- new KafkaConsumer[IO].consume(kafkaConf).start
     _              <- logger.info("Start flink processor")

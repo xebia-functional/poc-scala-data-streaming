@@ -14,35 +14,49 @@
  * limitations under the License.
  */
 
-package com.fortyseven.kafkaconsumer.configuration
+package com.fortyseven.pureconfig.kafkaconsumer
 
 import scala.concurrent.duration.FiniteDuration
 
+import com.fortyseven.common.configuration.*
 import com.fortyseven.common.configuration.refinedTypes.*
+import com.fortyseven.pureconfig.*
 import com.fortyseven.pureconfig.refinedTypesGivens.given
 import pureconfig.ConfigReader
-import pureconfig.generic.derivation.default.*
+import pureconfig.generic.derivation.default.derived
 
-final case class KafkaConsumerConfiguration(
+private[kafkaconsumer] case class KafkaConsumerConfiguration(
     broker: BrokerConfiguration,
     consumer: Option[ConsumerConfiguration],
     producer: Option[ProducerConfiguration]
-) derives ConfigReader
+) extends KafkaConsumerConfigurationI
 
-final case class BrokerConfiguration(brokerAddress: NonEmptyString) derives ConfigReader
+object KafkaConsumerConfiguration:
+  given ConfigReader[KafkaConsumerConfiguration] = ConfigReader.derived[KafkaConsumerConfiguration]
 
-final case class ConsumerConfiguration(
+private[kafkaconsumer] case class ConsumerConfiguration(
     topicName: NonEmptyString,
     autoOffsetReset: KafkaAutoOffsetReset,
     groupId: NonEmptyString,
     maxConcurrent: PositiveInt
-) derives ConfigReader
+) extends KafkaConsumerConsumerConfigurationI
 
-final case class ProducerConfiguration(
+object ConsumerConfiguration:
+  given ConfigReader[ConsumerConfiguration] = ConfigReader.derived[ConsumerConfiguration]
+
+private[kafkaconsumer] case class BrokerConfiguration(brokerAddress: NonEmptyString) extends KafkaConsumerBrokerConfigurationI
+
+object BrokerConfiguration:
+  given ConfigReader[BrokerConfiguration] = ConfigReader.derived[BrokerConfiguration]
+
+private[kafkaconsumer] case class ProducerConfiguration(
     topicName: NonEmptyString,
     valueSerializerClass: NonEmptyString,
     maxConcurrent: PositiveInt,
     compressionType: KafkaCompressionType,
     commitBatchWithinSize: PositiveInt,
     commitBatchWithinTime: FiniteDuration
-) derives ConfigReader
+) extends KafkaConsumerProducerConfigurationI
+
+object ProducerConfiguration:
+  given ConfigReader[ProducerConfiguration] = ConfigReader.derived[ProducerConfiguration]

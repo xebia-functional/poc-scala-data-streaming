@@ -157,6 +157,8 @@ lazy val `configuration-pureconfig`: Project =
       libraryDependencies ++= Seq(
         Libraries.config.pureConfig,
         Libraries.cats.core,
+        Libraries.cats.effectKernel,
+        Libraries.config.pureConfigCE,
         Libraries.test.munitCatsEffect
       )
     )
@@ -166,7 +168,7 @@ lazy val `configuration-pureconfig`: Project =
 lazy val `data-generator`: Project =
   project
     .in(file("03-u-data-generator"))
-    .dependsOn(`configuration-pureconfig` % Cctt)
+    .dependsOn(`configuration-pureconfig` % Cctt) // TODO it has to depend on the API
     .enablePlugins(DockerPlugin)
     .enablePlugins(JavaAppPackaging)
     .settings(commonSettings)
@@ -209,7 +211,6 @@ lazy val `data-generator`: Project =
 lazy val `consumer-kafka`: Project =
   project
     .in(file("04-i-consumer-kafka"))
-    .dependsOn(`configuration-pureconfig` % Cctt)
     .dependsOn(`input-api` % Cctt)
     .settings(commonSettings)
     .settings(
@@ -219,9 +220,7 @@ lazy val `consumer-kafka`: Project =
         Libraries.cats.effectKernel,
         Libraries.kafka.kafkaClients,
         Libraries.fs2.kafka,
-        Libraries.fs2.core,
-        Libraries.config.pureConfig,
-        Libraries.config.pureConfigCE
+        Libraries.fs2.core
       )
     )
 
@@ -230,7 +229,6 @@ lazy val `consumer-kafka`: Project =
 lazy val `processor-flink`: Project =
   project
     .in(file("04-o-processor-flink"))
-    .dependsOn(`configuration-pureconfig` % Cctt)
     .dependsOn(`output-api` % Cctt)
     .settings(commonSettings)
     .settings(
@@ -251,9 +249,7 @@ lazy val `processor-flink`: Project =
         Libraries.kafka.kafkaClients,
         Libraries.logging.catsCore,
         Libraries.logging.catsSlf4j,
-        Libraries.logging.logback,
-        Libraries.config.pureConfig,
-        Libraries.config.pureConfigCE
+        Libraries.logging.logback
       )
     )
 
@@ -279,10 +275,13 @@ lazy val `processor-flink-integration`: Project =
 lazy val `processor-spark`: Project = project
   .in(file("04-o-processor-spark"))
   .dependsOn(`output-api` % Cctt)
-  .dependsOn(`configuration-pureconfig` % Cctt)
+  .dependsOn(`configuration-pureconfig` % Cctt) // TODO remove when abstracting over configuration
   .settings(commonSettings)
   .settings(
     name := "spark",
+    libraryDependencies ++= Seq(
+      Libraries.config.pureConfig // TODO remove when abstracting over configuration
+    ),
     libraryDependencies ++= Seq(
       Libraries.spark.catalyst,
       Libraries.spark.core,
@@ -307,6 +306,8 @@ lazy val main: Project =
     .in(file("05-c-main"))
     .dependsOn(`consumer-kafka` % Cctt)
     .dependsOn(`data-generator` % Cctt)
+    .dependsOn(`configuration-pureconfig` % Cctt)
+    .dependsOn(`configuration-ciris` % Cctt)
     .dependsOn(`processor-flink` % Cctt)
     .settings(commonSettings)
     .settings(
