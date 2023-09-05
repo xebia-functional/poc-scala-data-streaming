@@ -21,8 +21,6 @@ import com.fortyseven.common.configuration.FlinkProcessorConfigurationI
 /**
  * @tparam F
  *   The effect in with Flink is executed.
- * @tparam FlinkConfiguration
- *   The type of the Flink Processor Configurator.
  */
 trait FlinkProcessorAPI[F[_]]:
   /**

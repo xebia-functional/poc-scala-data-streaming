@@ -16,8 +16,7 @@
 
 package com.fortyseven.common.configuration
 
-import scala.compiletime.requireConst
-import scala.sys.error
+import scala.compiletime.{error, requireConst}
 import scala.util.Try
 
 /**
