@@ -41,7 +41,7 @@ class VulcanSerdesSuite extends CatsEffectSuite:
     pneumaticPressureCodec.schema match
       case Left(_)       => ()
       case Right(schema) => mockedClient.register(s"$topic-value", AvroSchema(schema.toString))
-    val config                     = Config("useMockedClient", useMockedClient = Some(mockedClient))
+    val config                     = Configuration("useMockedClient", useMockedClient = Some(mockedClient))
     given Serde[PneumaticPressure] = avroSerde[PneumaticPressure](config, includeKey = false)
 
     val data: PneumaticPressure = PneumaticPressure(Bar(2.0))

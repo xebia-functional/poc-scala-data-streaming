@@ -22,27 +22,23 @@ import cats.*
 import cats.effect.kernel.Async
 import cats.implicits.*
 
-import com.fortyseven.common.api.ConfigurationAPI
-import com.fortyseven.domain.configuration.refinedTypes.KafkaAutoOffsetReset
+import com.fortyseven.common.configuration.KafkaConsumerConfigurationI
+import com.fortyseven.common.configuration.refinedTypes.KafkaAutoOffsetReset
 import com.fortyseven.input.api.KafkaConsumerAPI
-import com.fortyseven.kafkaconsumer.configuration.KafkaConsumerConfiguration
 import fs2.kafka.*
 import org.apache.kafka.clients.producer.ProducerConfig
 
-final class KafkaConsumer[F[_]: Async] extends KafkaConsumerAPI[F, KafkaConsumerConfiguration]:
+final class KafkaConsumer[F[_]: Async] extends KafkaConsumerAPI[F]:
 
-  extension (kaor: KafkaAutoOffsetReset)
-    def asKafka: AutoOffsetReset = kaor match
+  given Conversion[KafkaAutoOffsetReset, AutoOffsetReset] with
+    def apply(x: KafkaAutoOffsetReset): AutoOffsetReset = x match
       case KafkaAutoOffsetReset.Earliest => AutoOffsetReset.Earliest
       case KafkaAutoOffsetReset.Latest   => AutoOffsetReset.Latest
       case KafkaAutoOffsetReset.None     => AutoOffsetReset.None
 
-  override def consume(conf: ConfigurationAPI[F, KafkaConsumerConfiguration]): F[Unit] = for
-    kc <- conf.load()
-    _  <- runWithConfiguration(kc)
-  yield ()
+  override def consume[Configuration <: KafkaConsumerConfigurationI](config: Configuration): F[Unit] = runWithConfiguration(config)
 
-  private def runWithConfiguration(kc: KafkaConsumerConfiguration): F[Unit] =
+  private def runWithConfiguration(kc: KafkaConsumerConfigurationI): F[Unit] =
 
     val producerConfig = kc.producer.getOrElse(
       throw new RuntimeException("No producer config available")
@@ -57,13 +53,13 @@ final class KafkaConsumer[F[_]: Async] extends KafkaConsumerAPI[F, KafkaConsumer
 
     val consumerSettings =
       ConsumerSettings[F, String, Array[Byte]]
-        .withAutoOffsetReset(consumerConfig.autoOffsetReset.asKafka)
-        .withBootstrapServers(kc.broker.brokerAddress.asString)
-        .withGroupId(consumerConfig.groupId.asString)
+        .withAutoOffsetReset(consumerConfig.autoOffsetReset)
+        .withBootstrapServers(kc.broker.brokerAddress)
+        .withGroupId(consumerConfig.groupId)
 
     val producerSettings =
       ProducerSettings[F, String, Array[Byte]]
-        .withBootstrapServers(kc.broker.brokerAddress.asString)
+        .withBootstrapServers(kc.broker.brokerAddress)
         .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, producerConfig.compressionType.toString)
 
     val stream =
@@ -71,13 +67,13 @@ final class KafkaConsumer[F[_]: Async] extends KafkaConsumerAPI[F, KafkaConsumer
         .stream(consumerSettings)
         .subscribe(new Regex(s"${consumerConfig.topicName}-(.*)"))
         .records
-        .mapAsync(consumerConfig.maxConcurrent.asInt) { committable =>
+        .mapAsync(consumerConfig.maxConcurrent) { committable =>
           def addTopicPrefix(sourceTopic: String, targetTopic: String): String =
             val suffix = sourceTopic.substring(sourceTopic.lastIndexOf("-"))
             s"$targetTopic$suffix"
           processRecord(committable.record).map { case (key, value) =>
             val record =
-              ProducerRecord(addTopicPrefix(committable.record.topic, producerConfig.topicName.asString), key, value)
+              ProducerRecord(addTopicPrefix(committable.record.topic, producerConfig.topicName), key, value)
             committable.offset -> ProducerRecords.one(record)
           }
         }.through { offsetsAndProducerRecords =>
@@ -85,11 +81,11 @@ final class KafkaConsumer[F[_]: Async] extends KafkaConsumerAPI[F, KafkaConsumer
             offsetsAndProducerRecords
               .evalMap { case (offset, producerRecord) =>
                 producer.produce(producerRecord).map(_.as(offset))
-              }.parEvalMap(producerConfig.maxConcurrent.asInt)(identity)
+              }.parEvalMap(producerConfig.maxConcurrent)(identity)
           }
         }.through(
           commitBatchWithin(
-            producerConfig.commitBatchWithinSize.asInt,
+            producerConfig.commitBatchWithinSize,
             producerConfig.commitBatchWithinTime
           )
         )

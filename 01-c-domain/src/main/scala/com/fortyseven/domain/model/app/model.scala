@@ -34,7 +34,7 @@ object model:
    * @param distance
    *   value of the aggregation, in meters.
    */
-  case class TotalDistanceByTrip(tripId: TripId, distance: Meters)
+  final case class TotalDistanceByTrip(tripId: TripId, distance: Meters)
 
   /**
    * Total distance cycled by a given user.
@@ -46,7 +46,7 @@ object model:
    * @param distance
    *   Distance cycled in meters for the given user ID.
    */
-  case class TotalDistanceByUser(userId: UserId, distance: Meters)
+  final case class TotalDistanceByUser(userId: UserId, distance: Meters)
 
   /**
    * Current speed of the given trip ID.
@@ -60,7 +60,7 @@ object model:
    * @todo
    *   maybe a new parameter with a timestamp should be added to capture the time of the speed in the bicycle.
    */
-  case class CurrentSpeed(tripId: TripId, speed: Speed)
+  final case class CurrentSpeed(tripId: TripId, speed: Speed)
 
   /**
    * Total range of the given bicycle for the given trip.
@@ -74,4 +74,4 @@ object model:
    * @param remainingRange
    *   Remaining range in meters calculated from the remaining energy in the battery.
    */
-  case class TotalRange(tripId: TripId, bicycleId: BicycleId, remainingRange: Meters)
+  final case class TotalRange(tripId: TripId, bicycleId: BicycleId, remainingRange: Meters)

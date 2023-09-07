@@ -28,18 +28,18 @@ import vulcan.{AvroError, Codec}
 
 object VulcanSerdes:
 
-  final case class Config(schemaRegistryUrl: String, useMockedClient: Option[SchemaRegistryClient] = None)
+  final case class Configuration(schemaRegistryUrl: String, useMockedClient: Option[SchemaRegistryClient] = None)
 
-  private def avroSerdesConf(config: Config) = Map(
-    "schema.registry.url" -> config.schemaRegistryUrl
+  private def avroSerdesConf(configuration: Configuration) = Map(
+    "schema.registry.url" -> configuration.schemaRegistryUrl
   )
 
   final private case class SerializationError(msg: String) extends RuntimeException(msg) with NoStackTrace
 
-  def avroSerializer[T](config: Config, includeKey: Boolean)(using codec: Codec[T]): Serializer[T] =
+  def avroSerializer[T](configuration: Configuration, includeKey: Boolean)(using codec: Codec[T]): Serializer[T] =
     new Serializer[T]:
 
-      private val serializer = (codec.schema, config.useMockedClient) match
+      private val serializer = (codec.schema, configuration.useMockedClient) match
         case (Left(_), _) => KafkaAvroSerializer()
         case (Right(schema), Some(mockClient)) =>
           val parsedSchema = new AvroSchema(schema.toString)
@@ -53,7 +53,7 @@ object VulcanSerdes:
         case (Right(schema), None) =>
           val parsedSchema = new AvroSchema(schema.toString)
           new KafkaAvroSerializer:
-            this.configure(avroSerdesConf(config).asJava, includeKey)
+            this.configure(avroSerdesConf(configuration).asJava, includeKey)
             override def serialize(topic: String, record: AnyRef): Array[Byte] =
               serializeImpl(
                 getSubjectName(topic, includeKey, record, parsedSchema),
@@ -69,16 +69,16 @@ object VulcanSerdes:
             case Right(record) => record
         )
 
-  def avroDeserializer[T](config: Config, includeKey: Boolean)(using codec: Codec[T]): Deserializer[T] =
+  def avroDeserializer[T](configuration: Configuration, includeKey: Boolean)(using codec: Codec[T]): Deserializer[T] =
     new Deserializer[T]:
 
-      private val deserializer = (codec.schema, config.useMockedClient) match
+      private val deserializer = (codec.schema, configuration.useMockedClient) match
         case (Right(_), Some(mockClient)) =>
           new KafkaAvroDeserializer(mockClient)
         case _ =>
           new KafkaAvroDeserializer():
 
-            this.configure(avroSerdesConf(config).asJava, includeKey)
+            this.configure(avroSerdesConf(configuration).asJava, includeKey)
 
       override def deserialize(topic: String, data: Array[Byte]): T =
         (for
@@ -87,5 +87,5 @@ object VulcanSerdes:
           decoded      <- codec.decode(avro, readerSchema).left.map(_.throwable)
         yield decoded).fold(err => throw RuntimeException(err.getMessage), identity)
 
-  def avroSerde[T](config: Config, includeKey: Boolean)(using Codec[T]): Serde[T] =
+  def avroSerde[T](config: Configuration, includeKey: Boolean)(using Codec[T]): Serde[T] =
     Serdes.serdeFrom(avroSerializer(config, includeKey), avroDeserializer(config, includeKey))

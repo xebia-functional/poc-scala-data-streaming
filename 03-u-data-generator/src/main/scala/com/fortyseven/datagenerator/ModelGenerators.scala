@@ -25,7 +25,7 @@ import com.fortyseven.domain.model.iot.model.*
 import com.fortyseven.domain.model.types.refinedTypes.*
 import fs2.Stream
 
-class ModelGenerators[F[_]: Temporal](meteredInterval: FiniteDuration):
+final class ModelGenerators[F[_]: Temporal](meteredInterval: FiniteDuration):
 
   def generateBatteryCharge: fs2.Stream[F, BatteryCharge] = ???
 

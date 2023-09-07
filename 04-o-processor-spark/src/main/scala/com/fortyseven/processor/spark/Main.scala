@@ -16,10 +16,14 @@
 
 package com.fortyseven.processor.spark
 
-import com.fortyseven.processor.spark.configuration.ProcessorConfigurationLoader
+import com.fortyseven.pureconfig.spark.SparkProcessorConfigurationLoader
 
 object Main:
   def main(args: Array[String]): Unit =
-    val sc  = new ProcessorConfigurationLoader
-    val app = new DataProcessor
-    app.process(sc)
+    val sparkProcessorConfiguration = new SparkProcessorConfigurationLoader
+    val sparkProcessorConf          = sparkProcessorConfiguration.load()
+    val app                         = new SparkProcessor
+    sparkProcessorConf.fold(
+      configReaderFailures => throw new Exception(configReaderFailures.toString),
+      processorConfiguration => app.process(processorConfiguration)
+    )

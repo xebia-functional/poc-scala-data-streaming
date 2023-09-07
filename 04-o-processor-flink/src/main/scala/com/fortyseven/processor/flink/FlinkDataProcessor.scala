@@ -19,8 +19,8 @@ package com.fortyseven.processor.flink
 import cats.Applicative
 import cats.implicits.*
 
+import com.fortyseven.common.configuration.FlinkProcessorConfigurationI
 import com.fortyseven.domain.codecs.iot.IotCodecs.given
-import com.fortyseven.processor.flink.configuration.ProcessorConfiguration
 import org.apache.avro.Schema
 import org.apache.flink.api.common.eventtime.WatermarkStrategy
 import org.apache.flink.connector.kafka.source.KafkaSource
@@ -31,7 +31,7 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
 
 final class FlinkDataProcessor[F[_]: Applicative](env: StreamExecutionEnvironment):
 
-  def run(jpc: ProcessorConfiguration): F[JobClient] =
+  def run(jpc: FlinkProcessorConfigurationI): F[JobClient] =
 
     val consumerConfig = jpc.kafka.consumer.getOrElse(
       throw new RuntimeException("No consumer config available")
@@ -45,15 +45,15 @@ final class FlinkDataProcessor[F[_]: Applicative](env: StreamExecutionEnvironmen
       case Right(s) =>
         ConfluentRegistryAvroDeserializationSchema.forGeneric(
           s,
-          jpc.schemaRegistry.schemaRegistryURL.asString
+          jpc.schemaRegistry.schemaRegistryUrl
         )
       case Left(e) => throw new RuntimeException("No pneumaticPressureCodec schema available")
 
     val kafkaSource = KafkaSource
       .builder()
-      .setBootstrapServers(jpc.kafka.broker.brokerAddress.asString)
-      .setTopics(consumerConfig.topicName.asString)
-      .setGroupId(consumerConfig.groupId.asString)
+      .setBootstrapServers(jpc.kafka.broker.brokerAddress)
+      .setTopics(consumerConfig.topicName)
+      .setGroupId(consumerConfig.groupId)
       .setStartingOffsets(consumerConfig.autoOffsetReset.toString.toLowerCase match
         case "earliest" => OffsetsInitializer.earliest()
         case _          => OffsetsInitializer.latest()

@@ -16,6 +16,8 @@
 
 package com.fortyseven.common.api
 
-trait DataGeneratorAPI[F[_], Configuration]:
+import com.fortyseven.common.configuration.DataGeneratorConfigurationI
 
-  def generate(configuration: ConfigurationAPI[F, Configuration]): F[Unit]
+trait DataGeneratorAPI[F[_]]:
+
+  def generate[Configuration <: DataGeneratorConfigurationI](configuration: Configuration): F[Unit]

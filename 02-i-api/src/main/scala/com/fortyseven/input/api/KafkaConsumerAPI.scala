@@ -16,8 +16,8 @@
 
 package com.fortyseven.input.api
 
-import com.fortyseven.common.api.ConfigurationAPI
+import com.fortyseven.common.configuration.KafkaConsumerConfigurationI
 
-trait KafkaConsumerAPI[F[_], Configuration]:
+trait KafkaConsumerAPI[F[_]]:
 
-  def consume(config: ConfigurationAPI[F, Configuration]): F[Unit]
+  def consume[Configuration <: KafkaConsumerConfigurationI](config: Configuration): F[Unit]
