@@ -16,7 +16,8 @@
 
 package com.fortyseven.common.configuration
 
-import scala.compiletime.{error, requireConst}
+import scala.compiletime.ops.string.Matches
+import scala.compiletime.{codeOf, constValue, error}
 import scala.util.Try
 
 /**
@@ -73,10 +74,15 @@ object refinedTypes:
      *   More info at [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
      */
     inline def apply(kafkaCompressionType: String): KafkaCompressionType =
-      requireConst(kafkaCompressionType)
-      inline if values.map(_.toString).contains(kafkaCompressionType)
-      then valueOf(kafkaCompressionType)
-      else error("The valid values are none, gzip, snappy, lz4 and zstd.")
+      inline kafkaCompressionType match
+        case "none"   => none
+        case "gzip"   => gzip
+        case "snappy" => snappy
+        case "lz4"    => lz4
+        case "zstd"   => zstd
+        case _: String =>
+          error:
+            codeOf(kafkaCompressionType) + " is invalid.\nValid values are none, gzip, snappy, lz4 and zstd."
 
   /**
    * Set of allowed auto offset reset types for Kafka consumers.
@@ -86,7 +92,7 @@ object refinedTypes:
    */
   enum KafkaAutoOffsetReset:
 
-    case Earliest, Latest, None
+    case earliest, latest, none
 
   /**
    * Factory for [[KafkaAutoOffsetReset]] instances.
@@ -115,10 +121,13 @@ object refinedTypes:
      *   More info at [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
      */
     inline def apply(kafkaAutoOffsetReset: String): KafkaAutoOffsetReset =
-      requireConst(kafkaAutoOffsetReset)
-      inline if values.map(_.toString).contains(kafkaAutoOffsetReset)
-      then valueOf(kafkaAutoOffsetReset)
-      else error("The valid values are Earliest, Latest and None.")
+      inline kafkaAutoOffsetReset match
+        case "earliest" => earliest
+        case "latest"   => latest
+        case "none"     => none
+        case _: String =>
+          error:
+            codeOf(kafkaAutoOffsetReset) + " is invalid.\nValid values are earliest, latest and none."
 
   /**
    * Type alias for String. The validation happens in the factory methods of the companion object.
@@ -154,10 +163,9 @@ object refinedTypes:
      *   More info at [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
      */
     inline def apply(nonEmptyString: String): NonEmptyString =
-      requireConst(nonEmptyString)
-      inline if nonEmptyString.isBlank
-      then error("Empty String is not allowed here.")
-      else nonEmptyString
+      inline if constValue[Matches[nonEmptyString.type, "^\\S+$"]]
+      then nonEmptyString
+      else error(codeOf(nonEmptyString) + " is invalid. Empty String is not allowed here.")
 
     /**
      * When the compiler expects a value of type String but it finds a value of type NonEmptyString, it executes this.
@@ -202,9 +210,8 @@ object refinedTypes:
      *   More info at [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
      */
     inline def apply(int: Int): PositiveInt =
-      requireConst(int)
       inline if int < 0
-      then error("Int must be positive.")
+      then error(codeOf(int) + " is negative. Int must be positive.")
       else int
 
     /**

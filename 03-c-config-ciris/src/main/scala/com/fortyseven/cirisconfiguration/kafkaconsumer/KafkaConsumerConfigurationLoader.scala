@@ -31,7 +31,7 @@ final class KafkaConsumerConfigurationLoader[F[_]: Async] extends ConfigurationA
     for
       brokerAddress                 <- default("localhost:9092").as[NonEmptyString]
       consumerTopicName             <- default("data-generator").as[NonEmptyString]
-      consumerAutoOffsetReset       <- default(KafkaAutoOffsetReset.Earliest).as[KafkaAutoOffsetReset]
+      consumerAutoOffsetReset       <- default(KafkaAutoOffsetReset.earliest).as[KafkaAutoOffsetReset]
       consumerGroupId               <- default("groupId").as[NonEmptyString]
       consumerMaxConcurrent         <- default(25).as[PositiveInt]
       producerTopicName             <- default("input-topic").as[NonEmptyString]
