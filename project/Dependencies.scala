@@ -6,7 +6,7 @@ object Dependencies {
 
     object cats {
       private val coreVersion: String   = "2.10.0"
-      private val effectVersion: String = "3.5.1"
+      private val effectVersion: String = "3.5.2"
       val core: ModuleID                = "org.typelevel" %% "cats-core"          % coreVersion
       val effectKernel: ModuleID        = "org.typelevel" %% "cats-effect-kernel" % effectVersion
       val effect: ModuleID              = "org.typelevel" %% "cats-effect"        % effectVersion
@@ -22,15 +22,15 @@ object Dependencies {
     }
 
     object fs2 {
-      private val version: String      = "3.8.0"
-      private val kafkaVersion: String = "3.0.1"
+      private val version: String      = "3.9.2"
+      private val kafkaVersion: String = "3.1.0"
       val core: ModuleID               = "co.fs2"          %% "fs2-core"         % version
       val kafka: ModuleID              = "com.github.fd4s" %% "fs2-kafka"        % kafkaVersion
       val kafkaVulcan: ModuleID        = "com.github.fd4s" %% "fs2-kafka-vulcan" % kafkaVersion
     }
 
     object avro {
-      val avro: ModuleID   = "org.apache.avro"  % "avro"   % "1.11.2"
+      val avro: ModuleID   = "org.apache.avro"  % "avro"   % "1.11.3"
       val vulcan: ModuleID = "com.github.fd4s" %% "vulcan" % "1.9.0"
 
     }
@@ -53,7 +53,7 @@ object Dependencies {
     }
 
     object spark {
-      private val version: String = "3.4.1"
+      private val version: String = "3.5.0"
       val catalyst: ModuleID      = "org.apache.spark" %% "spark-catalyst"       % version % "provided"
       val core: ModuleID          = "org.apache.spark" %% "spark-core"           % version % "provided"
       val sql: ModuleID           = "org.apache.spark" %% "spark-sql"            % version % "provided"
