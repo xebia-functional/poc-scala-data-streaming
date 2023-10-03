@@ -17,6 +17,7 @@
 package com.fortyseven.common.configuration
 
 import scala.compiletime.ops.string.Matches
+import scala.compiletime.ops.int.*
 import scala.compiletime.{codeOf, constValue, error}
 import scala.util.Try
 
@@ -210,9 +211,9 @@ object refinedTypes:
      *   More info at [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
      */
     inline def apply(int: Int): PositiveInt =
-      inline if int < 0
-      then error(codeOf(int) + " is negative. Int must be positive.")
-      else int
+      inline if constValue[>[int.type, 0]]
+      then int
+      else error(codeOf(int) + " is negative. Int must be positive.")
 
     /**
      * When the compiler expects a value of type Int but it finds a value of type PositiveInt, it executes this.
