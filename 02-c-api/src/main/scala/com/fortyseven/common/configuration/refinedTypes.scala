@@ -211,7 +211,7 @@ object refinedTypes:
      *   More info at [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
      */
     inline def apply(int: Int): PositiveInt =
-      inline if constValue[>[int.type, 0]]
+      inline if constValue[int.type >= 0]
       then int
       else error(codeOf(int) + " is negative. Int must be positive.")
 
