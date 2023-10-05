@@ -31,7 +31,7 @@ class FlinkProcessorConfigurationLoader[F[_]: Async] extends ConfigurationAPI[F,
     for
       kafkaBrokerAddress                 <- default("localhost:9092").as[NonEmptyString]
       kafkaConsumerTopicName             <- default("input-topic-pp").as[NonEmptyString]
-      kafkaConsumerAutoOffsetReset       <- default(KafkaAutoOffsetReset.Earliest).as[KafkaAutoOffsetReset]
+      kafkaConsumerAutoOffsetReset       <- default(KafkaAutoOffsetReset.earliest).as[KafkaAutoOffsetReset]
       kafkaConsumerGroupId               <- default("groupId").as[NonEmptyString]
       kafkaConsumerMaxConcurrent         <- default(25).as[PositiveInt]
       kafkaProducerTopicName             <- default("output-topic").as[NonEmptyString]

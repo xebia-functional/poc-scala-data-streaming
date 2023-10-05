@@ -32,9 +32,9 @@ final class KafkaConsumer[F[_]: Async] extends KafkaConsumerAPI[F]:
 
   given Conversion[KafkaAutoOffsetReset, AutoOffsetReset] with
     def apply(x: KafkaAutoOffsetReset): AutoOffsetReset = x match
-      case KafkaAutoOffsetReset.Earliest => AutoOffsetReset.Earliest
-      case KafkaAutoOffsetReset.Latest   => AutoOffsetReset.Latest
-      case KafkaAutoOffsetReset.None     => AutoOffsetReset.None
+      case KafkaAutoOffsetReset.earliest => AutoOffsetReset.Earliest
+      case KafkaAutoOffsetReset.latest   => AutoOffsetReset.Latest
+      case KafkaAutoOffsetReset.none     => AutoOffsetReset.None
 
   override def consume[Configuration <: KafkaConsumerConfigurationI](config: Configuration): F[Unit] = runWithConfiguration(config)
 
