@@ -44,16 +44,8 @@ object ids:
      */
     def apply(id: UUID): BicycleId = id
 
-    extension (bicycleId: BicycleId)
-      /**
-       * Exposes the bicycle ID as the underlying UUID type.
-       *
-       * @return
-       *   an UUID.
-       * @see
-       *   [[https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html]].
-       */
-      def value: UUID = bicycleId
+    given Conversion[BicycleId, UUID] with
+      override def apply(x: BicycleId): UUID = x
 
   /**
    * Factory for [[UserId]] instances.
@@ -70,16 +62,8 @@ object ids:
      */
     def apply(id: UUID): UserId = id
 
-    extension (userId: UserId)
-      /**
-       * Exposes the user ID as the underlying UUID type.
-       *
-       * @return
-       *   un UUID.
-       * @see
-       *   [[https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html]].
-       */
-      def value: UUID = userId
+    given Conversion[UserId, UUID] with
+      override def apply(x: UserId): UUID = x
 
   /**
    * Factory for [[TripId]] instances.
@@ -96,13 +80,5 @@ object ids:
      */
     def apply(tripID: UUID): TripId = tripID
 
-    extension (tripId: TripId)
-      /**
-       * Exposes the trip ID as the underlying UUID type.
-       *
-       * @return
-       *   an UUID.
-       * @see
-       *   [[https://docs.scala-lang.org/scala3/reference/contextual/extension-methods.html]].
-       */
-      def value: UUID = tripId
+    given Conversion[TripId, UUID] with
+      override def apply(x: TripId): UUID = x

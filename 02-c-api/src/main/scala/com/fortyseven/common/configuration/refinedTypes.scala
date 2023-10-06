@@ -140,6 +140,8 @@ object refinedTypes:
    */
   object NonEmptyString:
 
+    private inline val validation = "^\\S+$"
+
     /**
      * Smart constructor for unknown strings at compile time.
      *
@@ -149,9 +151,9 @@ object refinedTypes:
      *   An Either with a Right NonEmptyString or a Left IllegalStateException.
      */
     def from(nonEmptyStringCandidate: String): Either[Throwable, NonEmptyString] =
-      if nonEmptyStringCandidate.isBlank
-      then Left(new IllegalStateException(s"The provided string $nonEmptyStringCandidate is empty."))
-      else Right(nonEmptyStringCandidate)
+      if validation.r.matches(nonEmptyStringCandidate)
+      then Right(nonEmptyStringCandidate)
+      else Left(new IllegalStateException(s"The provided string $nonEmptyStringCandidate is empty."))
 
     /**
      * Smart constructor for known strings at compile time. Use this method and not [[from]] when working with fixed values (''magic numbers'').
@@ -164,7 +166,7 @@ object refinedTypes:
      *   More info at [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
      */
     inline def apply(nonEmptyString: String): NonEmptyString =
-      inline if constValue[Matches[nonEmptyString.type, "^\\S+$"]]
+      inline if constValue[Matches[nonEmptyString.type, validation.type]]
       then nonEmptyString
       else error(codeOf(nonEmptyString) + " is invalid. Empty String is not allowed here.")
 
@@ -196,9 +198,9 @@ object refinedTypes:
      *   An Either with a Right PositiveInt or a Left IllegalStateException.
      */
     def from(intCandidate: Int): Either[Throwable, PositiveInt] =
-      if intCandidate < 0
-      then Left(new IllegalStateException(s"The provided int $intCandidate is not positive."))
-      else Right(intCandidate)
+      if intCandidate >= 0
+      then Right(intCandidate)
+      else Left(new IllegalStateException(s"The provided int $intCandidate is not positive."))
 
     /**
      * Smart constructor for known integers at compile time. Use this method and not [[from]] when working with fixed values (''magic numbers'').
