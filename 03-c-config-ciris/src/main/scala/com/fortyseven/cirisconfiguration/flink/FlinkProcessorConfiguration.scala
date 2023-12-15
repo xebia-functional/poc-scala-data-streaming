@@ -18,15 +18,13 @@ package com.fortyseven.cirisconfiguration.flink
 
 import scala.concurrent.duration.FiniteDuration
 
+import com.fortyseven.common.configuration.FlinkProcessorBrokerConfigurationI
+import com.fortyseven.common.configuration.FlinkProcessorConfigurationI
+import com.fortyseven.common.configuration.FlinkProcessorConsumerConfigurationI
+import com.fortyseven.common.configuration.FlinkProcessorKafkaConfigurationI
+import com.fortyseven.common.configuration.FlinkProcessorProducerConfigurationI
+import com.fortyseven.common.configuration.FlinkProcessorSchemaRegistryConfigurationI
 import com.fortyseven.common.configuration.refinedTypes.*
-import com.fortyseven.common.configuration.{
-  FlinkProcessorBrokerConfigurationI,
-  FlinkProcessorConfigurationI,
-  FlinkProcessorConsumerConfigurationI,
-  FlinkProcessorKafkaConfigurationI,
-  FlinkProcessorProducerConfigurationI,
-  FlinkProcessorSchemaRegistryConfigurationI
-}
 
 private[flink] final case class FlinkProcessorConfiguration(
     kafka: KafkaConfiguration,

@@ -22,6 +22,7 @@ import com.fortyseven.common.configuration.*
 import com.fortyseven.common.configuration.refinedTypes.*
 import com.fortyseven.pureconfig.*
 import com.fortyseven.pureconfig.refinedTypesGivens.given
+
 import pureconfig.ConfigReader
 import pureconfig.generic.derivation.default.derived
 

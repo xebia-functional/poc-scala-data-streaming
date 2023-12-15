@@ -16,12 +16,14 @@
 
 package com.fortyseven.main
 
-import cats.effect.{IO, IOApp}
+import cats.effect.IO
+import cats.effect.IOApp
 
 import com.fortyseven.cirisconfiguration.flink.FlinkProcessorConfigurationLoader
 import com.fortyseven.cirisconfiguration.kafkaconsumer.KafkaConsumerConfigurationLoader
 import com.fortyseven.kafkaconsumer.KafkaConsumer
 import com.fortyseven.processor.flink.FlinkProcessor
+
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 object FlinkCirisMain extends IOApp.Simple:

@@ -22,6 +22,7 @@ import com.fortyseven.domain.TestUtils.codeAndDecode
 import com.fortyseven.domain.TestUtils.given
 import com.fortyseven.domain.codecs.iot.IotCodecs.given
 import com.fortyseven.domain.model.iot.model.*
+
 import munit.ScalaCheckSuite
 import org.scalacheck.Prop.forAll
 

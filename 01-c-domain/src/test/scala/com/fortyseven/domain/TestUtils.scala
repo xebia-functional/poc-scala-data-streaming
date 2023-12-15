@@ -23,8 +23,11 @@ import com.fortyseven.domain.model.app.model.*
 import com.fortyseven.domain.model.iot.model.*
 import com.fortyseven.domain.model.types.ids.*
 import com.fortyseven.domain.model.types.refinedTypes.*
-import org.scalacheck.{Arbitrary, Gen}
-import vulcan.{AvroError, Codec}
+
+import org.scalacheck.Arbitrary
+import org.scalacheck.Gen
+import vulcan.AvroError
+import vulcan.Codec
 
 object TestUtils:
 

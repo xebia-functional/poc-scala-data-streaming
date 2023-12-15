@@ -18,7 +18,9 @@ package com.fortyseven.common.configuration
 
 import scala.concurrent.duration.FiniteDuration
 
-import com.fortyseven.common.configuration.refinedTypes.{KafkaCompressionType, NonEmptyString, PositiveInt}
+import com.fortyseven.common.configuration.refinedTypes.KafkaCompressionType
+import com.fortyseven.common.configuration.refinedTypes.NonEmptyString
+import com.fortyseven.common.configuration.refinedTypes.PositiveInt
 
 trait DataGeneratorConfigurationI:
   val kafka: DataGeneratorKafkaConfigurationI

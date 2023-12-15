@@ -16,12 +16,16 @@
 
 package com.fortyseven.domain.codecs.ids
 
-import scala.reflect.{ClassTag, classTag}
+import scala.reflect.ClassTag
+import scala.reflect.classTag
 
 import com.fortyseven.domain.TestUtils.codeAndDecode
 import com.fortyseven.domain.TestUtils.given
 import com.fortyseven.domain.codecs.ids.IdsCodecs.given
-import com.fortyseven.domain.model.types.ids.{BicycleId, TripId, UserId}
+import com.fortyseven.domain.model.types.ids.BicycleId
+import com.fortyseven.domain.model.types.ids.TripId
+import com.fortyseven.domain.model.types.ids.UserId
+
 import munit.ScalaCheckSuite
 import org.scalacheck.Arbitrary
 import org.scalacheck.Prop.forAll

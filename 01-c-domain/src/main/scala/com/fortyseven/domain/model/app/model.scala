@@ -16,8 +16,11 @@
 
 package com.fortyseven.domain.model.app
 
-import com.fortyseven.domain.model.types.ids.{BicycleId, TripId, UserId}
-import com.fortyseven.domain.model.types.refinedTypes.{Meters, Speed}
+import com.fortyseven.domain.model.types.ids.BicycleId
+import com.fortyseven.domain.model.types.ids.TripId
+import com.fortyseven.domain.model.types.ids.UserId
+import com.fortyseven.domain.model.types.refinedTypes.Meters
+import com.fortyseven.domain.model.types.refinedTypes.Speed
 
 /**
  * Contains case classes that represent aggregated data.

@@ -16,7 +16,11 @@
 
 package com.fortyseven.common.configuration
 
-import com.fortyseven.common.configuration.refinedTypes.{KafkaAutoOffsetReset, KafkaCompressionType, NonEmptyString, PositiveInt}
+import com.fortyseven.common.configuration.refinedTypes.KafkaAutoOffsetReset
+import com.fortyseven.common.configuration.refinedTypes.KafkaCompressionType
+import com.fortyseven.common.configuration.refinedTypes.NonEmptyString
+import com.fortyseven.common.configuration.refinedTypes.PositiveInt
+
 import munit.ScalaCheckSuite
 import org.scalacheck.Gen
 import org.scalacheck.Prop.forAll

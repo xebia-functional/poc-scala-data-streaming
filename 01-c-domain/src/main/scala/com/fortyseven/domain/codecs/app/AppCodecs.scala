@@ -21,6 +21,7 @@ import cats.implicits.*
 import com.fortyseven.domain.codecs.ids.IdsCodecs.given
 import com.fortyseven.domain.codecs.types.TypesCodecs.given
 import com.fortyseven.domain.model.app.model.*
+
 import vulcan.Codec
 
 /**

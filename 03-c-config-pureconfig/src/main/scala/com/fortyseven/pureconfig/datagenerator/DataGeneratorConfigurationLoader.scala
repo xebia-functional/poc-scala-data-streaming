@@ -19,6 +19,7 @@ package com.fortyseven.pureconfig.datagenerator
 import cats.effect.kernel.Async
 
 import com.fortyseven.common.api.ConfigurationAPI
+
 import pureconfig.ConfigSource
 import pureconfig.module.catseffect.syntax.*
 

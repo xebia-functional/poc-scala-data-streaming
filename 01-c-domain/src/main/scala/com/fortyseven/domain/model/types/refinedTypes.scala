@@ -16,7 +16,8 @@
 
 package com.fortyseven.domain.model.types
 
-import scala.compiletime.{error, requireConst}
+import scala.compiletime.error
+import scala.compiletime.requireConst
 
 import com.fortyseven.domain.model.iot.errors.*
 

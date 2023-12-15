@@ -16,13 +16,15 @@
 
 package com.fortyseven.datagenerator
 
+import org.apache.kafka.common.serialization.Serde
+
 import com.fortyseven.domain.codecs.iot.IotCodecs.pneumaticPressureCodec
 import com.fortyseven.domain.model.iot.model.PneumaticPressure
 import com.fortyseven.domain.model.types.refinedTypes.Bar
+
 import io.confluent.kafka.schemaregistry.avro.AvroSchema
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
 import munit.CatsEffectSuite
-import org.apache.kafka.common.serialization.Serde
 
 class VulcanSerdesSuite extends CatsEffectSuite:
 

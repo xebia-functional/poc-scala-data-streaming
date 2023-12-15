@@ -16,17 +16,18 @@
 
 package com.fortyseven.kafkaconsumer
 
-import scala.util.matching.Regex
-
 import cats.*
 import cats.effect.kernel.Async
 import cats.implicits.*
+import fs2.kafka.*
+
+import scala.util.matching.Regex
+
+import org.apache.kafka.clients.producer.ProducerConfig
 
 import com.fortyseven.common.configuration.KafkaConsumerConfigurationI
 import com.fortyseven.common.configuration.refinedTypes.KafkaAutoOffsetReset
 import com.fortyseven.input.api.KafkaConsumerAPI
-import fs2.kafka.*
-import org.apache.kafka.clients.producer.ProducerConfig
 
 final class KafkaConsumer[F[_]: Async] extends KafkaConsumerAPI[F]:
 

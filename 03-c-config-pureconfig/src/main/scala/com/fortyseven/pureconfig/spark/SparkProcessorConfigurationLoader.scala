@@ -17,6 +17,7 @@
 package com.fortyseven.pureconfig.spark
 
 import com.fortyseven.common.api.ConfigurationAPI
+
 import pureconfig.ConfigReader.Result
 import pureconfig.ConfigSource
 

@@ -20,9 +20,10 @@ import cats.*
 import cats.effect.kernel.Async
 import cats.implicits.*
 
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
+
 import com.fortyseven.common.configuration.FlinkProcessorConfigurationI
 import com.fortyseven.output.api.FlinkProcessorAPI
-import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
 
 final class FlinkProcessor[F[_]: Async] extends FlinkProcessorAPI[F]:
 

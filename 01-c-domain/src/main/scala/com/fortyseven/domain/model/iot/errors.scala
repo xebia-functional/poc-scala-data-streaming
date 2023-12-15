@@ -35,4 +35,4 @@ object errors:
    * @param message
    *   Reason for the OutOfBoundsError.
    */
-  final case class OutOfBoundsError(message: String) extends RuntimeException(message) with NoStackTrace
+    final case class OutOfBoundsError(message: String) extends RuntimeException(message) with NoStackTrace

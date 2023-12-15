@@ -16,9 +16,11 @@
 
 package com.fortyseven.common.configuration
 
+import scala.compiletime.codeOf
+import scala.compiletime.constValue
+import scala.compiletime.error
 import scala.compiletime.ops.int.*
 import scala.compiletime.ops.string.Matches
-import scala.compiletime.{codeOf, constValue, error}
 import scala.util.Try
 
 /**

@@ -16,8 +16,15 @@
 
 package com.fortyseven.processor.spark
 
-import com.fortyseven.common.configuration.{SparkProcessorConfigurationI, SparkProcessorReaderConfigurationI, SparkProcessorWriterConfigurationI}
-import org.apache.spark.sql.{DataFrame, DataFrameReader, DataFrameWriter, Row, SparkSession}
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.DataFrameReader
+import org.apache.spark.sql.DataFrameWriter
+import org.apache.spark.sql.Row
+import org.apache.spark.sql.SparkSession
+
+import com.fortyseven.common.configuration.SparkProcessorConfigurationI
+import com.fortyseven.common.configuration.SparkProcessorReaderConfigurationI
+import com.fortyseven.common.configuration.SparkProcessorWriterConfigurationI
 
 private[spark] final class SparkEngine(sparkSession: SparkSession):
 

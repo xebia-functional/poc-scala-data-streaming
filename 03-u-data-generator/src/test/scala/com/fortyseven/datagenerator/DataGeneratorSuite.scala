@@ -16,11 +16,12 @@
 
 package com.fortyseven.datagenerator
 
-import scala.concurrent.duration.*
-
 import cats.effect.IO
 
-import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
+import scala.concurrent.duration.*
+
+import munit.CatsEffectSuite
+import munit.ScalaCheckEffectSuite
 import org.scalacheck.*
 import org.scalacheck.effect.PropF
 

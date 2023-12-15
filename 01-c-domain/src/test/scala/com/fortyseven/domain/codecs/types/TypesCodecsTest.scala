@@ -16,12 +16,14 @@
 
 package com.fortyseven.domain.codecs.types
 
-import scala.reflect.{ClassTag, classTag}
+import scala.reflect.ClassTag
+import scala.reflect.classTag
 
 import com.fortyseven.domain.TestUtils.codeAndDecode
 import com.fortyseven.domain.TestUtils.given
 import com.fortyseven.domain.codecs.types.TypesCodecs.given
 import com.fortyseven.domain.model.types.refinedTypes.*
+
 import munit.ScalaCheckSuite
 import org.scalacheck.Arbitrary
 import org.scalacheck.Prop.forAll

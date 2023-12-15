@@ -19,7 +19,9 @@ package com.fortyseven.domain.codecs.types
 import cats.implicits.*
 
 import com.fortyseven.domain.model.types.refinedTypes.*
-import vulcan.{AvroError, Codec}
+
+import vulcan.AvroError
+import vulcan.Codec
 
 /**
  * It contains the Vulcan codecs for the types (enums, case classes...) defined in the object [[com.fortyseven.domain.model.types.refinedTypes]].

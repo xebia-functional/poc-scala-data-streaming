@@ -16,14 +16,15 @@
 
 package com.fortyseven.cirisconfiguration.flink
 
-import scala.concurrent.duration.*
-
 import cats.effect.kernel.Async
 
-import ciris.*
+import scala.concurrent.duration.*
+
 import com.fortyseven.cirisconfiguration.decoders.given
 import com.fortyseven.common.api.ConfigurationAPI
 import com.fortyseven.common.configuration.refinedTypes.*
+
+import ciris.*
 
 class FlinkProcessorConfigurationLoader[F[_]: Async] extends ConfigurationAPI[F, FlinkProcessorConfiguration]:
 

@@ -17,6 +17,7 @@
 package com.fortyseven.domain.model.types
 
 import com.fortyseven.domain.model.types.refinedTypes.*
+
 import munit.ScalaCheckSuite
 import org.scalacheck
 import org.scalacheck.Gen

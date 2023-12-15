@@ -16,12 +16,13 @@
 
 package com.fortyseven.domain.codecs.iot
 
-import scala.concurrent.duration.*
-
 import cats.implicits.*
+
+import scala.concurrent.duration.*
 
 import com.fortyseven.domain.codecs.types.TypesCodecs.given
 import com.fortyseven.domain.model.iot.model.*
+
 import vulcan.Codec
 
 /**

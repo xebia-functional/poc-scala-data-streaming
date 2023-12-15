@@ -16,14 +16,14 @@
 
 package com.fortyseven.datagenerator
 
-import scala.concurrent.duration.*
-
 import cats.effect.Temporal
+import fs2.Stream
+
+import scala.concurrent.duration.*
 
 import com.fortyseven.domain.model.app.model.*
 import com.fortyseven.domain.model.iot.model.*
 import com.fortyseven.domain.model.types.refinedTypes.*
-import fs2.Stream
 
 final class ModelGenerators[F[_]: Temporal](meteredInterval: FiniteDuration):
 

@@ -16,10 +16,11 @@
 
 package com.fortyseven.processor.spark
 
-import com.fortyseven.common.configuration.SparkProcessorConfigurationI
-import com.fortyseven.output.api.SparkProcessorAPI
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
+
+import com.fortyseven.common.configuration.SparkProcessorConfigurationI
+import com.fortyseven.output.api.SparkProcessorAPI
 
 class SparkProcessor extends SparkProcessorAPI:
 

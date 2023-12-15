@@ -16,7 +16,10 @@
 
 package com.fortyseven.domain.codecs.ids
 
-import com.fortyseven.domain.model.types.ids.{BicycleId, TripId, UserId}
+import com.fortyseven.domain.model.types.ids.BicycleId
+import com.fortyseven.domain.model.types.ids.TripId
+import com.fortyseven.domain.model.types.ids.UserId
+
 import vulcan.Codec
 
 /**

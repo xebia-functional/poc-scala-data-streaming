@@ -17,6 +17,7 @@
 package com.fortyseven.domain.codecs.iot
 
 import com.fortyseven.domain.model.iot.errors.OutOfBoundsError
+
 import vulcan.Codec
 
 /**

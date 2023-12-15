@@ -16,18 +16,20 @@
 
 package com.fortyseven.datagenerator
 
-import scala.concurrent.duration.*
-
 import cats.Parallel
 import cats.effect.kernel.Async
 import cats.implicits.*
+import fs2.kafka.*
+
+import scala.concurrent.duration.*
+
+import org.apache.kafka.clients.producer.ProducerConfig
 
 import com.fortyseven.common.api.DataGeneratorAPI
 import com.fortyseven.common.configuration.DataGeneratorConfigurationI
 import com.fortyseven.domain.codecs.iot.IotCodecs.given
-import com.fortyseven.domain.model.iot.model.{GPSPosition, PneumaticPressure}
-import fs2.kafka.*
-import org.apache.kafka.clients.producer.ProducerConfig
+import com.fortyseven.domain.model.iot.model.GPSPosition
+import com.fortyseven.domain.model.iot.model.PneumaticPressure
 
 final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorAPI[F]:
 

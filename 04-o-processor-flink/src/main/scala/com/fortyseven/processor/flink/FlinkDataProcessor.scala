@@ -19,8 +19,6 @@ package com.fortyseven.processor.flink
 import cats.Applicative
 import cats.implicits.*
 
-import com.fortyseven.common.configuration.FlinkProcessorConfigurationI
-import com.fortyseven.domain.codecs.iot.IotCodecs.given
 import org.apache.avro.Schema
 import org.apache.flink.api.common.eventtime.WatermarkStrategy
 import org.apache.flink.connector.kafka.source.KafkaSource
@@ -28,6 +26,9 @@ import org.apache.flink.connector.kafka.source.enumerator.initializer.OffsetsIni
 import org.apache.flink.core.execution.JobClient
 import org.apache.flink.formats.avro.registry.confluent.ConfluentRegistryAvroDeserializationSchema
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
+
+import com.fortyseven.common.configuration.FlinkProcessorConfigurationI
+import com.fortyseven.domain.codecs.iot.IotCodecs.given
 
 final class FlinkDataProcessor[F[_]: Applicative](env: StreamExecutionEnvironment):
 
