@@ -25,11 +25,13 @@ import pureconfig.module.catseffect.syntax.*
 
 final class KafkaConsumerConfigurationLoader[F[_]: Async] extends ConfigurationAPI[F, KafkaConsumerConfiguration]:
 
-  /**
-   * @return
-   *   An instance of the the class [Configuration] wrapped into an effect of type [Effect]. The return type of the method is mappable or flatMappable
-   *   since it is wrapped into an effect. Thus, you can use it in a for-comprehension. If the value of the configuration fails to be loaded, the
-   *   effect will handle the error gracefully.
-   */
-  override def load(): F[KafkaConsumerConfiguration] =
-    ConfigSource.default.at("kafka-consumer").loadF[F, KafkaConsumerConfiguration]()
+  /** @return
+    *   An instance of the the class [Configuration] wrapped into an effect of type [Effect]. The return type of the
+    *   method is mappable or flatMappable since it is wrapped into an effect. Thus, you can use it in a
+    *   for-comprehension. If the value of the configuration fails to be loaded, the effect will handle the error
+    *   gracefully.
+    */
+  override def load(): F[KafkaConsumerConfiguration] = ConfigSource
+    .default
+    .at("kafka-consumer")
+    .loadF[F, KafkaConsumerConfiguration]()

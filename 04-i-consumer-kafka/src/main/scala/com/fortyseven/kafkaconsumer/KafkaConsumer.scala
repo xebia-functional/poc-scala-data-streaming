@@ -32,63 +32,61 @@ import com.fortyseven.input.api.KafkaConsumerAPI
 final class KafkaConsumer[F[_]: Async] extends KafkaConsumerAPI[F]:
 
   given Conversion[KafkaAutoOffsetReset, AutoOffsetReset] with
+
     def apply(x: KafkaAutoOffsetReset): AutoOffsetReset = x match
       case KafkaAutoOffsetReset.earliest => AutoOffsetReset.Earliest
-      case KafkaAutoOffsetReset.latest   => AutoOffsetReset.Latest
-      case KafkaAutoOffsetReset.none     => AutoOffsetReset.None
+      case KafkaAutoOffsetReset.latest => AutoOffsetReset.Latest
+      case KafkaAutoOffsetReset.none => AutoOffsetReset.None
 
-  override def consume[Configuration <: KafkaConsumerConfigurationI](config: Configuration): F[Unit] = runWithConfiguration(config)
+  override def consume[Configuration <: KafkaConsumerConfigurationI](config: Configuration): F[Unit] =
+    runWithConfiguration(config)
 
   private def runWithConfiguration(kc: KafkaConsumerConfigurationI): F[Unit] =
 
-    val producerConfig = kc.producer.getOrElse(
-      throw new RuntimeException("No producer config available")
-    )
+    val producerConfig = kc.producer.getOrElse(throw new RuntimeException("No producer config available"))
 
-    val consumerConfig = kc.consumer.getOrElse(
-      throw new RuntimeException("No consumer config available")
-    )
+    val consumerConfig = kc.consumer.getOrElse(throw new RuntimeException("No consumer config available"))
 
-    def processRecord(record: ConsumerRecord[String, Array[Byte]]): F[(String, Array[Byte])] =
-      Applicative[F].pure(record.key -> record.value)
+    def processRecord(record: ConsumerRecord[String, Array[Byte]]): F[(String, Array[Byte])] = Applicative[F]
+      .pure(record.key -> record.value)
 
-    val consumerSettings =
-      ConsumerSettings[F, String, Array[Byte]]
-        .withAutoOffsetReset(consumerConfig.autoOffsetReset)
-        .withBootstrapServers(kc.broker.brokerAddress)
-        .withGroupId(consumerConfig.groupId)
+    val consumerSettings = ConsumerSettings[F, String, Array[Byte]]
+      .withAutoOffsetReset(consumerConfig.autoOffsetReset)
+      .withBootstrapServers(kc.broker.brokerAddress)
+      .withGroupId(consumerConfig.groupId)
 
-    val producerSettings =
-      ProducerSettings[F, String, Array[Byte]]
-        .withBootstrapServers(kc.broker.brokerAddress)
-        .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, producerConfig.compressionType.toString)
+    val producerSettings = ProducerSettings[F, String, Array[Byte]]
+      .withBootstrapServers(kc.broker.brokerAddress)
+      .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, producerConfig.compressionType.toString)
 
-    val stream =
-      fs2.kafka.KafkaConsumer
-        .stream(consumerSettings)
-        .subscribe(new Regex(s"${consumerConfig.topicName}-(.*)"))
-        .records
-        .mapAsync(consumerConfig.maxConcurrent) { committable =>
-          def addTopicPrefix(sourceTopic: String, targetTopic: String): String =
-            val suffix = sourceTopic.substring(sourceTopic.lastIndexOf("-"))
-            s"$targetTopic$suffix"
-          processRecord(committable.record).map { case (key, value) =>
-            val record =
-              ProducerRecord(addTopicPrefix(committable.record.topic, producerConfig.topicName), key, value)
-            committable.offset -> ProducerRecords.one(record)
-          }
-        }.through { offsetsAndProducerRecords =>
-          KafkaProducer.stream(producerSettings).flatMap { producer =>
+    val stream = fs2
+      .kafka
+      .KafkaConsumer
+      .stream(consumerSettings)
+      .subscribe(new Regex(s"${consumerConfig.topicName}-(.*)"))
+      .records
+      .mapAsync(consumerConfig.maxConcurrent) { committable =>
+        def addTopicPrefix(sourceTopic: String, targetTopic: String): String =
+          val suffix = sourceTopic.substring(sourceTopic.lastIndexOf("-"))
+          s"$targetTopic$suffix"
+        processRecord(committable.record).map { case (key, value) =>
+          val record = ProducerRecord(addTopicPrefix(committable.record.topic, producerConfig.topicName), key, value)
+          committable.offset -> ProducerRecords.one(record)
+        }
+      }
+      .through { offsetsAndProducerRecords =>
+        KafkaProducer
+          .stream(producerSettings)
+          .flatMap { producer =>
             offsetsAndProducerRecords
-              .evalMap { case (offset, producerRecord) =>
-                producer.produce(producerRecord).map(_.as(offset))
-              }.parEvalMap(producerConfig.maxConcurrent)(identity)
+              .evalMap { case (offset, producerRecord) => producer.produce(producerRecord).map(_.as(offset)) }
+              .parEvalMap(producerConfig.maxConcurrent)(identity)
           }
-        }.through(
-          commitBatchWithin(
-            producerConfig.commitBatchWithinSize,
-            producerConfig.commitBatchWithinTime
-          )
-        )
+      }
+      .through(commitBatchWithin(producerConfig.commitBatchWithinSize, producerConfig.commitBatchWithinTime))
 
     stream.compile.drain
+
+  end runWithConfiguration
+
+end KafkaConsumer

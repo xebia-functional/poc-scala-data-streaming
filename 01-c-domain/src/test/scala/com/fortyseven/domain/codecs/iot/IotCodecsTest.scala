@@ -55,3 +55,5 @@ class IotCodecsTest extends ScalaCheckSuite:
   property("BreaksHealth should return the same value after encoding and decoding"):
     forAll: (breaksHealth: BreaksHealth) =>
       assertEquals(codeAndDecode(breaksHealth), Right(breaksHealth))
+
+end IotCodecsTest

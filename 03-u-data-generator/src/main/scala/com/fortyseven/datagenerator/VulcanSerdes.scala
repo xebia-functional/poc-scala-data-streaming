@@ -36,9 +36,8 @@ object VulcanSerdes:
 
   final case class Configuration(schemaRegistryUrl: String, useMockedClient: Option[SchemaRegistryClient] = None)
 
-  private def avroSerdesConf(configuration: Configuration) = Map(
-    "schema.registry.url" -> configuration.schemaRegistryUrl
-  )
+  private def avroSerdesConf(configuration: Configuration) =
+    Map("schema.registry.url" -> configuration.schemaRegistryUrl)
 
   final private case class SerializationError(msg: String) extends RuntimeException(msg) with NoStackTrace
 
@@ -51,47 +50,37 @@ object VulcanSerdes:
           val parsedSchema = new AvroSchema(schema.toString)
           new KafkaAvroSerializer(mockClient):
             override def serialize(topic: String, record: AnyRef): Array[Byte] =
-              serializeImpl(
-                getSubjectName(topic, includeKey, record, parsedSchema),
-                record,
-                parsedSchema
-              )
+              serializeImpl(getSubjectName(topic, includeKey, record, parsedSchema), record, parsedSchema)
         case (Right(schema), None) =>
           val parsedSchema = new AvroSchema(schema.toString)
           new KafkaAvroSerializer:
             this.configure(avroSerdesConf(configuration).asJava, includeKey)
             override def serialize(topic: String, record: AnyRef): Array[Byte] =
-              serializeImpl(
-                getSubjectName(topic, includeKey, record, parsedSchema),
-                record,
-                parsedSchema
-              )
+              serializeImpl(getSubjectName(topic, includeKey, record, parsedSchema), record, parsedSchema)
 
-      override def serialize(topic: String, data: T): Array[Byte] =
-        serializer.serialize(
-          topic,
-          codec.encode(data) match
-            case Left(err)     => SerializationError(err.message)
-            case Right(record) => record
-        )
+      override def serialize(topic: String, data: T): Array[Byte] = serializer.serialize(
+        topic,
+        codec.encode(data) match
+          case Left(err) => SerializationError(err.message)
+          case Right(record) => record
+      )
 
   def avroDeserializer[T](configuration: Configuration, includeKey: Boolean)(using codec: Codec[T]): Deserializer[T] =
     new Deserializer[T]:
 
       private val deserializer = (codec.schema, configuration.useMockedClient) match
-        case (Right(_), Some(mockClient)) =>
-          new KafkaAvroDeserializer(mockClient)
-        case _ =>
-          new KafkaAvroDeserializer():
+        case (Right(_), Some(mockClient)) => new KafkaAvroDeserializer(mockClient)
+        case _ => new KafkaAvroDeserializer():
 
             this.configure(avroSerdesConf(configuration).asJava, includeKey)
 
-      override def deserialize(topic: String, data: Array[Byte]): T =
-        (for
-          readerSchema <- codec.schema.left.map(_.throwable)
-          avro         <- Try(deserializer.deserialize(topic, data, readerSchema)).toEither
-          decoded      <- codec.decode(avro, readerSchema).left.map(_.throwable)
-        yield decoded).fold(err => throw RuntimeException(err.getMessage), identity)
+      override def deserialize(topic: String, data: Array[Byte]): T = (for
+        readerSchema <- codec.schema.left.map(_.throwable)
+        avro <- Try(deserializer.deserialize(topic, data, readerSchema)).toEither
+        decoded <- codec.decode(avro, readerSchema).left.map(_.throwable)
+      yield decoded).fold(err => throw RuntimeException(err.getMessage), identity)
 
-  def avroSerde[T](config: Configuration, includeKey: Boolean)(using Codec[T]): Serde[T] =
-    Serdes.serdeFrom(avroSerializer(config, includeKey), avroDeserializer(config, includeKey))
+  def avroSerde[T](config: Configuration, includeKey: Boolean)(using Codec[T]): Serde[T] = Serdes
+    .serdeFrom(avroSerializer(config, includeKey), avroDeserializer(config, includeKey))
+
+end VulcanSerdes

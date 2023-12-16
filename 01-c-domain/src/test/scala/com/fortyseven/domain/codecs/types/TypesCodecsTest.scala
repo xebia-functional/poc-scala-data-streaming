@@ -48,3 +48,5 @@ class TypesCodecsTest extends ScalaCheckSuite:
   propCodec[Bar]()
 
   propCodec[Meters]()
+
+end TypesCodecsTest

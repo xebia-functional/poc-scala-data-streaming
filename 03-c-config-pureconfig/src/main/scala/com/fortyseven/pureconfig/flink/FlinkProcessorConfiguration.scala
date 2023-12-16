@@ -25,7 +25,7 @@ import com.fortyseven.pureconfig.refinedTypesGivens.given
 import pureconfig.ConfigReader
 import pureconfig.generic.derivation.default.derived
 
-private[flink] final case class FlinkProcessorConfiguration(
+final private[flink] case class FlinkProcessorConfiguration(
     kafka: KafkaConfiguration,
     schemaRegistry: SchemaRegistryConfiguration
 ) extends FlinkProcessorConfigurationI
@@ -33,7 +33,7 @@ private[flink] final case class FlinkProcessorConfiguration(
 object FlinkProcessorConfiguration:
   given ConfigReader[FlinkProcessorConfiguration] = ConfigReader.derived[FlinkProcessorConfiguration]
 
-private[flink] final case class KafkaConfiguration(
+final private[flink] case class KafkaConfiguration(
     broker: BrokerConfiguration,
     consumer: Option[ConsumerConfiguration],
     producer: Option[ProducerConfiguration]
@@ -42,14 +42,13 @@ private[flink] final case class KafkaConfiguration(
 object KafkaConfiguration:
   given ConfigReader[KafkaConfiguration] = ConfigReader.derived[KafkaConfiguration]
 
-private[flink] final case class BrokerConfiguration(
-    brokerAddress: NonEmptyString
-) extends FlinkProcessorBrokerConfigurationI
+final private[flink] case class BrokerConfiguration(brokerAddress: NonEmptyString)
+    extends FlinkProcessorBrokerConfigurationI
 
 object BrokerConfiguration:
   given ConfigReader[BrokerConfiguration] = ConfigReader.derived[BrokerConfiguration]
 
-private[flink] final case class ConsumerConfiguration(
+final private[flink] case class ConsumerConfiguration(
     topicName: NonEmptyString,
     autoOffsetReset: KafkaAutoOffsetReset,
     groupId: NonEmptyString,
@@ -59,7 +58,7 @@ private[flink] final case class ConsumerConfiguration(
 object ConsumerConfiguration:
   given ConfigReader[ConsumerConfiguration] = ConfigReader.derived[ConsumerConfiguration]
 
-private[flink] final case class ProducerConfiguration(
+final private[flink] case class ProducerConfiguration(
     topicName: NonEmptyString,
     valueSerializerClass: NonEmptyString,
     maxConcurrent: PositiveInt,
@@ -71,9 +70,8 @@ private[flink] final case class ProducerConfiguration(
 object ProducerConfiguration:
   given ConfigReader[ProducerConfiguration] = ConfigReader.derived[ProducerConfiguration]
 
-private[flink] final case class SchemaRegistryConfiguration(
-    schemaRegistryUrl: NonEmptyString
-) extends FlinkProcessorSchemaRegistryConfigurationI
+final private[flink] case class SchemaRegistryConfiguration(schemaRegistryUrl: NonEmptyString)
+    extends FlinkProcessorSchemaRegistryConfigurationI
 
 object SchemaRegistryConfiguration:
   given ConfigReader[SchemaRegistryConfiguration] = ConfigReader.derived[SchemaRegistryConfiguration]

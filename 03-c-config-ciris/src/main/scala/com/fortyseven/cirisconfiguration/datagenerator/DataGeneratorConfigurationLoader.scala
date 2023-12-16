@@ -30,19 +30,18 @@ final class DataGeneratorConfigurationLoader[F[_]: Async] extends ConfigurationA
 
   private def defaultConfig(): ConfigValue[Effect, DataGeneratorConfiguration] =
     for
-      kafkaBrokerBoostrapServers         <- default("localhost:9092").as[NonEmptyString]
-      kafkaProducerTopicName             <- default("data-generator").as[NonEmptyString]
-      kafkaProducerValueSerializerClass  <- default("io.confluent.kafka.serializers.KafkaAvroSerializer").as[NonEmptyString]
-      kafkaProducerMaxConcurrent         <- default(Int.MaxValue).as[PositiveInt]
-      kafkaProducerCompressionType       <- default(KafkaCompressionType.lz4).as[KafkaCompressionType]
+      kafkaBrokerBoostrapServers <- default("localhost:9092").as[NonEmptyString]
+      kafkaProducerTopicName <- default("data-generator").as[NonEmptyString]
+      kafkaProducerValueSerializerClass <- default("io.confluent.kafka.serializers.KafkaAvroSerializer")
+        .as[NonEmptyString]
+      kafkaProducerMaxConcurrent <- default(Int.MaxValue).as[PositiveInt]
+      kafkaProducerCompressionType <- default(KafkaCompressionType.lz4).as[KafkaCompressionType]
       kafkaProducerCommitBatchWithinSize <- default(10).as[PositiveInt]
       kafkaProducerCommitBatchWithinTime <- default(15.seconds).as[FiniteDuration]
-      schemaRegistryUrl                  <- default("http://localhost:8081").as[NonEmptyString]
+      schemaRegistryUrl <- default("http://localhost:8081").as[NonEmptyString]
     yield DataGeneratorConfiguration(
       kafka = DataGeneratorKafkaConfiguration(
-        broker = DataGeneratorBrokerConfiguration(
-          bootstrapServers = kafkaBrokerBoostrapServers
-        ),
+        broker = DataGeneratorBrokerConfiguration(bootstrapServers = kafkaBrokerBoostrapServers),
         producer = DataGeneratorProducerConfiguration(
           topicName = kafkaProducerTopicName,
           valueSerializerClass = kafkaProducerValueSerializerClass,
@@ -52,9 +51,9 @@ final class DataGeneratorConfigurationLoader[F[_]: Async] extends ConfigurationA
           commitBatchWithinTime = kafkaProducerCommitBatchWithinTime
         )
       ),
-      schemaRegistry = DataGeneratorSchemaRegistryConfiguration(
-        schemaRegistryUrl = schemaRegistryUrl
-      )
+      schemaRegistry = DataGeneratorSchemaRegistryConfiguration(schemaRegistryUrl = schemaRegistryUrl)
     )
 
   override def load(): F[DataGeneratorConfiguration] = defaultConfig().load[F]
+
+end DataGeneratorConfigurationLoader

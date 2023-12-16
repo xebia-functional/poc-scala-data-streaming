@@ -32,16 +32,16 @@ class refinedTypesTest extends ScalaCheckSuite:
       KafkaCompressionType.from(kct).isRight
 
   property("An invalid KafkaCompressionType should return Left"):
-    forAll(Gen.alphaStr.suchThat(randomString => !KafkaCompressionType.values.map(_.toString).contains(randomString))): kct =>
-      KafkaCompressionType.from(kct).isLeft
+    forAll(Gen.alphaStr.suchThat(randomString => !KafkaCompressionType.values.map(_.toString).contains(randomString))):
+      kct => KafkaCompressionType.from(kct).isLeft
 
   property("A valid value of KafkaAutoOffsetReset should return Right"):
     forAll(Gen.oneOf(KafkaAutoOffsetReset.values.toIndexedSeq).map(_.toString)): kct =>
       KafkaAutoOffsetReset.from(kct).isRight
 
   property("An invalid KafkaAutoOffsetReset should return Left"):
-    forAll(Gen.alphaStr.suchThat(randomString => !KafkaAutoOffsetReset.values.map(_.toString).contains(randomString))): kct =>
-      KafkaAutoOffsetReset.from(kct).isLeft
+    forAll(Gen.alphaStr.suchThat(randomString => !KafkaAutoOffsetReset.values.map(_.toString).contains(randomString))):
+      kct => KafkaAutoOffsetReset.from(kct).isLeft
 
   property("Any String that is empty or has only spaces should return Left"):
     forAll(Gen.oneOf(IndexedSeq("", " ", "  ", "    "))): string =>
@@ -58,3 +58,5 @@ class refinedTypesTest extends ScalaCheckSuite:
   property("Any Integer that is zero or positive should return a valid PositiveInt"):
     forAll(Gen.posNum[Int]): positive =>
       PositiveInt.from(positive).isRight
+
+end refinedTypesTest

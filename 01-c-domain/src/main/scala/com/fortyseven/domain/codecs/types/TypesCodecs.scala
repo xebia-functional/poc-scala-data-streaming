@@ -23,26 +23,37 @@ import com.fortyseven.domain.model.types.refinedTypes.*
 import vulcan.AvroError
 import vulcan.Codec
 
-/**
- * It contains the Vulcan codecs for the types (enums, case classes...) defined in the object [[com.fortyseven.domain.model.types.refinedTypes]].
- */
+/** It contains the Vulcan codecs for the types (enums, case classes...) defined in the object
+  * [[com.fortyseven.domain.model.types.refinedTypes]].
+  */
 object TypesCodecs:
 
-  given latitudeCodec: Codec[Latitude] =
-    Codec.double.imapError(Latitude.from(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
+  given latitudeCodec: Codec[Latitude] = Codec
+    .double
+    .imapError(Latitude.from(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
 
-  given longitudeCodec: Codec[Longitude] =
-    Codec.double.imapError(Longitude.from(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
+  given longitudeCodec: Codec[Longitude] = Codec
+    .double
+    .imapError(Longitude.from(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
 
-  given percentageCodec: Codec[Percentage] =
-    Codec.double.imapError(Percentage.from(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
+  given percentageCodec: Codec[Percentage] = Codec
+    .double
+    .imapError(Percentage.from(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
 
-  given speedCodec: Codec[Speed] =
-    Codec.double.imapError(Speed.from(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
+  given speedCodec: Codec[Speed] = Codec
+    .double
+    .imapError(Speed.from(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
 
-  given hertzCodec: Codec[Hz] = Codec.double.imapError(Hz.from(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
+  given hertzCodec: Codec[Hz] = Codec
+    .double
+    .imapError(Hz.from(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
 
-  given barCodec: Codec[Bar] = Codec.double.imapError(Bar.from(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
+  given barCodec: Codec[Bar] = Codec
+    .double
+    .imapError(Bar.from(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
 
-  given metersCodec: Codec[Meters] =
-    Codec.int.imapError(Meters.from(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
+  given metersCodec: Codec[Meters] = Codec
+    .int
+    .imapError(Meters.from(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
+
+end TypesCodecs

@@ -26,10 +26,11 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 object DataGeneratorPureconfigMain extends IOApp.Simple:
 
-  override def run: IO[Unit] = for
-    logger      <- Slf4jLogger.create[IO]
-    _           <- logger.info("Loading Data Generator Configuration")
-    dataGenConf <- DataGeneratorConfigurationLoader[IO].load()
-    _           <- logger.info("Start data generator")
-    _           <- new DataGenerator[IO].generate(dataGenConf)
-  yield ()
+  override def run: IO[Unit] =
+    for
+      logger <- Slf4jLogger.create[IO]
+      _ <- logger.info("Loading Data Generator Configuration")
+      dataGenConf <- DataGeneratorConfigurationLoader[IO].load()
+      _ <- logger.info("Start data generator")
+      _ <- new DataGenerator[IO].generate(dataGenConf)
+    yield ()

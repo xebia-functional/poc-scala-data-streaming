@@ -34,20 +34,14 @@ final class FlinkDataProcessor[F[_]: Applicative](env: StreamExecutionEnvironmen
 
   def run(jpc: FlinkProcessorConfigurationI): F[JobClient] =
 
-    val consumerConfig = jpc.kafka.consumer.getOrElse(
-      throw new RuntimeException("No consumer config available")
-    )
+    val consumerConfig = jpc.kafka.consumer.getOrElse(throw new RuntimeException("No consumer config available"))
 
     // val producerConfig = jpc.kafkaConfiguration.producer.getOrElse(
     //  throw new RuntimeException("No producer config available")
     // )
 
     val deserializationSchema = pneumaticPressureCodec.schema match
-      case Right(s) =>
-        ConfluentRegistryAvroDeserializationSchema.forGeneric(
-          s,
-          jpc.schemaRegistry.schemaRegistryUrl
-        )
+      case Right(s) => ConfluentRegistryAvroDeserializationSchema.forGeneric(s, jpc.schemaRegistry.schemaRegistryUrl)
       case Left(e) => throw new RuntimeException("No pneumaticPressureCodec schema available")
 
     val kafkaSource = KafkaSource
@@ -55,9 +49,10 @@ final class FlinkDataProcessor[F[_]: Applicative](env: StreamExecutionEnvironmen
       .setBootstrapServers(jpc.kafka.broker.brokerAddress)
       .setTopics(consumerConfig.topicName)
       .setGroupId(consumerConfig.groupId)
-      .setStartingOffsets(consumerConfig.autoOffsetReset.toString.toLowerCase match
-        case "earliest" => OffsetsInitializer.earliest()
-        case _          => OffsetsInitializer.latest()
+      .setStartingOffsets(
+        consumerConfig.autoOffsetReset.toString.toLowerCase match
+          case "earliest" => OffsetsInitializer.earliest()
+          case _ => OffsetsInitializer.latest()
       )
       .setValueOnlyDeserializer(deserializationSchema)
       .build()
@@ -81,3 +76,7 @@ final class FlinkDataProcessor[F[_]: Applicative](env: StreamExecutionEnvironmen
     stream.print
 
     env.executeAsync("Flink Streaming").pure
+
+  end run
+
+end FlinkDataProcessor

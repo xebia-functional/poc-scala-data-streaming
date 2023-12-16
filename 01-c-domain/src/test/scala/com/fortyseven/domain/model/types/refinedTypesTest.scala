@@ -92,3 +92,5 @@ class refinedTypesTest extends ScalaCheckSuite:
   property("A valid Meters should have a value equal to 0 or higher"):
     forAll(Gen.posNum[Int]): meters =>
       Meters.from(meters).isRight
+
+end refinedTypesTest

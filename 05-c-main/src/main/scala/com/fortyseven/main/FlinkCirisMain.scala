@@ -28,14 +28,17 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 object FlinkCirisMain extends IOApp.Simple:
 
-  override def run: IO[Unit] = for
-    logger         <- Slf4jLogger.create[IO]
-    kafkaConf      <- new KafkaConsumerConfigurationLoader[IO].load()
-    flinkConf      <- new FlinkProcessorConfigurationLoader[IO].load()
-    _              <- logger.info("Start kafka consumer")
-    consumerFiber  <- new KafkaConsumer[IO].consume(kafkaConf).start
-    _              <- logger.info("Start flink processor")
-    processorFiber <- new FlinkProcessor[IO].process(flinkConf).start
-    _              <- consumerFiber.join
-    _              <- processorFiber.join
-  yield ()
+  override def run: IO[Unit] =
+    for
+      logger <- Slf4jLogger.create[IO]
+      kafkaConf <- new KafkaConsumerConfigurationLoader[IO].load()
+      flinkConf <- new FlinkProcessorConfigurationLoader[IO].load()
+      _ <- logger.info("Start kafka consumer")
+      consumerFiber <- new KafkaConsumer[IO].consume(kafkaConf).start
+      _ <- logger.info("Start flink processor")
+      processorFiber <- new FlinkProcessor[IO].process(flinkConf).start
+      _ <- consumerFiber.join
+      _ <- processorFiber.join
+    yield ()
+
+end FlinkCirisMain

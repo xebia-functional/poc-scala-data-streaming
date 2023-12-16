@@ -45,7 +45,8 @@ private[kafkaconsumer] case class ConsumerConfiguration(
 object ConsumerConfiguration:
   given ConfigReader[ConsumerConfiguration] = ConfigReader.derived[ConsumerConfiguration]
 
-private[kafkaconsumer] case class BrokerConfiguration(brokerAddress: NonEmptyString) extends KafkaConsumerBrokerConfigurationI
+private[kafkaconsumer] case class BrokerConfiguration(brokerAddress: NonEmptyString)
+    extends KafkaConsumerBrokerConfigurationI
 
 object BrokerConfiguration:
   given ConfigReader[BrokerConfiguration] = ConfigReader.derived[BrokerConfiguration]

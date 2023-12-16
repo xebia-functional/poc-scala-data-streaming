@@ -26,33 +26,31 @@ import com.fortyseven.common.configuration.FlinkProcessorProducerConfigurationI
 import com.fortyseven.common.configuration.FlinkProcessorSchemaRegistryConfigurationI
 import com.fortyseven.common.configuration.refinedTypes.*
 
-private[flink] final case class FlinkProcessorConfiguration(
+final private[flink] case class FlinkProcessorConfiguration(
     kafka: KafkaConfiguration,
     schemaRegistry: SchemaRegistryConfiguration
 ) extends FlinkProcessorConfigurationI
 
-private[flink] final case class SchemaRegistryConfiguration(
-    schemaRegistryUrl: NonEmptyString
-) extends FlinkProcessorSchemaRegistryConfigurationI
+final private[flink] case class SchemaRegistryConfiguration(schemaRegistryUrl: NonEmptyString)
+    extends FlinkProcessorSchemaRegistryConfigurationI
 
-private[flink] final case class KafkaConfiguration(
+final private[flink] case class KafkaConfiguration(
     broker: BrokerConfiguration,
     consumer: Option[ConsumerConfiguration],
     producer: Option[ProducerConfiguration]
 ) extends FlinkProcessorKafkaConfigurationI
 
-private[flink] final case class BrokerConfiguration(
-    brokerAddress: NonEmptyString
-) extends FlinkProcessorBrokerConfigurationI
+final private[flink] case class BrokerConfiguration(brokerAddress: NonEmptyString)
+    extends FlinkProcessorBrokerConfigurationI
 
-private[flink] final case class ConsumerConfiguration(
+final private[flink] case class ConsumerConfiguration(
     topicName: NonEmptyString,
     autoOffsetReset: KafkaAutoOffsetReset,
     groupId: NonEmptyString,
     maxConcurrent: PositiveInt
 ) extends FlinkProcessorConsumerConfigurationI
 
-private[flink] final case class ProducerConfiguration(
+final private[flink] case class ProducerConfiguration(
     topicName: NonEmptyString,
     valueSerializerClass: NonEmptyString,
     maxConcurrent: PositiveInt,

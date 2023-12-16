@@ -25,11 +25,13 @@ import pureconfig.module.catseffect.syntax.*
 
 final class DataGeneratorConfigurationLoader[F[_]: Async] extends ConfigurationAPI[F, DataGeneratorConfiguration]:
 
-  /**
-   * @return
-   *   An instance of the the class [Configuration] wrapped into an effect of type [Effect]. The return type of the method is mappable or flatMappable
-   *   since it is wrapped into an effect. Thus, you can use it in a for-comprehension. If the value of the configuration fails to be loaded, the
-   *   effect will handle the error gracefully.
-   */
-  override def load(): F[DataGeneratorConfiguration] =
-    ConfigSource.default.at("data-generator").loadF[F, DataGeneratorConfiguration]()
+  /** @return
+    *   An instance of the the class [Configuration] wrapped into an effect of type [Effect]. The return type of the
+    *   method is mappable or flatMappable since it is wrapped into an effect. Thus, you can use it in a
+    *   for-comprehension. If the value of the configuration fails to be loaded, the effect will handle the error
+    *   gracefully.
+    */
+  override def load(): F[DataGeneratorConfiguration] = ConfigSource
+    .default
+    .at("data-generator")
+    .loadF[F, DataGeneratorConfiguration]()

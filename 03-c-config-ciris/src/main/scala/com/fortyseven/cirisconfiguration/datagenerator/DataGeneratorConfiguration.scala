@@ -21,21 +21,20 @@ import scala.concurrent.duration.FiniteDuration
 import com.fortyseven.common.configuration.*
 import com.fortyseven.common.configuration.refinedTypes.*
 
-private[datagenerator] final case class DataGeneratorConfiguration(
+final private[datagenerator] case class DataGeneratorConfiguration(
     kafka: DataGeneratorKafkaConfiguration,
     schemaRegistry: DataGeneratorSchemaRegistryConfiguration
 ) extends DataGeneratorConfigurationI
 
-private[datagenerator] final case class DataGeneratorKafkaConfiguration(
+final private[datagenerator] case class DataGeneratorKafkaConfiguration(
     broker: DataGeneratorBrokerConfiguration,
     producer: DataGeneratorProducerConfiguration
 ) extends DataGeneratorKafkaConfigurationI
 
-private[datagenerator] final case class DataGeneratorBrokerConfiguration(
-    bootstrapServers: NonEmptyString
-) extends DataGeneratorBrokerConfigurationI
+final private[datagenerator] case class DataGeneratorBrokerConfiguration(bootstrapServers: NonEmptyString)
+    extends DataGeneratorBrokerConfigurationI
 
-private[datagenerator] final case class DataGeneratorProducerConfiguration(
+final private[datagenerator] case class DataGeneratorProducerConfiguration(
     topicName: NonEmptyString,
     valueSerializerClass: NonEmptyString,
     maxConcurrent: PositiveInt,
@@ -44,6 +43,5 @@ private[datagenerator] final case class DataGeneratorProducerConfiguration(
     commitBatchWithinTime: FiniteDuration
 ) extends DataGeneratorProducerConfigurationI
 
-private[datagenerator] final case class DataGeneratorSchemaRegistryConfiguration(
-    schemaRegistryUrl: NonEmptyString
-) extends DataGeneratorSchemaRegistryConfigurationI
+final private[datagenerator] case class DataGeneratorSchemaRegistryConfiguration(schemaRegistryUrl: NonEmptyString)
+    extends DataGeneratorSchemaRegistryConfigurationI

@@ -41,7 +41,7 @@ final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorAPI[F]:
 
     val generators = new ModelGenerators[F](100.milliseconds)
 
-    val gpsPositionTopicName       = s"${configuration.kafka.producer.topicName}-gps"
+    val gpsPositionTopicName = s"${configuration.kafka.producer.topicName}-gps"
     val pneumaticPressureTopicName = s"${configuration.kafka.producer.topicName}-pp"
 
     val producerSettings = ProducerSettings[F, String, Array[Byte]]
@@ -54,18 +54,18 @@ final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorAPI[F]:
       includeKey = false
     )
 
-    val gpsPositionSerializer = avroSerializer[GPSPosition](
-      Configuration(configuration.schemaRegistry.schemaRegistryUrl),
-      includeKey = false
-    )
+    val gpsPositionSerializer =
+      avroSerializer[GPSPosition](Configuration(configuration.schemaRegistry.schemaRegistryUrl), includeKey = false)
 
     KafkaProducer
       .stream(producerSettings)
       .flatMap { producer =>
-        val gpsPositionStream =
-          generators.generateGPSPosition.mapRecords(gpsPositionTopicName)(using gpsPositionSerializer)
-        val pneumaticPressureStream =
-          generators.generatePneumaticPressure.mapRecords(pneumaticPressureTopicName)(using pneumaticPressureSerializer)
+        val gpsPositionStream = generators
+          .generateGPSPosition
+          .mapRecords(gpsPositionTopicName)(using gpsPositionSerializer)
+        val pneumaticPressureStream = generators
+          .generatePneumaticPressure
+          .mapRecords(pneumaticPressureTopicName)(using pneumaticPressureSerializer)
         gpsPositionStream
           .parZip(pneumaticPressureStream)
           .flatMap { case (s1, s2) => fs2.Stream.emit(s1) ++ fs2.Stream.emit(s2) }
@@ -79,12 +79,16 @@ final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorAPI[F]:
       .compile
       .drain
 
+  end runWithConfiguration
+
   extension [T](inputStream: fs2.Stream[F, T])
-    private def mapRecords(
-        topic: String
-    )(using serializer: KafkaSerializer[T]): fs2.Stream[F, ProducerRecords[String, Array[Byte]]] =
-      inputStream.map { committable =>
-        val key   = committable.getClass.getSimpleName
-        val value = serializer.serialize(topic, committable)
-        ProducerRecords.one(ProducerRecord(topic, key, value))
-      }
+
+    private def mapRecords(topic: String)(using
+        serializer: KafkaSerializer[T]
+    ): fs2.Stream[F, ProducerRecords[String, Array[Byte]]] = inputStream.map { committable =>
+      val key = committable.getClass.getSimpleName
+      val value = serializer.serialize(topic, committable)
+      ProducerRecords.one(ProducerRecord(topic, key, value))
+    }
+
+end DataGenerator

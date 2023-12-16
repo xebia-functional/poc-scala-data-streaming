@@ -42,3 +42,5 @@ class idsTest extends ScalaCheckSuite:
   property("TripId should build from a valid UUID and method call value should return the same UUID"):
     forAll: (uuid: UUID) =>
       assertEquals(TripId(uuid).value, uuid)
+
+end idsTest

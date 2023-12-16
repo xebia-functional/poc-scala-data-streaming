@@ -18,15 +18,13 @@ package com.fortyseven.output.api
 
 import com.fortyseven.common.configuration.FlinkProcessorConfigurationI
 
-/**
- * @tparam F
- *   The effect in with Flink is executed.
- */
+/** @tparam F
+  *   The effect in with Flink is executed.
+  */
 trait FlinkProcessorAPI[F[_]]:
-  /**
-   * @param config
-   *   An instance of a class that extends [[FlinkConfiguration]].
-   * @return
-   *   It executes the effects of the Flink Processor and returns Unit.
-   */
+  /** @param config
+    *   An instance of a class that extends [[FlinkConfiguration]].
+    * @return
+    *   It executes the effects of the Flink Processor and returns Unit.
+    */
   def process[Configuration <: FlinkProcessorConfigurationI](config: Configuration): F[Unit]

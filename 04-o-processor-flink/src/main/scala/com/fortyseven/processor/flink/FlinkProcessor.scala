@@ -27,12 +27,11 @@ import com.fortyseven.output.api.FlinkProcessorAPI
 
 final class FlinkProcessor[F[_]: Async] extends FlinkProcessorAPI[F]:
 
-  /**
-   * @param configuration
-   *   An instance of [[ProcessorConfiguration]] class that extends [[ConfigurationAPI]].
-   * @return
-   *   It executes the effects of the Flink Processor and returns Unit.
-   */
+  /** @param configuration
+    *   An instance of [[ProcessorConfiguration]] class that extends [[ConfigurationAPI]].
+    * @return
+    *   It executes the effects of the Flink Processor and returns Unit.
+    */
   override def process[Configuration <: FlinkProcessorConfigurationI](configuration: Configuration): F[Unit] =
     runWithConfiguration(configuration)
 
@@ -44,3 +43,5 @@ final class FlinkProcessor[F[_]: Async] extends FlinkProcessorAPI[F]:
 
   private def runWithConfiguration(jpc: FlinkProcessorConfigurationI): F[Unit] =
     new FlinkDataProcessor(setAndGetEnvironment()).run(jpc).void
+
+end FlinkProcessor

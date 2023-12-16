@@ -36,9 +36,14 @@ class DataGeneratorSuite extends CatsEffectSuite with ScalaCheckEffectSuite:
         _ = sample.foreach(it => assert(it.latitude.value >= -90.0 && it.latitude.value <= 90.0))
         _ = sample.foreach(it => assert(it.longitude.value >= -180.0 && it.longitude.value <= 180.0))
         _ = sample
-              .sliding(2).map(l =>
-                (math.abs(l.head.latitude.value - l.last.latitude.value), math.abs(l.head.longitude.value - l.last.longitude.value))
-              ).foreach(it => assert(it._1 <= 1e-3 && it._2 <= 1e-3))
+          .sliding(2)
+          .map(l =>
+            (
+              math.abs(l.head.latitude.value - l.last.latitude.value),
+              math.abs(l.head.longitude.value - l.last.longitude.value)
+            )
+          )
+          .foreach(it => assert(it._1 <= 1e-3 && it._2 <= 1e-3))
       yield ()
     }
 
@@ -47,6 +52,11 @@ class DataGeneratorSuite extends CatsEffectSuite with ScalaCheckEffectSuite:
       for
         sample <- dataGenerator.generatePneumaticPressure.take(sampleSize).compile.toList
         _ = sample.foreach(it => assert(it.pressure.value > 0.0))
-        _ = sample.sliding(2).map(l => l.head.pressure.value - l.last.pressure.value).foreach(it => assert(it >= 0 && it <= 1e-3))
+        _ = sample
+          .sliding(2)
+          .map(l => l.head.pressure.value - l.last.pressure.value)
+          .foreach(it => assert(it >= 0 && it <= 1e-3))
       yield ()
     }
+
+end DataGeneratorSuite

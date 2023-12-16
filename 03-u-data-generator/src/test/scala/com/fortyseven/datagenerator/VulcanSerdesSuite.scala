@@ -30,27 +30,31 @@ class VulcanSerdesSuite extends CatsEffectSuite:
 
   import VulcanSerdes.*
 
-  private def serialize[A](topic: String, data: A)(using serde: Serde[A]): Array[Byte] =
-    serde.serializer.serialize(topic, data)
+  private def serialize[A](topic: String, data: A)(using serde: Serde[A]): Array[Byte] = serde
+    .serializer
+    .serialize(topic, data)
 
-  private def deserialize[A](topic: String, bytes: Array[Byte])(using serde: Serde[A]): A =
-    serde.deserializer.deserialize(topic, bytes)
+  private def deserialize[A](topic: String, bytes: Array[Byte])(using serde: Serde[A]): A = serde
+    .deserializer
+    .deserialize(topic, bytes)
 
   test("Serialize a case class as a record"):
     val mockedClient = new MockSchemaRegistryClient()
-    val topic        = "test-topic"
+    val topic = "test-topic"
 
     pneumaticPressureCodec.schema match
-      case Left(_)       => ()
+      case Left(_) => ()
       case Right(schema) => mockedClient.register(s"$topic-value", AvroSchema(schema.toString))
-    val config                     = Configuration("useMockedClient", useMockedClient = Some(mockedClient))
+    val config = Configuration("useMockedClient", useMockedClient = Some(mockedClient))
     given Serde[PneumaticPressure] = avroSerde[PneumaticPressure](config, includeKey = false)
 
     val data: PneumaticPressure = PneumaticPressure(Bar(2.0))
 
     val result: PneumaticPressure =
-      val serialized   = serialize(topic, data)
+      val serialized = serialize(topic, data)
       val deserialized = deserialize(topic, serialized)
       deserialized
 
     assertEquals(data, result)
+
+end VulcanSerdesSuite

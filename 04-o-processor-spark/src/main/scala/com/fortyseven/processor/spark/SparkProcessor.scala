@@ -42,3 +42,7 @@ class SparkProcessor extends SparkProcessorAPI:
     val spark = SparkSession.builder.config(sparkConf).getOrCreate()
 
     new SparkEngine(spark).run(sparkProcessorConfiguration)
+
+  end runWithConfiguration
+
+end SparkProcessor

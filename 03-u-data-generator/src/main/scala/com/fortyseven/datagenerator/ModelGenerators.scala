@@ -36,18 +36,17 @@ final class ModelGenerators[F[_]: Temporal](meteredInterval: FiniteDuration):
       def getValue(value: Double) = value - math.random() * 1e-3
 
       (Latitude.from(getValue(latValue)), Longitude.from(getValue(lonValue))) match
-        case (Right(lat), Right(lon)) =>
-          fs2.Stream.emit(GPSPosition(lat, lon)).metered(meteredInterval) ++ emitLoop(lat.value, lon.value)
+        case (Right(lat), Right(lon)) => fs2.Stream.emit(GPSPosition(lat, lon)).metered(meteredInterval) ++
+            emitLoop(lat.value, lon.value)
         case _ => emitLoop(latValue, lonValue)
 
     emitLoop(latValue = 2.0, lonValue = 2.0)
 
   def generatePneumaticPressure: fs2.Stream[F, PneumaticPressure] =
 
-    def emitLoop(pValue: Double): fs2.Stream[F, PneumaticPressure] =
-      Bar.from(pValue - math.random() * 1e-3) match
-        case Right(p) => fs2.Stream.emit(PneumaticPressure(p)).metered(meteredInterval) ++ emitLoop(p.value)
-        case _        => emitLoop(pValue)
+    def emitLoop(pValue: Double): fs2.Stream[F, PneumaticPressure] = Bar.from(pValue - math.random() * 1e-3) match
+      case Right(p) => fs2.Stream.emit(PneumaticPressure(p)).metered(meteredInterval) ++ emitLoop(p.value)
+      case _ => emitLoop(pValue)
 
     emitLoop(pValue = 2.0)
 
@@ -64,3 +63,5 @@ final class ModelGenerators[F[_]: Temporal](meteredInterval: FiniteDuration):
   def generateTotalDistancePerUser: fs2.Stream[F, TotalDistanceByUser] = ???
 
   def generateTotalRange: fs2.Stream[F, TotalRange] = ???
+
+end ModelGenerators
