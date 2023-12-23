@@ -31,34 +31,25 @@ private[kafkaconsumer] case class KafkaConsumerConfiguration(
     consumer: Option[ConsumerConfiguration],
     producer: Option[ProducerConfiguration]
 ) extends KafkaConsumerConfigurationI
-
-object KafkaConsumerConfiguration:
-  given ConfigReader[KafkaConsumerConfiguration] = ConfigReader.derived[KafkaConsumerConfiguration]
+    derives ConfigReader
 
 private[kafkaconsumer] case class ConsumerConfiguration(
-    topicName: NonEmptyString,
+    topicName: TopicName,
     autoOffsetReset: KafkaAutoOffsetReset,
-    groupId: NonEmptyString,
-    maxConcurrent: PositiveInt
+    groupId: GroupId,
+    maxConcurrent: MaxConcurrent
 ) extends KafkaConsumerConsumerConfigurationI
+    derives ConfigReader
 
-object ConsumerConfiguration:
-  given ConfigReader[ConsumerConfiguration] = ConfigReader.derived[ConsumerConfiguration]
-
-private[kafkaconsumer] case class BrokerConfiguration(brokerAddress: NonEmptyString)
-    extends KafkaConsumerBrokerConfigurationI
-
-object BrokerConfiguration:
-  given ConfigReader[BrokerConfiguration] = ConfigReader.derived[BrokerConfiguration]
+private[kafkaconsumer] case class BrokerConfiguration(brokerAddress: BrokerAddress)
+    extends KafkaConsumerBrokerConfigurationI derives ConfigReader
 
 private[kafkaconsumer] case class ProducerConfiguration(
-    topicName: NonEmptyString,
-    valueSerializerClass: NonEmptyString,
-    maxConcurrent: PositiveInt,
+    topicName: TopicName,
+    valueSerializerClass: ValueSerializerClass,
+    maxConcurrent: MaxConcurrent,
     compressionType: KafkaCompressionType,
-    commitBatchWithinSize: PositiveInt,
+    commitBatchWithinSize: CommitBatchWithinSize,
     commitBatchWithinTime: FiniteDuration
 ) extends KafkaConsumerProducerConfigurationI
-
-object ProducerConfiguration:
-  given ConfigReader[ProducerConfiguration] = ConfigReader.derived[ProducerConfiguration]
+    derives ConfigReader

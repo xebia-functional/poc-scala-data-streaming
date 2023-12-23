@@ -34,17 +34,17 @@ final private[spark] class SparkEngine(sparkSession: SparkSession):
       def buildReader(reader: SparkProcessorReaderConfigurationI): DataFrameReader = sparkSession
         .read
         .format("kafka")
-        .option("kafka.bootstrap.servers", reader.kafka.bootstrapServers)
-        .option("subscribePattern", reader.kafka.topic)
-        .option("startingOffsets", reader.kafka.startingOffsets)
-        .option("endingOffsets", reader.kafka.endingOffsets)
+        .option("kafka.bootstrap.servers", reader.kafka.bootstrapServers.value)
+        .option("subscribePattern", reader.kafka.topic.value)
+        .option("startingOffsets", reader.kafka.startingOffsets.value)
+        .option("endingOffsets", reader.kafka.endingOffsets.value)
 
     extension (dataFrameReader: DataFrameReader) def applyLogic(): DataFrame = dataFrameReader.load()
 
     extension (dataFrame: DataFrame)
       def buildWriter(writer: SparkProcessorWriterConfigurationI): DataFrameWriter[Row] = dataFrame
         .write
-        .format(writer.format)
+        .format(writer.format.toString)
 
     sparkSession
       .buildReader(sparkProcessorConfiguration.reader)

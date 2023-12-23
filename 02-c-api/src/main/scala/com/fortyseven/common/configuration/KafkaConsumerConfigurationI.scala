@@ -26,18 +26,18 @@ trait KafkaConsumerConfigurationI:
   val producer: Option[KafkaConsumerProducerConfigurationI]
 
 trait KafkaConsumerBrokerConfigurationI:
-  val brokerAddress: NonEmptyString
+  val brokerAddress: BrokerAddress
 
 trait KafkaConsumerConsumerConfigurationI:
-  val topicName: NonEmptyString
+  val topicName: TopicName
   val autoOffsetReset: KafkaAutoOffsetReset
-  val groupId: NonEmptyString
-  val maxConcurrent: PositiveInt
+  val groupId: GroupId
+  val maxConcurrent: MaxConcurrent
 
 trait KafkaConsumerProducerConfigurationI:
-  val topicName: NonEmptyString
-  val valueSerializerClass: NonEmptyString
-  val maxConcurrent: PositiveInt
+  val topicName: TopicName
+  val valueSerializerClass: ValueSerializerClass
+  val maxConcurrent: MaxConcurrent
   val compressionType: KafkaCompressionType
-  val commitBatchWithinSize: PositiveInt
+  val commitBatchWithinSize: CommitBatchWithinSize
   val commitBatchWithinTime: FiniteDuration

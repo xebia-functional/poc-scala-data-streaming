@@ -18,10 +18,7 @@ package com.fortyseven.common.configuration
 
 import scala.concurrent.duration.FiniteDuration
 
-import com.fortyseven.common.configuration.refinedTypes.KafkaAutoOffsetReset
-import com.fortyseven.common.configuration.refinedTypes.KafkaCompressionType
-import com.fortyseven.common.configuration.refinedTypes.NonEmptyString
-import com.fortyseven.common.configuration.refinedTypes.PositiveInt
+import com.fortyseven.common.configuration.refinedTypes.*
 
 trait FlinkProcessorConfigurationI:
   val kafka: FlinkProcessorKafkaConfigurationI
@@ -33,21 +30,21 @@ trait FlinkProcessorKafkaConfigurationI:
   val producer: Option[FlinkProcessorProducerConfigurationI]
 
 trait FlinkProcessorBrokerConfigurationI:
-  val brokerAddress: NonEmptyString
+  val brokerAddress: BrokerAddress
 
 trait FlinkProcessorConsumerConfigurationI:
-  val topicName: NonEmptyString
+  val topicName: TopicName
   val autoOffsetReset: KafkaAutoOffsetReset
-  val groupId: NonEmptyString
-  val maxConcurrent: PositiveInt
+  val groupId: GroupId
+  val maxConcurrent: MaxConcurrent
 
 trait FlinkProcessorProducerConfigurationI:
-  val topicName: NonEmptyString
-  val valueSerializerClass: NonEmptyString
-  val maxConcurrent: PositiveInt
+  val topicName: TopicName
+  val valueSerializerClass: ValueSerializerClass
+  val maxConcurrent: MaxConcurrent
   val compressionType: KafkaCompressionType
-  val commitBatchWithinSize: PositiveInt
+  val commitBatchWithinSize: CommitBatchWithinSize
   val commitBatchWithinTime: FiniteDuration
 
 trait FlinkProcessorSchemaRegistryConfigurationI:
-  val schemaRegistryUrl: NonEmptyString
+  val schemaRegistryUrl: SchemaRegistryUrl

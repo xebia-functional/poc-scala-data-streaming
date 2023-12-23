@@ -27,21 +27,21 @@ final private[kafkaconsumer] case class KafkaConsumerConfiguration(
     producer: Option[ProducerConfiguration]
 ) extends KafkaConsumerConfigurationI
 
-final private[kafkaconsumer] case class BrokerConfiguration(brokerAddress: NonEmptyString)
+final private[kafkaconsumer] case class BrokerConfiguration(brokerAddress: BrokerAddress)
     extends KafkaConsumerBrokerConfigurationI
 
 final private[kafkaconsumer] case class ConsumerConfiguration(
-    topicName: NonEmptyString,
+    topicName: TopicName,
     autoOffsetReset: KafkaAutoOffsetReset,
-    groupId: NonEmptyString,
-    maxConcurrent: PositiveInt
+    groupId: GroupId,
+    maxConcurrent: MaxConcurrent
 ) extends KafkaConsumerConsumerConfigurationI
 
 final private[kafkaconsumer] case class ProducerConfiguration(
-    topicName: NonEmptyString,
-    valueSerializerClass: NonEmptyString,
-    maxConcurrent: PositiveInt,
+    topicName: TopicName,
+    valueSerializerClass: ValueSerializerClass,
+    maxConcurrent: MaxConcurrent,
     compressionType: KafkaCompressionType,
-    commitBatchWithinSize: PositiveInt,
+    commitBatchWithinSize: CommitBatchWithinSize,
     commitBatchWithinTime: FiniteDuration
 ) extends KafkaConsumerProducerConfigurationI

@@ -29,49 +29,35 @@ final private[flink] case class FlinkProcessorConfiguration(
     kafka: KafkaConfiguration,
     schemaRegistry: SchemaRegistryConfiguration
 ) extends FlinkProcessorConfigurationI
-
-object FlinkProcessorConfiguration:
-  given ConfigReader[FlinkProcessorConfiguration] = ConfigReader.derived[FlinkProcessorConfiguration]
+    derives ConfigReader
 
 final private[flink] case class KafkaConfiguration(
     broker: BrokerConfiguration,
     consumer: Option[ConsumerConfiguration],
     producer: Option[ProducerConfiguration]
 ) extends FlinkProcessorKafkaConfigurationI
+    derives ConfigReader
 
-object KafkaConfiguration:
-  given ConfigReader[KafkaConfiguration] = ConfigReader.derived[KafkaConfiguration]
-
-final private[flink] case class BrokerConfiguration(brokerAddress: NonEmptyString)
-    extends FlinkProcessorBrokerConfigurationI
-
-object BrokerConfiguration:
-  given ConfigReader[BrokerConfiguration] = ConfigReader.derived[BrokerConfiguration]
+final private[flink] case class BrokerConfiguration(brokerAddress: BrokerAddress)
+    extends FlinkProcessorBrokerConfigurationI derives ConfigReader
 
 final private[flink] case class ConsumerConfiguration(
-    topicName: NonEmptyString,
+    topicName: TopicName,
     autoOffsetReset: KafkaAutoOffsetReset,
-    groupId: NonEmptyString,
-    maxConcurrent: PositiveInt
+    groupId: GroupId,
+    maxConcurrent: MaxConcurrent
 ) extends FlinkProcessorConsumerConfigurationI
-
-object ConsumerConfiguration:
-  given ConfigReader[ConsumerConfiguration] = ConfigReader.derived[ConsumerConfiguration]
+    derives ConfigReader
 
 final private[flink] case class ProducerConfiguration(
-    topicName: NonEmptyString,
-    valueSerializerClass: NonEmptyString,
-    maxConcurrent: PositiveInt,
+    topicName: TopicName,
+    valueSerializerClass: ValueSerializerClass,
+    maxConcurrent: MaxConcurrent,
     compressionType: KafkaCompressionType,
-    commitBatchWithinSize: PositiveInt,
+    commitBatchWithinSize: CommitBatchWithinSize,
     commitBatchWithinTime: FiniteDuration
 ) extends FlinkProcessorProducerConfigurationI
+    derives ConfigReader
 
-object ProducerConfiguration:
-  given ConfigReader[ProducerConfiguration] = ConfigReader.derived[ProducerConfiguration]
-
-final private[flink] case class SchemaRegistryConfiguration(schemaRegistryUrl: NonEmptyString)
-    extends FlinkProcessorSchemaRegistryConfigurationI
-
-object SchemaRegistryConfiguration:
-  given ConfigReader[SchemaRegistryConfiguration] = ConfigReader.derived[SchemaRegistryConfiguration]
+final private[flink] case class SchemaRegistryConfiguration(schemaRegistryUrl: SchemaRegistryUrl)
+    extends FlinkProcessorSchemaRegistryConfigurationI derives ConfigReader

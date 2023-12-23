@@ -29,40 +29,26 @@ final private[datagenerator] case class DataGeneratorConfiguration(
     kafka: DataGeneratorKafkaConfiguration,
     schemaRegistry: DataGeneratorSchemaRegistryConfiguration
 ) extends DataGeneratorConfigurationI
-
-object DataGeneratorConfiguration:
-  given ConfigReader[DataGeneratorConfiguration] = ConfigReader.derived[DataGeneratorConfiguration]
+    derives ConfigReader
 
 final private[datagenerator] case class DataGeneratorKafkaConfiguration(
     broker: DataGeneratorBrokerConfiguration,
     producer: DataGeneratorProducerConfiguration
 ) extends DataGeneratorKafkaConfigurationI
+    derives ConfigReader
 
-object DataGeneratorKafkaConfiguration:
-  given ConfigReader[DataGeneratorKafkaConfiguration] = ConfigReader.derived[DataGeneratorKafkaConfiguration]
-
-final private[datagenerator] case class DataGeneratorBrokerConfiguration(bootstrapServers: NonEmptyString)
+final private[datagenerator] case class DataGeneratorBrokerConfiguration(bootstrapServers: BootstrapServers)
     extends DataGeneratorBrokerConfigurationI
 
-object DataGeneratorBrokerConfiguration:
-  given ConfigReader[DataGeneratorBrokerConfiguration] = ConfigReader.derived[DataGeneratorBrokerConfiguration]
-
 final private[datagenerator] case class DataGeneratorProducerConfiguration(
-    topicName: NonEmptyString,
-    valueSerializerClass: NonEmptyString,
-    maxConcurrent: PositiveInt,
+    topicName: TopicName,
+    valueSerializerClass: ValueSerializerClass,
+    maxConcurrent: MaxConcurrent,
     compressionType: KafkaCompressionType,
-    commitBatchWithinSize: PositiveInt,
+    commitBatchWithinSize: CommitBatchWithinSize,
     commitBatchWithinTime: FiniteDuration
 ) extends DataGeneratorProducerConfigurationI
+    derives ConfigReader
 
-object DataGeneratorProducerConfiguration:
-  given ConfigReader[DataGeneratorProducerConfiguration] = ConfigReader.derived[DataGeneratorProducerConfiguration]
-
-final private[datagenerator] case class DataGeneratorSchemaRegistryConfiguration(schemaRegistryUrl: NonEmptyString)
-    extends DataGeneratorSchemaRegistryConfigurationI
-
-object DataGeneratorSchemaRegistryConfiguration:
-
-  given ConfigReader[DataGeneratorSchemaRegistryConfiguration] = ConfigReader
-    .derived[DataGeneratorSchemaRegistryConfiguration]
+final private[datagenerator] case class DataGeneratorSchemaRegistryConfiguration(schemaRegistryUrl: SchemaRegistryUrl)
+    extends DataGeneratorSchemaRegistryConfigurationI derives ConfigReader

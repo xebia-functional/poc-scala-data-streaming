@@ -41,21 +41,26 @@ final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorAPI[F]:
 
     val generators = new ModelGenerators[F](100.milliseconds)
 
-    val gpsPositionTopicName = s"${configuration.kafka.producer.topicName}-gps"
-    val pneumaticPressureTopicName = s"${configuration.kafka.producer.topicName}-pp"
+    val gpsPositionTopicName = s"${configuration.kafka.producer.topicName.value}-gps"
+    val pneumaticPressureTopicName = s"${configuration.kafka.producer.topicName.value}-pp"
 
     val producerSettings = ProducerSettings[F, String, Array[Byte]]
-      .withBootstrapServers(configuration.kafka.broker.bootstrapServers)
+      .withBootstrapServers(configuration.kafka.broker.bootstrapServers.value)
       .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, configuration.kafka.producer.compressionType.toString)
-      .withProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, configuration.kafka.producer.valueSerializerClass)
+      .withProperty(
+        ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+        configuration.kafka.producer.valueSerializerClass.value
+      )
 
     val pneumaticPressureSerializer = avroSerializer[PneumaticPressure](
-      Configuration(configuration.schemaRegistry.schemaRegistryUrl),
+      Configuration(configuration.schemaRegistry.schemaRegistryUrl.value),
       includeKey = false
     )
 
-    val gpsPositionSerializer =
-      avroSerializer[GPSPosition](Configuration(configuration.schemaRegistry.schemaRegistryUrl), includeKey = false)
+    val gpsPositionSerializer = avroSerializer[GPSPosition](
+      Configuration(configuration.schemaRegistry.schemaRegistryUrl.value),
+      includeKey = false
+    )
 
     KafkaProducer
       .stream(producerSettings)
@@ -71,7 +76,7 @@ final class DataGenerator[F[_]: Async: Parallel] extends DataGeneratorAPI[F]:
           .flatMap { case (s1, s2) => fs2.Stream.emit(s1) ++ fs2.Stream.emit(s2) }
           .evalMap(producer.produce)
           .groupWithin(
-            configuration.kafka.producer.commitBatchWithinSize,
+            configuration.kafka.producer.commitBatchWithinSize.value,
             configuration.kafka.producer.commitBatchWithinTime
           )
           .evalMap(_.sequence)

@@ -41,14 +41,15 @@ final class FlinkDataProcessor[F[_]: Applicative](env: StreamExecutionEnvironmen
     // )
 
     val deserializationSchema = pneumaticPressureCodec.schema match
-      case Right(s) => ConfluentRegistryAvroDeserializationSchema.forGeneric(s, jpc.schemaRegistry.schemaRegistryUrl)
+      case Right(s) =>
+        ConfluentRegistryAvroDeserializationSchema.forGeneric(s, jpc.schemaRegistry.schemaRegistryUrl.toString)
       case Left(e) => throw new RuntimeException("No pneumaticPressureCodec schema available")
 
     val kafkaSource = KafkaSource
       .builder()
-      .setBootstrapServers(jpc.kafka.broker.brokerAddress)
-      .setTopics(consumerConfig.topicName)
-      .setGroupId(consumerConfig.groupId)
+      .setBootstrapServers(jpc.kafka.broker.brokerAddress.toString)
+      .setTopics(consumerConfig.topicName.toString)
+      .setGroupId(consumerConfig.groupId.toString)
       .setStartingOffsets(
         consumerConfig.autoOffsetReset.toString.toLowerCase match
           case "earliest" => OffsetsInitializer.earliest()

@@ -20,7 +20,6 @@ import cats.effect.kernel.Async
 
 import scala.concurrent.duration.*
 
-import com.fortyseven.cirisconfiguration.decoders.given
 import com.fortyseven.common.api.ConfigurationAPI
 import com.fortyseven.common.configuration.refinedTypes.*
 
@@ -30,19 +29,20 @@ class FlinkProcessorConfigurationLoader[F[_]: Async] extends ConfigurationAPI[F,
 
   private def defaultConfig(): ConfigValue[Effect, FlinkProcessorConfiguration] =
     for
-      kafkaBrokerAddress <- default("localhost:9092").as[NonEmptyString]
-      kafkaConsumerTopicName <- default("input-topic-pp").as[NonEmptyString]
+      kafkaBrokerAddress <- default(BrokerAddress.assume("localhost:9092")).as[BrokerAddress]
+      kafkaConsumerTopicName <- default(TopicName.assume("input-topic-pp")).as[TopicName]
       kafkaConsumerAutoOffsetReset <- default(KafkaAutoOffsetReset.earliest).as[KafkaAutoOffsetReset]
-      kafkaConsumerGroupId <- default("groupId").as[NonEmptyString]
-      kafkaConsumerMaxConcurrent <- default(25).as[PositiveInt]
-      kafkaProducerTopicName <- default("output-topic").as[NonEmptyString]
-      kafkaProducerValueSerializerClass <- default("io.confluent.kafka.serializers.KafkaAvroSerializer")
-        .as[NonEmptyString]
-      kafkaProducerMaxConcurrent <- default(Int.MaxValue).as[PositiveInt]
+      kafkaConsumerGroupId <- default(GroupId.assume("groupId")).as[GroupId]
+      kafkaConsumerMaxConcurrent <- default(MaxConcurrent.assume(25)).as[MaxConcurrent]
+      kafkaProducerTopicName <- default(TopicName.assume("output-topic")).as[TopicName]
+      kafkaProducerValueSerializerClass <- default(
+        ValueSerializerClass.assume("io.confluent.kafka.serializers.KafkaAvroSerializer")
+      ).as[ValueSerializerClass]
+      kafkaProducerMaxConcurrent <- default(MaxConcurrent.assume(Int.MaxValue)).as[MaxConcurrent]
       kafkaProducerCompressionType <- default(KafkaCompressionType.lz4).as[KafkaCompressionType]
-      kafkaProducerCommitBatchWithinSize <- default(10).as[PositiveInt]
+      kafkaProducerCommitBatchWithinSize <- default(CommitBatchWithinSize.assume(10)).as[CommitBatchWithinSize]
       kafkaProducerCommitBatchWithinTime <- default(15.seconds).as[FiniteDuration]
-      schemaRegistryUrl <- default("http://localhost:8081").as[NonEmptyString]
+      schemaRegistryUrl <- default(SchemaRegistryUrl.assume("http://localhost:8081")).as[SchemaRegistryUrl]
     yield FlinkProcessorConfiguration(
       KafkaConfiguration(
         broker = BrokerConfiguration(kafkaBrokerAddress),

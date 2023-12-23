@@ -20,7 +20,6 @@ import cats.effect.kernel.Async
 
 import scala.concurrent.duration.*
 
-import com.fortyseven.cirisconfiguration.decoders.given
 import com.fortyseven.common.api.ConfigurationAPI
 import com.fortyseven.common.configuration.refinedTypes.*
 
@@ -30,16 +29,18 @@ final class KafkaConsumerConfigurationLoader[F[_]: Async] extends ConfigurationA
 
   private def defaultConfig(): ConfigValue[Effect, KafkaConsumerConfiguration] =
     for
-      brokerAddress <- default("localhost:9092").as[NonEmptyString]
-      consumerTopicName <- default("data-generator").as[NonEmptyString]
+      brokerAddress <- default(BrokerAddress.assume("localhost:9092")).as[BrokerAddress]
+      consumerTopicName <- default(TopicName.assume("data-generator")).as[TopicName]
       consumerAutoOffsetReset <- default(KafkaAutoOffsetReset.earliest).as[KafkaAutoOffsetReset]
-      consumerGroupId <- default("groupId").as[NonEmptyString]
-      consumerMaxConcurrent <- default(25).as[PositiveInt]
-      producerTopicName <- default("input-topic").as[NonEmptyString]
-      producerValueSerializerClass <- default("io.confluent.kafka.serializers.KafkaAvroSerializer").as[NonEmptyString]
-      producerMaxConcurrent <- default(Int.MaxValue).as[PositiveInt]
+      consumerGroupId <- default(GroupId.assume("groupId")).as[GroupId]
+      consumerMaxConcurrent <- default(MaxConcurrent.assume(25)).as[MaxConcurrent]
+      producerTopicName <- default(TopicName.assume("input-topic")).as[TopicName]
+      producerValueSerializerClass <- default(
+        ValueSerializerClass.assume("io.confluent.kafka.serializers.KafkaAvroSerializer")
+      ).as[ValueSerializerClass]
+      producerMaxConcurrent <- default(MaxConcurrent.assume(Int.MaxValue)).as[MaxConcurrent]
       producerCompressionType <- default(KafkaCompressionType.lz4).as[KafkaCompressionType]
-      producerCommitBatchWithinSize <- default(10).as[PositiveInt]
+      producerCommitBatchWithinSize <- default(CommitBatchWithinSize.assume(10)).as[CommitBatchWithinSize]
       producerCommitBatchWithinTime <- default(15.seconds).as[FiniteDuration]
     yield KafkaConsumerConfiguration(
       broker = BrokerConfiguration(brokerAddress),

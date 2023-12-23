@@ -31,17 +31,17 @@ final private[datagenerator] case class DataGeneratorKafkaConfiguration(
     producer: DataGeneratorProducerConfiguration
 ) extends DataGeneratorKafkaConfigurationI
 
-final private[datagenerator] case class DataGeneratorBrokerConfiguration(bootstrapServers: NonEmptyString)
+final private[datagenerator] case class DataGeneratorBrokerConfiguration(bootstrapServers: BootstrapServers)
     extends DataGeneratorBrokerConfigurationI
 
 final private[datagenerator] case class DataGeneratorProducerConfiguration(
-    topicName: NonEmptyString,
-    valueSerializerClass: NonEmptyString,
-    maxConcurrent: PositiveInt,
+    topicName: TopicName,
+    valueSerializerClass: ValueSerializerClass,
+    maxConcurrent: MaxConcurrent,
     compressionType: KafkaCompressionType,
-    commitBatchWithinSize: PositiveInt,
+    commitBatchWithinSize: CommitBatchWithinSize,
     commitBatchWithinTime: FiniteDuration
 ) extends DataGeneratorProducerConfigurationI
 
-final private[datagenerator] case class DataGeneratorSchemaRegistryConfiguration(schemaRegistryUrl: NonEmptyString)
+final private[datagenerator] case class DataGeneratorSchemaRegistryConfiguration(schemaRegistryUrl: SchemaRegistryUrl)
     extends DataGeneratorSchemaRegistryConfigurationI

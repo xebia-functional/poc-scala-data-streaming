@@ -30,8 +30,8 @@ class SparkProcessor extends SparkProcessorAPI:
   private def runWithConfiguration(sparkProcessorConfiguration: SparkProcessorConfigurationI): Unit =
 
     val sparkConf: SparkConf = new SparkConf()
-      .setAppName(sparkProcessorConfiguration.app.appName)
-      .setMaster(sparkProcessorConfiguration.app.masterUrl)
+      .setAppName(sparkProcessorConfiguration.app.appName.toString)
+      .setMaster(sparkProcessorConfiguration.app.masterUrl.toString)
       .set("spark.streaming.backpressure.enabled", sparkProcessorConfiguration.streaming.backpressureEnabled.toString)
       .set("spark.streaming.blockInterval", sparkProcessorConfiguration.streaming.blockInterval.toString)
       .set(
