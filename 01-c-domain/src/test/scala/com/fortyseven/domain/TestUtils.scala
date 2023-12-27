@@ -23,8 +23,11 @@ import com.fortyseven.domain.model.app.model.*
 import com.fortyseven.domain.model.iot.model.*
 import com.fortyseven.domain.model.types.ids.*
 import com.fortyseven.domain.model.types.refinedTypes.*
-import org.scalacheck.{Arbitrary, Gen}
-import vulcan.{AvroError, Codec}
+
+import org.scalacheck.Arbitrary
+import org.scalacheck.Gen
+import vulcan.AvroError
+import vulcan.Codec
 
 object TestUtils:
 
@@ -36,17 +39,14 @@ object TestUtils:
 
   given Arbitrary[BicycleId] = Arbitrary(Gen.uuid.map(BicycleId.apply))
 
-  given Arbitrary[Latitude] = Arbitrary(
-    Gen.chooseNum[Double](-90.0, 90.0).flatMap(Latitude.from(_).fold(_ => Gen.fail, Gen.const))
-  )
+  given Arbitrary[Latitude] =
+    Arbitrary(Gen.chooseNum[Double](-90.0, 90.0).flatMap(Latitude.from(_).fold(_ => Gen.fail, Gen.const)))
 
-  given Arbitrary[Longitude] = Arbitrary(
-    Gen.chooseNum[Double](-180.0, 180.0).flatMap(Longitude.from(_).fold(_ => Gen.fail, Gen.const))
-  )
+  given Arbitrary[Longitude] =
+    Arbitrary(Gen.chooseNum[Double](-180.0, 180.0).flatMap(Longitude.from(_).fold(_ => Gen.fail, Gen.const)))
 
-  given Arbitrary[Percentage] = Arbitrary(
-    Gen.chooseNum[Double](0.0, 100.0).flatMap(Percentage.from(_).fold(_ => Gen.fail, Gen.const))
-  )
+  given Arbitrary[Percentage] =
+    Arbitrary(Gen.chooseNum[Double](0.0, 100.0).flatMap(Percentage.from(_).fold(_ => Gen.fail, Gen.const)))
 
   given Arbitrary[Speed] = Arbitrary(Gen.posNum[Double].flatMap(Speed.from(_).fold(_ => Gen.fail, Gen.const)))
 
@@ -56,28 +56,19 @@ object TestUtils:
 
   given Arbitrary[Meters] = Arbitrary(Gen.posNum[Int].flatMap(Meters.from(_).fold(_ => Gen.fail, Gen.const)))
 
-  given Arbitrary[TotalDistanceByTrip] = Arbitrary(
-    Gen.resultOf(TotalDistanceByTrip.apply)
-  )
+  given Arbitrary[TotalDistanceByTrip] = Arbitrary(Gen.resultOf(TotalDistanceByTrip.apply))
 
-  given Arbitrary[TotalDistanceByUser] = Arbitrary(
-    Gen.resultOf(TotalDistanceByUser.apply)
-  )
+  given Arbitrary[TotalDistanceByUser] = Arbitrary(Gen.resultOf(TotalDistanceByUser.apply))
 
   given Arbitrary[CurrentSpeed] = Arbitrary(Gen.resultOf(CurrentSpeed.apply))
 
-  given Arbitrary[TotalRange] = Arbitrary(
-    Gen.resultOf(TotalRange.apply)
-  )
+  given Arbitrary[TotalRange] = Arbitrary(Gen.resultOf(TotalRange.apply))
 
-  given Arbitrary[GPSPosition] = Arbitrary(
-    Gen.resultOf(GPSPosition.apply)
-  )
+  given Arbitrary[GPSPosition] = Arbitrary(Gen.resultOf(GPSPosition.apply))
 
   given Arbitrary[WheelRotation] = Arbitrary(Gen.resultOf(WheelRotation.apply))
 
-  given Arbitrary[BatteryCharge] =
-    Arbitrary(Gen.resultOf(BatteryCharge.apply))
+  given Arbitrary[BatteryCharge] = Arbitrary(Gen.resultOf(BatteryCharge.apply))
 
   given Arbitrary[BatteryHealth] = Arbitrary(Gen.resultOf(BatteryHealth.apply))
 
@@ -88,3 +79,5 @@ object TestUtils:
   given Arbitrary[BreaksHealth] = Arbitrary(Gen.resultOf(BreaksHealth.apply))
 
   def codeAndDecode[C: Codec](instance: C): Either[AvroError, C] = Codec.encode(instance).flatMap(Codec.decode[C])
+
+end TestUtils

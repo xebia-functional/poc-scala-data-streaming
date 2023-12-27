@@ -17,14 +17,15 @@
 package com.fortyseven.domain.codecs.iot
 
 import com.fortyseven.domain.model.iot.errors.OutOfBoundsError
+
 import vulcan.Codec
 
-/**
- * It contains the Vulcan codecs for the types (enums, case classes...) defined in the object [[com.fortyseven.domain.model.iot.errors]].
- */
+/** It contains the Vulcan codecs for the types (enums, case classes...) defined in the object
+  * [[com.fortyseven.domain.model.iot.errors]].
+  */
 object IotErrorCodecs:
 
   private val _namespace = "iot-error"
 
-  given outOfBoundsErrorCodec: Codec[OutOfBoundsError] =
-    Codec.record(name = "OutOfBoundsError", namespace = _namespace)(_("msg", _.message).map(OutOfBoundsError.apply))
+  given outOfBoundsErrorCodec: Codec[OutOfBoundsError] = Codec
+    .record(name = "OutOfBoundsError", namespace = _namespace)(_("msg", _.message).map(OutOfBoundsError.apply))

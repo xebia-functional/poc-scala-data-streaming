@@ -16,42 +16,42 @@
 
 package com.fortyseven.processor.spark
 
-import com.fortyseven.common.configuration.{SparkProcessorConfigurationI, SparkProcessorReaderConfigurationI, SparkProcessorWriterConfigurationI}
-import org.apache.spark.sql.{DataFrame, DataFrameReader, DataFrameWriter, Row, SparkSession}
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.DataFrameReader
+import org.apache.spark.sql.DataFrameWriter
+import org.apache.spark.sql.Row
+import org.apache.spark.sql.SparkSession
 
-private[spark] final class SparkEngine(sparkSession: SparkSession):
+import com.fortyseven.common.configuration.SparkProcessorConfigurationI
+import com.fortyseven.common.configuration.SparkProcessorReaderConfigurationI
+import com.fortyseven.common.configuration.SparkProcessorWriterConfigurationI
+
+final private[spark] class SparkEngine(sparkSession: SparkSession):
 
   def run(sparkProcessorConfiguration: SparkProcessorConfigurationI): Unit =
 
     extension (sparkSession: SparkSession)
-      def buildReader(reader: SparkProcessorReaderConfigurationI): DataFrameReader =
-        sparkSession.read
-          .format("kafka")
-          .option(
-            "kafka.bootstrap.servers",
-            reader.kafka.bootstrapServers
-          )
-          .option(
-            "subscribePattern",
-            reader.kafka.topic
-          )
-          .option(
-            "startingOffsets",
-            reader.kafka.startingOffsets
-          )
-          .option(
-            "endingOffsets",
-            reader.kafka.endingOffsets
-          )
+      def buildReader(reader: SparkProcessorReaderConfigurationI): DataFrameReader = sparkSession
+        .read
+        .format("kafka")
+        .option("kafka.bootstrap.servers", reader.kafka.bootstrapServers)
+        .option("subscribePattern", reader.kafka.topic)
+        .option("startingOffsets", reader.kafka.startingOffsets)
+        .option("endingOffsets", reader.kafka.endingOffsets)
 
     extension (dataFrameReader: DataFrameReader) def applyLogic(): DataFrame = dataFrameReader.load()
 
     extension (dataFrame: DataFrame)
-      def buildWriter(writer: SparkProcessorWriterConfigurationI): DataFrameWriter[Row] =
-        dataFrame.write.format(writer.format)
+      def buildWriter(writer: SparkProcessorWriterConfigurationI): DataFrameWriter[Row] = dataFrame
+        .write
+        .format(writer.format)
 
     sparkSession
       .buildReader(sparkProcessorConfiguration.reader)
       .applyLogic()
       .buildWriter(sparkProcessorConfiguration.writer)
       .save()
+
+  end run
+
+end SparkEngine

@@ -21,10 +21,11 @@ import scala.concurrent.duration.FiniteDuration
 import com.fortyseven.common.configuration.*
 import com.fortyseven.common.configuration.refinedTypes.*
 import com.fortyseven.pureconfig.refinedTypesGivens.given
+
 import pureconfig.ConfigReader
 import pureconfig.generic.derivation.default.derived
 
-private[datagenerator] final case class DataGeneratorConfiguration(
+final private[datagenerator] case class DataGeneratorConfiguration(
     kafka: DataGeneratorKafkaConfiguration,
     schemaRegistry: DataGeneratorSchemaRegistryConfiguration
 ) extends DataGeneratorConfigurationI
@@ -32,7 +33,7 @@ private[datagenerator] final case class DataGeneratorConfiguration(
 object DataGeneratorConfiguration:
   given ConfigReader[DataGeneratorConfiguration] = ConfigReader.derived[DataGeneratorConfiguration]
 
-private[datagenerator] final case class DataGeneratorKafkaConfiguration(
+final private[datagenerator] case class DataGeneratorKafkaConfiguration(
     broker: DataGeneratorBrokerConfiguration,
     producer: DataGeneratorProducerConfiguration
 ) extends DataGeneratorKafkaConfigurationI
@@ -40,14 +41,13 @@ private[datagenerator] final case class DataGeneratorKafkaConfiguration(
 object DataGeneratorKafkaConfiguration:
   given ConfigReader[DataGeneratorKafkaConfiguration] = ConfigReader.derived[DataGeneratorKafkaConfiguration]
 
-private[datagenerator] final case class DataGeneratorBrokerConfiguration(
-    bootstrapServers: NonEmptyString
-) extends DataGeneratorBrokerConfigurationI
+final private[datagenerator] case class DataGeneratorBrokerConfiguration(bootstrapServers: NonEmptyString)
+    extends DataGeneratorBrokerConfigurationI
 
 object DataGeneratorBrokerConfiguration:
   given ConfigReader[DataGeneratorBrokerConfiguration] = ConfigReader.derived[DataGeneratorBrokerConfiguration]
 
-private[datagenerator] final case class DataGeneratorProducerConfiguration(
+final private[datagenerator] case class DataGeneratorProducerConfiguration(
     topicName: NonEmptyString,
     valueSerializerClass: NonEmptyString,
     maxConcurrent: PositiveInt,
@@ -59,9 +59,10 @@ private[datagenerator] final case class DataGeneratorProducerConfiguration(
 object DataGeneratorProducerConfiguration:
   given ConfigReader[DataGeneratorProducerConfiguration] = ConfigReader.derived[DataGeneratorProducerConfiguration]
 
-private[datagenerator] final case class DataGeneratorSchemaRegistryConfiguration(
-    schemaRegistryUrl: NonEmptyString
-) extends DataGeneratorSchemaRegistryConfigurationI
+final private[datagenerator] case class DataGeneratorSchemaRegistryConfiguration(schemaRegistryUrl: NonEmptyString)
+    extends DataGeneratorSchemaRegistryConfigurationI
 
 object DataGeneratorSchemaRegistryConfiguration:
-  given ConfigReader[DataGeneratorSchemaRegistryConfiguration] = ConfigReader.derived[DataGeneratorSchemaRegistryConfiguration]
+
+  given ConfigReader[DataGeneratorSchemaRegistryConfiguration] = ConfigReader
+    .derived[DataGeneratorSchemaRegistryConfiguration]

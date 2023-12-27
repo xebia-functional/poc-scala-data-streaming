@@ -21,22 +21,23 @@ import scala.concurrent.duration.FiniteDuration
 import com.fortyseven.common.configuration.*
 import com.fortyseven.common.configuration.refinedTypes.*
 
-private[kafkaconsumer] final case class KafkaConsumerConfiguration(
+final private[kafkaconsumer] case class KafkaConsumerConfiguration(
     broker: BrokerConfiguration,
     consumer: Option[ConsumerConfiguration],
     producer: Option[ProducerConfiguration]
 ) extends KafkaConsumerConfigurationI
 
-private[kafkaconsumer] final case class BrokerConfiguration(brokerAddress: NonEmptyString) extends KafkaConsumerBrokerConfigurationI
+final private[kafkaconsumer] case class BrokerConfiguration(brokerAddress: NonEmptyString)
+    extends KafkaConsumerBrokerConfigurationI
 
-private[kafkaconsumer] final case class ConsumerConfiguration(
+final private[kafkaconsumer] case class ConsumerConfiguration(
     topicName: NonEmptyString,
     autoOffsetReset: KafkaAutoOffsetReset,
     groupId: NonEmptyString,
     maxConcurrent: PositiveInt
 ) extends KafkaConsumerConsumerConfigurationI
 
-private[kafkaconsumer] final case class ProducerConfiguration(
+final private[kafkaconsumer] case class ProducerConfiguration(
     topicName: NonEmptyString,
     valueSerializerClass: NonEmptyString,
     maxConcurrent: PositiveInt,

@@ -20,18 +20,18 @@ import cats.*
 import cats.effect.kernel.Async
 import cats.implicits.*
 
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
+
 import com.fortyseven.common.configuration.FlinkProcessorConfigurationI
 import com.fortyseven.output.api.FlinkProcessorAPI
-import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
 
 final class FlinkProcessor[F[_]: Async] extends FlinkProcessorAPI[F]:
 
-  /**
-   * @param configuration
-   *   An instance of [[ProcessorConfiguration]] class that extends [[ConfigurationAPI]].
-   * @return
-   *   It executes the effects of the Flink Processor and returns Unit.
-   */
+  /** @param configuration
+    *   An instance of [[ProcessorConfiguration]] class that extends [[ConfigurationAPI]].
+    * @return
+    *   It executes the effects of the Flink Processor and returns Unit.
+    */
   override def process[Configuration <: FlinkProcessorConfigurationI](configuration: Configuration): F[Unit] =
     runWithConfiguration(configuration)
 
@@ -43,3 +43,5 @@ final class FlinkProcessor[F[_]: Async] extends FlinkProcessorAPI[F]:
 
   private def runWithConfiguration(jpc: FlinkProcessorConfigurationI): F[Unit] =
     new FlinkDataProcessor(setAndGetEnvironment()).run(jpc).void
+
+end FlinkProcessor

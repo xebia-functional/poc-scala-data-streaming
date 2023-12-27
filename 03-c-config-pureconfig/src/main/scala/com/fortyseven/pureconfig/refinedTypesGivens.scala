@@ -20,20 +20,20 @@ import cats.syntax.all.*
 
 import com.fortyseven.common.configuration.*
 import com.fortyseven.common.configuration.refinedTypes.*
+
 import pureconfig.ConfigReader
 import pureconfig.error.ExceptionThrown
 
-/**
- * It contains the givens for the types that pureConfig does not have automatic derivation.
- */
+/** It contains the givens for the types that pureConfig does not have automatic derivation.
+  */
 object refinedTypesGivens:
 
   given ConfigReader[NonEmptyString] = ConfigReader.fromString(NonEmptyString.from(_).leftMap(ExceptionThrown.apply))
 
   given ConfigReader[PositiveInt] = ConfigReader[Int].emap(PositiveInt.from(_).leftMap(ExceptionThrown.apply))
 
-  given ConfigReader[KafkaAutoOffsetReset] =
-    ConfigReader.fromString(KafkaAutoOffsetReset.from(_).leftMap(ExceptionThrown.apply))
+  given ConfigReader[KafkaAutoOffsetReset] = ConfigReader
+    .fromString(KafkaAutoOffsetReset.from(_).leftMap(ExceptionThrown.apply))
 
-  given ConfigReader[KafkaCompressionType] =
-    ConfigReader.fromString(KafkaCompressionType.from(_).leftMap(ExceptionThrown.apply))
+  given ConfigReader[KafkaCompressionType] = ConfigReader
+    .fromString(KafkaCompressionType.from(_).leftMap(ExceptionThrown.apply))

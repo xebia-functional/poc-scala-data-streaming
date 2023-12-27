@@ -18,10 +18,14 @@ package com.fortyseven.domain.model.types
 
 import java.util.UUID
 
-import com.fortyseven.domain.model.types.ids.{BicycleId, TripId, UserId}
+import com.fortyseven.domain.model.types.ids.BicycleId
+import com.fortyseven.domain.model.types.ids.TripId
+import com.fortyseven.domain.model.types.ids.UserId
+
 import munit.ScalaCheckSuite
+import org.scalacheck.Arbitrary
+import org.scalacheck.Gen
 import org.scalacheck.Prop.forAll
-import org.scalacheck.{Arbitrary, Gen}
 
 class idsTest extends ScalaCheckSuite:
 
@@ -38,3 +42,5 @@ class idsTest extends ScalaCheckSuite:
   property("TripId should build from a valid UUID and method call value should return the same UUID"):
     forAll: (uuid: UUID) =>
       assertEquals(TripId(uuid).value, uuid)
+
+end idsTest

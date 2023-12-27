@@ -16,49 +16,44 @@
 
 package com.fortyseven.domain.codecs.iot
 
-import scala.concurrent.duration.*
-
 import cats.implicits.*
+
+import scala.concurrent.duration.*
 
 import com.fortyseven.domain.codecs.types.TypesCodecs.given
 import com.fortyseven.domain.model.iot.model.*
+
 import vulcan.Codec
 
-/**
- * It contains the Vulcan codecs for the types (enums, case classes...) defined in the object [[com.fortyseven.domain.model.iot.model]].
- */
+/** It contains the Vulcan codecs for the types (enums, case classes...) defined in the object
+  * [[com.fortyseven.domain.model.iot.model]].
+  */
 object IotCodecs:
 
   private val _namespace = "iot"
 
-  given gpsPositionCodec: Codec[GPSPosition] =
-    Codec.record(name = "GPSPosition", namespace = _namespace) { field =>
-      (
-        field("latitude", _.latitude),
-        field("longitude", _.longitude)
-      ).mapN(GPSPosition.apply)
-    }
+  given gpsPositionCodec: Codec[GPSPosition] = Codec.record(name = "GPSPosition", namespace = _namespace) { field =>
+    (field("latitude", _.latitude), field("longitude", _.longitude)).mapN(GPSPosition.apply)
+  }
 
-  given wheelRotationCodec: Codec[WheelRotation] =
-    Codec.record(name = "WheelRotation", namespace = _namespace)(_("s", _.frequency).map(WheelRotation.apply))
+  given wheelRotationCodec: Codec[WheelRotation] = Codec
+    .record(name = "WheelRotation", namespace = _namespace)(_("s", _.frequency).map(WheelRotation.apply))
 
-  given batteryChargeCodec: Codec[BatteryCharge] =
-    Codec.record(name = "BatteryCharge", namespace = _namespace)(_("percentage", _.percentage).map(BatteryCharge.apply))
+  given batteryChargeCodec: Codec[BatteryCharge] = Codec
+    .record(name = "BatteryCharge", namespace = _namespace)(_("percentage", _.percentage).map(BatteryCharge.apply))
 
-  given batteryHealthCodec: Codec[BatteryHealth] =
-    Codec.record(name = "BatteryHealth", namespace = _namespace)(_("remaining", _.remaining).map(BatteryHealth.apply))
+  given batteryHealthCodec: Codec[BatteryHealth] = Codec
+    .record(name = "BatteryHealth", namespace = _namespace)(_("remaining", _.remaining).map(BatteryHealth.apply))
 
-  given pneumaticPressureCodec: Codec[PneumaticPressure] =
-    Codec.record(name = "PneumaticPressure", namespace = _namespace)(
-      _("pressure", _.pressure).map(PneumaticPressure.apply)
-    )
+  given pneumaticPressureCodec: Codec[PneumaticPressure] = Codec
+    .record(name = "PneumaticPressure", namespace = _namespace)(_("pressure", _.pressure).map(PneumaticPressure.apply))
 
   given finiteDurationCodec: Codec[FiniteDuration] = Codec.long.imap(_.millis)(_.toMillis)
 
-  given breaksUsageCodec: Codec[BreaksUsage] =
-    Codec.record(name = "BreaksUsage", namespace = _namespace)(
-      _("finateDuration", _.finiteDuration).map(BreaksUsage.apply)
-    )
+  given breaksUsageCodec: Codec[BreaksUsage] = Codec
+    .record(name = "BreaksUsage", namespace = _namespace)(_("finateDuration", _.finiteDuration).map(BreaksUsage.apply))
 
-  given breaksHealthCodec: Codec[BreaksHealth] =
-    Codec.record(name = "BreaksHealth", namespace = _namespace)(_("remaining", _.remaining).map(BreaksHealth.apply))
+  given breaksHealthCodec: Codec[BreaksHealth] = Codec
+    .record(name = "BreaksHealth", namespace = _namespace)(_("remaining", _.remaining).map(BreaksHealth.apply))
+
+end IotCodecs

@@ -17,6 +17,7 @@
 package com.fortyseven.domain.model.types
 
 import com.fortyseven.domain.model.types.refinedTypes.*
+
 import munit.ScalaCheckSuite
 import org.scalacheck
 import org.scalacheck.Gen
@@ -91,3 +92,5 @@ class refinedTypesTest extends ScalaCheckSuite:
   property("A valid Meters should have a value equal to 0 or higher"):
     forAll(Gen.posNum[Int]): meters =>
       Meters.from(meters).isRight
+
+end refinedTypesTest

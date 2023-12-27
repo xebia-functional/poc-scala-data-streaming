@@ -20,6 +20,7 @@ import com.fortyseven.domain.TestUtils.codeAndDecode
 import com.fortyseven.domain.TestUtils.given
 import com.fortyseven.domain.codecs.app.AppCodecs.given
 import com.fortyseven.domain.model.app.model.*
+
 import munit.ScalaCheckSuite
 import org.scalacheck.Prop.forAll
 
@@ -40,3 +41,5 @@ class AppCodecsTest extends ScalaCheckSuite:
   property("Total range should return the same value after encoding and decoding"):
     forAll: (totalRange: TotalRange) =>
       assertEquals(codeAndDecode(totalRange), Right(totalRange))
+
+end AppCodecsTest

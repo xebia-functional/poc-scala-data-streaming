@@ -20,85 +20,79 @@ import scala.concurrent.duration.FiniteDuration
 
 import com.fortyseven.domain.model.types.refinedTypes.*
 
-/**
- * Contains final case classes that represent atomic information captured by sensors.
- */
+/** Contains final case classes that represent atomic information captured by sensors.
+  */
 object model:
 
-  /**
-   * GPSPosition.
-   *
-   * @constructor
-   *   Create a GPSPosition with a specified `latitude` and `longitude`.
-   *
-   * @param latitude
-   *   Expressed in a refined type that is a subset of Double (-90.0, 90.0).
-   * @param longitude
-   *   Expressed in a refined type that is a subset of Double (-180.0, 180.0).
-   */
+  /** GPSPosition.
+    *
+    * @constructor
+    *   Create a GPSPosition with a specified `latitude` and `longitude`.
+    *
+    * @param latitude
+    *   Expressed in a refined type that is a subset of Double (-90.0, 90.0).
+    * @param longitude
+    *   Expressed in a refined type that is a subset of Double (-180.0, 180.0).
+    */
   final case class GPSPosition(latitude: Latitude, longitude: Longitude)
 
-  /**
-   * WheelRotation
-   *
-   * @constructor
-   *   Create a WheelRotation with a specified `frequency`.
-   * @param frequency
-   *   Expressed in a refined type, that is a subset of Double (>=0.0).
-   */
+  /** WheelRotation
+    *
+    * @constructor
+    *   Create a WheelRotation with a specified `frequency`.
+    * @param frequency
+    *   Expressed in a refined type, that is a subset of Double (>=0.0).
+    */
   final case class WheelRotation(frequency: Hz)
 
-  /**
-   * BatteryCharge.
-   *
-   * @constructor
-   *   Create a BatteryCharge with a specified `percentage`.
-   *
-   * @param percentage
-   *   Expressed in a refined type that is a subset of Double (0.00, 100.00).
-   */
+  /** BatteryCharge.
+    *
+    * @constructor
+    *   Create a BatteryCharge with a specified `percentage`.
+    *
+    * @param percentage
+    *   Expressed in a refined type that is a subset of Double (0.00, 100.00).
+    */
   final case class BatteryCharge(percentage: Percentage)
 
-  /**
-   * BatteryHealth.
-   *
-   * @constructor
-   *   Create a BatteryHealth with a specified `remaining`.
-   *
-   * @param remaining
-   *   Expressed in a refined type that is a subset of Double (0.0, 100.0).
-   */
+  /** BatteryHealth.
+    *
+    * @constructor
+    *   Create a BatteryHealth with a specified `remaining`.
+    *
+    * @param remaining
+    *   Expressed in a refined type that is a subset of Double (0.0, 100.0).
+    */
   final case class BatteryHealth(remaining: Percentage)
 
-  /**
-   * PneumaticPressure.
-   *
-   * @constructor
-   *   Create a PneumaticPressure with a specified `pressure`.
-   *
-   * @param pressure
-   *   Expressed in a refined type that is a subset of Double (>=0.0).
-   */
+  /** PneumaticPressure.
+    *
+    * @constructor
+    *   Create a PneumaticPressure with a specified `pressure`.
+    *
+    * @param pressure
+    *   Expressed in a refined type that is a subset of Double (>=0.0).
+    */
   final case class PneumaticPressure(pressure: Bar)
 
-  /**
-   * BreaksUsage.
-   *
-   * @constructor
-   *   Create a BreaksUsage with a specified `finiteDuration`.
-   *
-   * @param finiteDuration
-   *   Expressed in seconds [[scala.concurrent.duration.FiniteDuration]].
-   */
+  /** BreaksUsage.
+    *
+    * @constructor
+    *   Create a BreaksUsage with a specified `finiteDuration`.
+    *
+    * @param finiteDuration
+    *   Expressed in seconds [[scala.concurrent.duration.FiniteDuration]].
+    */
   final case class BreaksUsage(finiteDuration: FiniteDuration)
 
-  /**
-   * BreaksHealth.
-   *
-   * @constructor
-   *   Create a BreaksHealth with a specified `remaining`.
-   *
-   * @param remaining
-   *   Expressed in a refined type that is a subset of Double (0.0, 100.0).
-   */
+  /** BreaksHealth.
+    *
+    * @constructor
+    *   Create a BreaksHealth with a specified `remaining`.
+    *
+    * @param remaining
+    *   Expressed in a refined type that is a subset of Double (0.0, 100.0).
+    */
   final case class BreaksHealth(remaining: Percentage)
+
+end model

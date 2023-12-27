@@ -17,16 +17,19 @@
 package com.fortyseven.pureconfig.spark
 
 import com.fortyseven.common.api.ConfigurationAPI
+
 import pureconfig.ConfigReader.Result
 import pureconfig.ConfigSource
 
 final class SparkProcessorConfigurationLoader extends ConfigurationAPI[Result, SparkProcessorConfiguration]:
 
-  /**
-   * @return
-   *   An instance of the the class [Configuration] wrapped into an effect of type [Effect]. The return type of the method is mappable or flatMappable
-   *   since it is wrapped into an effect. Thus, you can use it in a for-comprehension. If the value of the configuration fails to be loaded, the
-   *   effect will handle the error gracefully.
-   */
-  override def load(): Result[SparkProcessorConfiguration] =
-    ConfigSource.default.at("processor-spark").load[SparkProcessorConfiguration]
+  /** @return
+    *   An instance of the the class [Configuration] wrapped into an effect of type [Effect]. The return type of the
+    *   method is mappable or flatMappable since it is wrapped into an effect. Thus, you can use it in a
+    *   for-comprehension. If the value of the configuration fails to be loaded, the effect will handle the error
+    *   gracefully.
+    */
+  override def load(): Result[SparkProcessorConfiguration] = ConfigSource
+    .default
+    .at("processor-spark")
+    .load[SparkProcessorConfiguration]

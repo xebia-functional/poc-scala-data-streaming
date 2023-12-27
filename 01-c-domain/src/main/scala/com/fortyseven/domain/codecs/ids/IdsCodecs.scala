@@ -16,12 +16,15 @@
 
 package com.fortyseven.domain.codecs.ids
 
-import com.fortyseven.domain.model.types.ids.{BicycleId, TripId, UserId}
+import com.fortyseven.domain.model.types.ids.BicycleId
+import com.fortyseven.domain.model.types.ids.TripId
+import com.fortyseven.domain.model.types.ids.UserId
+
 import vulcan.Codec
 
-/**
- * It contains the Vulcan codecs for the types (enums, case classes...) defined in the object [[com.fortyseven.domain.model.types.ids]].
- */
+/** It contains the Vulcan codecs for the types (enums, case classes...) defined in the object
+  * [[com.fortyseven.domain.model.types.ids]].
+  */
 object IdsCodecs:
 
   given bicycleIdCodec: Codec[BicycleId] = Codec.uuid.imap(BicycleId.apply)(_.value)
