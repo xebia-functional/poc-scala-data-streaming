@@ -20,11 +20,11 @@ import cats.effect.kernel.Async
 
 import scala.concurrent.duration.*
 
-import com.fortyseven.cirisconfiguration.decoders.given
 import com.fortyseven.common.api.ConfigurationAPI
 import com.fortyseven.common.configuration.refinedTypes.*
 
 import ciris.*
+import io.github.iltotore.iron.ciris.given
 
 final class KafkaConsumerConfigurationLoader[F[_]: Async] extends ConfigurationAPI[F, KafkaConsumerConfiguration]:
 

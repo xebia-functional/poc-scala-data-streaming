@@ -31,9 +31,7 @@ private[kafkaconsumer] case class KafkaConsumerConfiguration(
     consumer: Option[ConsumerConfiguration],
     producer: Option[ProducerConfiguration]
 ) extends KafkaConsumerConfigurationI
-
-object KafkaConsumerConfiguration:
-  given ConfigReader[KafkaConsumerConfiguration] = ConfigReader.derived[KafkaConsumerConfiguration]
+    derives ConfigReader
 
 private[kafkaconsumer] case class ConsumerConfiguration(
     topicName: NonEmptyString,
@@ -41,15 +39,10 @@ private[kafkaconsumer] case class ConsumerConfiguration(
     groupId: NonEmptyString,
     maxConcurrent: PositiveInt
 ) extends KafkaConsumerConsumerConfigurationI
-
-object ConsumerConfiguration:
-  given ConfigReader[ConsumerConfiguration] = ConfigReader.derived[ConsumerConfiguration]
+    derives ConfigReader
 
 private[kafkaconsumer] case class BrokerConfiguration(brokerAddress: NonEmptyString)
-    extends KafkaConsumerBrokerConfigurationI
-
-object BrokerConfiguration:
-  given ConfigReader[BrokerConfiguration] = ConfigReader.derived[BrokerConfiguration]
+    extends KafkaConsumerBrokerConfigurationI derives ConfigReader
 
 private[kafkaconsumer] case class ProducerConfiguration(
     topicName: NonEmptyString,
@@ -59,6 +52,4 @@ private[kafkaconsumer] case class ProducerConfiguration(
     commitBatchWithinSize: PositiveInt,
     commitBatchWithinTime: FiniteDuration
 ) extends KafkaConsumerProducerConfigurationI
-
-object ProducerConfiguration:
-  given ConfigReader[ProducerConfiguration] = ConfigReader.derived[ProducerConfiguration]
+    derives ConfigReader

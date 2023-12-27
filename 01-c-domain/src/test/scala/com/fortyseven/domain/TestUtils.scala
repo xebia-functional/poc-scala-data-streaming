@@ -16,7 +16,6 @@
 
 package com.fortyseven.domain
 
-import java.util.UUID
 import scala.concurrent.duration.FiniteDuration
 
 import com.fortyseven.domain.model.app.model.*
@@ -30,14 +29,6 @@ import vulcan.AvroError
 import vulcan.Codec
 
 object TestUtils:
-
-  given Arbitrary[UUID] = Arbitrary(Gen.uuid)
-
-  given Arbitrary[UserId] = Arbitrary(Gen.resultOf[UUID, UserId](UserId.apply))
-
-  given Arbitrary[TripId] = Arbitrary(Gen.resultOf[UUID, TripId](TripId.apply))
-
-  given Arbitrary[BicycleId] = Arbitrary(Gen.uuid.map(BicycleId.apply))
 
   given Arbitrary[Latitude] =
     Arbitrary(Gen.chooseNum[Double](-90.0, 90.0).flatMap(Latitude.from(_).fold(_ => Gen.fail, Gen.const)))

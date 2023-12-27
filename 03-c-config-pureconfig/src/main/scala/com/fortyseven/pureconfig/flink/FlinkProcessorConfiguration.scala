@@ -29,24 +29,17 @@ final private[flink] case class FlinkProcessorConfiguration(
     kafka: KafkaConfiguration,
     schemaRegistry: SchemaRegistryConfiguration
 ) extends FlinkProcessorConfigurationI
-
-object FlinkProcessorConfiguration:
-  given ConfigReader[FlinkProcessorConfiguration] = ConfigReader.derived[FlinkProcessorConfiguration]
+    derives ConfigReader
 
 final private[flink] case class KafkaConfiguration(
     broker: BrokerConfiguration,
     consumer: Option[ConsumerConfiguration],
     producer: Option[ProducerConfiguration]
 ) extends FlinkProcessorKafkaConfigurationI
-
-object KafkaConfiguration:
-  given ConfigReader[KafkaConfiguration] = ConfigReader.derived[KafkaConfiguration]
+    derives ConfigReader
 
 final private[flink] case class BrokerConfiguration(brokerAddress: NonEmptyString)
-    extends FlinkProcessorBrokerConfigurationI
-
-object BrokerConfiguration:
-  given ConfigReader[BrokerConfiguration] = ConfigReader.derived[BrokerConfiguration]
+    extends FlinkProcessorBrokerConfigurationI derives ConfigReader
 
 final private[flink] case class ConsumerConfiguration(
     topicName: NonEmptyString,
@@ -54,9 +47,7 @@ final private[flink] case class ConsumerConfiguration(
     groupId: NonEmptyString,
     maxConcurrent: PositiveInt
 ) extends FlinkProcessorConsumerConfigurationI
-
-object ConsumerConfiguration:
-  given ConfigReader[ConsumerConfiguration] = ConfigReader.derived[ConsumerConfiguration]
+    derives ConfigReader
 
 final private[flink] case class ProducerConfiguration(
     topicName: NonEmptyString,
@@ -66,12 +57,7 @@ final private[flink] case class ProducerConfiguration(
     commitBatchWithinSize: PositiveInt,
     commitBatchWithinTime: FiniteDuration
 ) extends FlinkProcessorProducerConfigurationI
-
-object ProducerConfiguration:
-  given ConfigReader[ProducerConfiguration] = ConfigReader.derived[ProducerConfiguration]
+    derives ConfigReader
 
 final private[flink] case class SchemaRegistryConfiguration(schemaRegistryUrl: NonEmptyString)
-    extends FlinkProcessorSchemaRegistryConfigurationI
-
-object SchemaRegistryConfiguration:
-  given ConfigReader[SchemaRegistryConfiguration] = ConfigReader.derived[SchemaRegistryConfiguration]
+    extends FlinkProcessorSchemaRegistryConfigurationI derives ConfigReader

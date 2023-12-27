@@ -74,7 +74,8 @@ lazy val domain: Project = project
       Libraries.avro.avro,
       Libraries.cats.free,
       Libraries.cats.core,
-      Libraries.test.munitScalacheck
+      Libraries.test.munitScalacheck,
+      Libraries.iron.core
     )
   )
 
@@ -116,7 +117,10 @@ lazy val `configuration-ciris`: Project = project
   .in(file("03-c-config-ciris"))
   .dependsOn(`common-api` % Cctt)
   .settings(commonSettings)
-  .settings(name := "ciris", libraryDependencies ++= Seq(Libraries.config.ciris, Libraries.cats.effectKernel))
+  .settings(
+    name := "ciris",
+    libraryDependencies ++= Seq(Libraries.config.ciris, Libraries.cats.effectKernel, Libraries.iron.ciris)
+  )
 
 lazy val `configuration-pureconfig`: Project = project
   .in(file("03-c-config-pureconfig"))

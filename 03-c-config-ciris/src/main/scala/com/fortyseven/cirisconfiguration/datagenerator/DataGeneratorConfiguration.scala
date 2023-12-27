@@ -20,6 +20,9 @@ import scala.concurrent.duration.FiniteDuration
 
 import com.fortyseven.common.configuration.*
 import com.fortyseven.common.configuration.refinedTypes.*
+import com.fortyseven.common.configuration.refinedTypes.KafkaCompressionType
+import com.fortyseven.common.configuration.refinedTypes.NonEmptyString
+import com.fortyseven.common.configuration.refinedTypes.PositiveInt
 
 final private[datagenerator] case class DataGeneratorConfiguration(
     kafka: DataGeneratorKafkaConfiguration,

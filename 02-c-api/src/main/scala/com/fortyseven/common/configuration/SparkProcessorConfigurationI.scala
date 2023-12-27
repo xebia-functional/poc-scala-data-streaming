@@ -18,7 +18,7 @@ package com.fortyseven.common.configuration
 
 import scala.concurrent.duration.FiniteDuration
 
-import com.fortyseven.common.configuration.refinedTypes.*
+import com.fortyseven.common.configuration.refinedTypes.NonEmptyString
 
 trait SparkProcessorConfigurationI:
   val app: SparkProcessorApplicationConfigurationI
@@ -27,8 +27,8 @@ trait SparkProcessorConfigurationI:
   val writer: SparkProcessorWriterConfigurationI
 
 trait SparkProcessorApplicationConfigurationI:
-  val appName: AppName
-  val masterUrl: MasterUrl
+  val appName: NonEmptyString
+  val masterUrl: NonEmptyString
 
 trait SparkProcessorStreamingConfigurationI:
   val backpressureEnabled: Boolean
@@ -39,10 +39,10 @@ trait SparkProcessorReaderConfigurationI:
   val kafka: SparkProcessorKafkaConfigurationI
 
 trait SparkProcessorWriterConfigurationI:
-  val format: Format
+  val format: NonEmptyString
 
 trait SparkProcessorKafkaConfigurationI:
-  val bootstrapServers: BootstrapServers
-  val topic: TopicName
-  val startingOffsets: Offset
-  val endingOffsets: Offset
+  val bootstrapServers: NonEmptyString
+  val topic: NonEmptyString
+  val startingOffsets: NonEmptyString
+  val endingOffsets: NonEmptyString

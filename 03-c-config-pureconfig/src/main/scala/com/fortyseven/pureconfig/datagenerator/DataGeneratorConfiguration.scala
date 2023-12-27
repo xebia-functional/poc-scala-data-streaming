@@ -29,23 +29,16 @@ final private[datagenerator] case class DataGeneratorConfiguration(
     kafka: DataGeneratorKafkaConfiguration,
     schemaRegistry: DataGeneratorSchemaRegistryConfiguration
 ) extends DataGeneratorConfigurationI
-
-object DataGeneratorConfiguration:
-  given ConfigReader[DataGeneratorConfiguration] = ConfigReader.derived[DataGeneratorConfiguration]
+    derives ConfigReader
 
 final private[datagenerator] case class DataGeneratorKafkaConfiguration(
     broker: DataGeneratorBrokerConfiguration,
     producer: DataGeneratorProducerConfiguration
 ) extends DataGeneratorKafkaConfigurationI
-
-object DataGeneratorKafkaConfiguration:
-  given ConfigReader[DataGeneratorKafkaConfiguration] = ConfigReader.derived[DataGeneratorKafkaConfiguration]
+    derives ConfigReader
 
 final private[datagenerator] case class DataGeneratorBrokerConfiguration(bootstrapServers: NonEmptyString)
-    extends DataGeneratorBrokerConfigurationI
-
-object DataGeneratorBrokerConfiguration:
-  given ConfigReader[DataGeneratorBrokerConfiguration] = ConfigReader.derived[DataGeneratorBrokerConfiguration]
+    extends DataGeneratorBrokerConfigurationI derives ConfigReader
 
 final private[datagenerator] case class DataGeneratorProducerConfiguration(
     topicName: NonEmptyString,
@@ -55,14 +48,7 @@ final private[datagenerator] case class DataGeneratorProducerConfiguration(
     commitBatchWithinSize: PositiveInt,
     commitBatchWithinTime: FiniteDuration
 ) extends DataGeneratorProducerConfigurationI
-
-object DataGeneratorProducerConfiguration:
-  given ConfigReader[DataGeneratorProducerConfiguration] = ConfigReader.derived[DataGeneratorProducerConfiguration]
+    derives ConfigReader
 
 final private[datagenerator] case class DataGeneratorSchemaRegistryConfiguration(schemaRegistryUrl: NonEmptyString)
-    extends DataGeneratorSchemaRegistryConfigurationI
-
-object DataGeneratorSchemaRegistryConfiguration:
-
-  given ConfigReader[DataGeneratorSchemaRegistryConfiguration] = ConfigReader
-    .derived[DataGeneratorSchemaRegistryConfiguration]
+    extends DataGeneratorSchemaRegistryConfigurationI derives ConfigReader

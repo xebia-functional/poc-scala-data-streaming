@@ -31,40 +31,26 @@ final private[spark] case class SparkProcessorConfiguration(
     reader: SparkProcessorReaderConfiguration,
     writer: SparkProcessorWriterConfiguration
 ) extends SparkProcessorConfigurationI
-
-object SparkProcessorConfiguration:
-  given ConfigReader[SparkProcessorConfiguration] = ConfigReader.derived[SparkProcessorConfiguration]
+    derives ConfigReader
 
 final private[spark] case class SparkProcessorApplicationConfiguration(
     appName: NonEmptyString,
     masterUrl: NonEmptyString
 ) extends SparkProcessorApplicationConfigurationI
-
-object SparkProcessorApplicationConfiguration:
-
-  given ConfigReader[SparkProcessorApplicationConfiguration] = ConfigReader
-    .derived[SparkProcessorApplicationConfiguration]
+    derives ConfigReader
 
 final private[spark] case class SparkProcessorStreamingConfiguration(
     backpressureEnabled: Boolean,
     blockInterval: FiniteDuration,
     stopGracefullyOnShutdown: Boolean
 ) extends SparkProcessorStreamingConfigurationI
-
-object SparkProcessorStreamingConfiguration:
-  given ConfigReader[SparkProcessorStreamingConfiguration] = ConfigReader.derived[SparkProcessorStreamingConfiguration]
+    derives ConfigReader
 
 final private[spark] case class SparkProcessorReaderConfiguration(kafka: SparkProcessorKafkaConfiguration)
-    extends SparkProcessorReaderConfigurationI
-
-object SparkProcessorReaderConfiguration:
-  given ConfigReader[SparkProcessorReaderConfiguration] = ConfigReader.derived[SparkProcessorReaderConfiguration]
+    extends SparkProcessorReaderConfigurationI derives ConfigReader
 
 final private[spark] case class SparkProcessorWriterConfiguration(format: NonEmptyString)
-    extends SparkProcessorWriterConfigurationI
-
-object SparkProcessorWriterConfiguration:
-  given ConfigReader[SparkProcessorWriterConfiguration] = ConfigReader.derived[SparkProcessorWriterConfiguration]
+    extends SparkProcessorWriterConfigurationI derives ConfigReader
 
 final private[spark] case class SparkProcessorKafkaConfiguration(
     bootstrapServers: NonEmptyString,
@@ -72,6 +58,4 @@ final private[spark] case class SparkProcessorKafkaConfiguration(
     startingOffsets: NonEmptyString,
     endingOffsets: NonEmptyString
 ) extends SparkProcessorKafkaConfigurationI
-
-object SparkProcessorKafkaConfiguration:
-  given ConfigReader[SparkProcessorKafkaConfiguration] = ConfigReader.derived[SparkProcessorKafkaConfiguration]
+    derives ConfigReader
