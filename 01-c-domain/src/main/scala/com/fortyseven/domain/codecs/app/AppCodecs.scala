@@ -42,9 +42,11 @@ object AppCodecs:
         .mapN(TotalDistanceByUser.apply)
     }
 
-  given currentSpeedCodec: Codec[CurrentSpeed] = Codec.record("CurrentSpeed", _namespace) { currentSpeed =>
-    (currentSpeed("tripId", _.tripId), currentSpeed("speed", _.speed)).mapN(CurrentSpeed.apply)
-  }
+  given currentSpeedCodec: Codec[CurrentSpeed] =
+    import com.fortyseven.domain.codecs.types.TypesCodecs.speedCodec
+    Codec.record("CurrentSpeed", _namespace) { currentSpeed =>
+      (currentSpeed("tripId", _.tripId), currentSpeed("speed", _.speed)).mapN(CurrentSpeed.apply)
+    }
 
   given totalRangeCodec: Codec[TotalRange] = Codec.record("TotalRange", _namespace) { totalRange =>
     (

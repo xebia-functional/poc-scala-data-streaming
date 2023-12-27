@@ -36,8 +36,9 @@ object IotCodecs:
     (field("latitude", _.latitude), field("longitude", _.longitude)).mapN(GPSPosition.apply)
   }
 
-  given wheelRotationCodec: Codec[WheelRotation] = Codec
-    .record(name = "WheelRotation", namespace = _namespace)(_("s", _.frequency).map(WheelRotation.apply))
+  given wheelRotationCodec: Codec[WheelRotation] =
+    import com.fortyseven.domain.codecs.types.TypesCodecs.hertzCodec
+    Codec.record(name = "WheelRotation", namespace = _namespace)(_("s", _.frequency).map(WheelRotation.apply))
 
   given batteryChargeCodec: Codec[BatteryCharge] = Codec
     .record(name = "BatteryCharge", namespace = _namespace)(_("percentage", _.percentage).map(BatteryCharge.apply))
@@ -45,8 +46,11 @@ object IotCodecs:
   given batteryHealthCodec: Codec[BatteryHealth] = Codec
     .record(name = "BatteryHealth", namespace = _namespace)(_("remaining", _.remaining).map(BatteryHealth.apply))
 
-  given pneumaticPressureCodec: Codec[PneumaticPressure] = Codec
-    .record(name = "PneumaticPressure", namespace = _namespace)(_("pressure", _.pressure).map(PneumaticPressure.apply))
+  given pneumaticPressureCodec: Codec[PneumaticPressure] =
+    import com.fortyseven.domain.codecs.types.TypesCodecs.barCodec
+    Codec.record(name = "PneumaticPressure", namespace = _namespace)(
+      _("pressure", _.pressure).map(PneumaticPressure.apply)
+    )
 
   given finiteDurationCodec: Codec[FiniteDuration] = Codec.long.imap(_.millis)(_.toMillis)
 

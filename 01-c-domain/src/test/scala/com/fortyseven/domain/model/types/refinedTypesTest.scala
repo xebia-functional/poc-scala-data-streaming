@@ -27,70 +27,70 @@ class refinedTypesTest extends ScalaCheckSuite:
 
   property("Latitudes grater than 90 are not allowed"):
     forAll(Gen.chooseNum(90.0, Double.MaxValue).suchThat(_ > 90.0)): latitude =>
-      Latitude.from(latitude).isLeft
+      Latitude.either(latitude).isLeft
 
   property("Latitudes smaller than -90 are not allowed"):
     forAll(Gen.chooseNum(Double.MinValue, -90.0).suchThat(_ < -90.0)): latitude =>
-      Latitude.from(latitude).isLeft
+      Latitude.either(latitude).isLeft
 
   property("Latitude should build from values that conform with Earth latitude limits"):
     forAll(Gen.chooseNum(-90.0, 90.0)): latitude =>
-      Latitude.from(latitude).isRight
+      Latitude.either(latitude).isRight
 
   property("Longitude grater than 180 are not allowed"):
     forAll(Gen.chooseNum(180.0, Double.MaxValue).suchThat(_ > 180.0)): longitude =>
-      Longitude.from(longitude).isLeft
+      Longitude.either(longitude).isLeft
 
   property("Longitude smaller than -180 are not allowed"):
     forAll(Gen.chooseNum(Double.MinValue, -180.0).suchThat(_ < -180.0)): longitude =>
-      Longitude.from(longitude).isLeft
+      Longitude.either(longitude).isLeft
 
   property("Longitude should build from values that conform with Earth longitude limits"):
     forAll(Gen.chooseNum(-180.0, 180.0)): longitude =>
-      Longitude.from(longitude).isRight
+      Longitude.either(longitude).isRight
 
   property("An invalid Percentage should have values bellow 0"):
     forAll(Gen.negNum[Double]): percentage =>
-      Percentage.from(percentage).isLeft
+      Percentage.either(percentage).isLeft
 
   property("An invalid Percentage should have values above 100"):
     forAll(Gen.chooseNum(100.0, Double.MaxValue).suchThat(_ > 100.0)): percentage =>
-      Percentage.from(percentage).isLeft
+      Percentage.either(percentage).isLeft
 
   property("A valid Percentage should have values between 0 and 100"):
     forAll(Gen.chooseNum(0.0, 100.0)): percentage =>
-      Percentage.from(percentage).isRight
+      Percentage.either(percentage).isRight
 
   property("An invalid Speed should have a value lower than 0"):
     forAll(Gen.negNum[Double]): speed =>
-      Speed.from(speed).isLeft
+      Speed.either(speed).isLeft
 
   property("A valid Speed should have a value equal to 0 or higher"):
     forAll(Gen.posNum[Double]): speed =>
-      Speed.from(speed).isRight
+      Speed.either(speed).isRight
 
   property("An invalid Hz should have a value lower than 0"):
     forAll(Gen.negNum[Double]): hz =>
-      Hz.from(hz).isLeft
+      Hz.either(hz).isLeft
 
   property("A valid Hz should have a value equal to 0 or higher"):
     forAll(Gen.posNum[Double]): hz =>
-      Hz.from(hz).isRight
+      Hz.either(hz).isRight
 
   property("An invalid Bar should have a value lower than 0"):
     forAll(Gen.negNum[Double]): bar =>
-      Bar.from(bar).isLeft
+      Bar.either(bar).isLeft
 
   property("A valid Bar should have a value equal to 0 or higher"):
     forAll(Gen.posNum[Double]): bar =>
-      Bar.from(bar).isRight
+      Bar.either(bar).isRight
 
   property("An invalid Meters should have a value lower than 0"):
     forAll(Gen.negNum[Int]): meters =>
-      Meters.from(meters).isLeft
+      Meters.either(meters).isLeft
 
   property("A valid Meters should have a value equal to 0 or higher"):
     forAll(Gen.posNum[Int]): meters =>
-      Meters.from(meters).isRight
+      Meters.either(meters).isRight
 
 end refinedTypesTest

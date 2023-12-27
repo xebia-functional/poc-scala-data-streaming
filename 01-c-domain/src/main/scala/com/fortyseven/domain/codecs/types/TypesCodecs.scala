@@ -30,30 +30,30 @@ object TypesCodecs:
 
   given latitudeCodec: Codec[Latitude] = Codec
     .double
-    .imapError(Latitude.from(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
+    .imapError(Latitude.either(_).leftMap(e => AvroError(s"AvroError: ${e}")))(identity)
 
   given longitudeCodec: Codec[Longitude] = Codec
     .double
-    .imapError(Longitude.from(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
+    .imapError(Longitude.either(_).leftMap(e => AvroError(s"AvroError: ${e}")))(identity)
 
   given percentageCodec: Codec[Percentage] = Codec
     .double
-    .imapError(Percentage.from(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
+    .imapError(Percentage.either(_).leftMap(e => AvroError(s"AvroError: ${e}")))(identity)
 
   given speedCodec: Codec[Speed] = Codec
     .double
-    .imapError(Speed.from(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
+    .imapError(Speed.either(_).leftMap(e => AvroError(s"AvroError: ${e}")))(identity)
 
   given hertzCodec: Codec[Hz] = Codec
     .double
-    .imapError(Hz.from(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
+    .imapError(Hz.either(_).leftMap(e => AvroError(s"AvroError: ${e}")))(identity)
 
   given barCodec: Codec[Bar] = Codec
     .double
-    .imapError(Bar.from(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
+    .imapError(Bar.either(_).leftMap(e => AvroError(s"AvroError: ${e}")))(identity)
 
   given metersCodec: Codec[Meters] = Codec
     .int
-    .imapError(Meters.from(_).leftMap(e => AvroError(s"AvroError: ${e.message}")))(_.value)
+    .imapError(Meters.either(_).leftMap(e => AvroError(s"AvroError: ${e}")))(identity)
 
 end TypesCodecs

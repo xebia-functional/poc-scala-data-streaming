@@ -75,7 +75,8 @@ lazy val domain: Project = project
       Libraries.cats.free,
       Libraries.cats.core,
       Libraries.test.munitScalacheck,
-      Libraries.iron.core
+      Libraries.iron.core,
+      Libraries.iron.scalacheck
     )
   )
 

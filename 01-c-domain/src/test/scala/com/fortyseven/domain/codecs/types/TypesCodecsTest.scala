@@ -20,33 +20,41 @@ import scala.reflect.ClassTag
 import scala.reflect.classTag
 
 import com.fortyseven.domain.TestUtils.codeAndDecode
-import com.fortyseven.domain.TestUtils.given
-import com.fortyseven.domain.codecs.types.TypesCodecs.given
+import com.fortyseven.domain.codecs.types.TypesCodecs.barCodec
+import com.fortyseven.domain.codecs.types.TypesCodecs.hertzCodec
+import com.fortyseven.domain.codecs.types.TypesCodecs.latitudeCodec
+import com.fortyseven.domain.codecs.types.TypesCodecs.longitudeCodec
+import com.fortyseven.domain.codecs.types.TypesCodecs.metersCodec
+import com.fortyseven.domain.codecs.types.TypesCodecs.percentageCodec
+import com.fortyseven.domain.codecs.types.TypesCodecs.speedCodec
 import com.fortyseven.domain.model.types.refinedTypes.*
 
+import io.github.iltotore.iron.scalacheck.all.fallback
 import munit.ScalaCheckSuite
 import org.scalacheck.Arbitrary
 import org.scalacheck.Prop.forAll
 
 class TypesCodecsTest extends ScalaCheckSuite:
 
-  private def propCodec[A: Arbitrary: vulcan.Codec: ClassTag](): Unit =
+  private def propCodec[A: Arbitrary: ClassTag](codec: vulcan.Codec[A]): Unit =
     property(s"Encoding and decoding for ${classTag[A].runtimeClass.getSimpleName} should work"):
-      forAll: (a: A) =>
-        assertEquals(codeAndDecode(a), Right(a))
+      forAll(Arbitrary.arbitrary) { value =>
+        given vulcan.Codec[A] = codec
+        assertEquals(codeAndDecode(value), Right(value))
+      }
 
-  propCodec[Latitude]()
+  propCodec[Latitude](latitudeCodec)
 
-  propCodec[Longitude]()
+  propCodec[Longitude](longitudeCodec)
 
-  propCodec[Percentage]()
+  propCodec[Percentage](percentageCodec)
 
-  propCodec[Speed]()
+  propCodec[Speed](speedCodec)
 
-  propCodec[Hz]()
+  propCodec[Hz](hertzCodec)
 
-  propCodec[Bar]()
+  propCodec[Bar](barCodec)
 
-  propCodec[Meters]()
+  propCodec[Meters](metersCodec)
 
 end TypesCodecsTest

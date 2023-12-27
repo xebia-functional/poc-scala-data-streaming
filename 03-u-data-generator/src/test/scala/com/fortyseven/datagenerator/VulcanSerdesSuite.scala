@@ -24,6 +24,7 @@ import com.fortyseven.domain.model.types.refinedTypes.Bar
 
 import io.confluent.kafka.schemaregistry.avro.AvroSchema
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient
+import io.github.iltotore.iron.autoRefine
 import munit.CatsEffectSuite
 
 class VulcanSerdesSuite extends CatsEffectSuite:

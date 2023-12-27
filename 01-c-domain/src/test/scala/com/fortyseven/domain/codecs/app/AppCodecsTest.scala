@@ -16,19 +16,28 @@
 
 package com.fortyseven.domain.codecs.app
 
+import java.util.UUID
+
 import com.fortyseven.domain.TestUtils.codeAndDecode
 import com.fortyseven.domain.TestUtils.given
 import com.fortyseven.domain.codecs.app.AppCodecs.given
 import com.fortyseven.domain.model.app.model.*
+import com.fortyseven.domain.model.types.refinedTypes.Meters
 
 import munit.ScalaCheckSuite
 import org.scalacheck.Prop.forAll
+import vulcan.AvroError
 
 class AppCodecsTest extends ScalaCheckSuite:
 
-  property("Total distance by trip should return the same value after encoding and decoding"):
-    forAll: (totalDistanceByTrip: TotalDistanceByTrip) =>
-      assertEquals(codeAndDecode(totalDistanceByTrip), Right(totalDistanceByTrip))
+  property(
+    "TotalDistanceByTrip should encode and decode only with correct values, otherwise should raise and AvroError"
+  ):
+    forAll { (id: UUID, x: Int) =>
+      x match
+        case x if x >= 0 => assert(codeAndDecode(TotalDistanceByTrip(id, Meters.assume(x))).isRight)
+        case x if x < 0 => assert(codeAndDecode(TotalDistanceByTrip(id, Meters.assume(x))).isLeft)
+    }
 
   property("Total distance by user should return the same value after encoding and decoding"):
     forAll: (totalDistanceByUser: TotalDistanceByUser) =>

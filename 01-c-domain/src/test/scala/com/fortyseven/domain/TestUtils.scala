@@ -23,29 +23,13 @@ import com.fortyseven.domain.model.iot.model.*
 import com.fortyseven.domain.model.types.ids.*
 import com.fortyseven.domain.model.types.refinedTypes.*
 
+import io.github.iltotore.iron.scalacheck.all.given
 import org.scalacheck.Arbitrary
 import org.scalacheck.Gen
 import vulcan.AvroError
 import vulcan.Codec
 
 object TestUtils:
-
-  given Arbitrary[Latitude] =
-    Arbitrary(Gen.chooseNum[Double](-90.0, 90.0).flatMap(Latitude.from(_).fold(_ => Gen.fail, Gen.const)))
-
-  given Arbitrary[Longitude] =
-    Arbitrary(Gen.chooseNum[Double](-180.0, 180.0).flatMap(Longitude.from(_).fold(_ => Gen.fail, Gen.const)))
-
-  given Arbitrary[Percentage] =
-    Arbitrary(Gen.chooseNum[Double](0.0, 100.0).flatMap(Percentage.from(_).fold(_ => Gen.fail, Gen.const)))
-
-  given Arbitrary[Speed] = Arbitrary(Gen.posNum[Double].flatMap(Speed.from(_).fold(_ => Gen.fail, Gen.const)))
-
-  given Arbitrary[Hz] = Arbitrary(Gen.posNum[Double].flatMap(Hz.from(_).fold(_ => Gen.fail, Gen.const)))
-
-  given Arbitrary[Bar] = Arbitrary(Gen.posNum[Double].flatMap(Bar.from(_).fold(_ => Gen.fail, Gen.const)))
-
-  given Arbitrary[Meters] = Arbitrary(Gen.posNum[Int].flatMap(Meters.from(_).fold(_ => Gen.fail, Gen.const)))
 
   given Arbitrary[TotalDistanceByTrip] = Arbitrary(Gen.resultOf(TotalDistanceByTrip.apply))
 
