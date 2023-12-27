@@ -52,26 +52,25 @@ final class KafkaConsumer[F[_]: Async] extends KafkaConsumerAPI[F]:
 
     val consumerSettings = ConsumerSettings[F, String, Array[Byte]]
       .withAutoOffsetReset(consumerConfig.autoOffsetReset)
-      .withBootstrapServers(kc.broker.brokerAddress.value)
-      .withGroupId(consumerConfig.groupId.value)
+      .withBootstrapServers(kc.broker.brokerAddress)
+      .withGroupId(consumerConfig.groupId)
 
     val producerSettings = ProducerSettings[F, String, Array[Byte]]
-      .withBootstrapServers(kc.broker.brokerAddress.value)
+      .withBootstrapServers(kc.broker.brokerAddress)
       .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, producerConfig.compressionType.toString)
 
     val stream = fs2
       .kafka
       .KafkaConsumer
       .stream(consumerSettings)
-      .subscribe(new Regex(s"${consumerConfig.topicName.value}-(.*)"))
+      .subscribe(new Regex(s"${consumerConfig.topicName}-(.*)"))
       .records
-      .mapAsync(consumerConfig.maxConcurrent.value) { committable =>
+      .mapAsync(consumerConfig.maxConcurrent) { committable =>
         def addTopicPrefix(sourceTopic: String, targetTopic: String): String =
           val suffix = sourceTopic.substring(sourceTopic.lastIndexOf("-"))
           s"$targetTopic$suffix"
         processRecord(committable.record).map { case (key, value) =>
-          val record =
-            ProducerRecord(addTopicPrefix(committable.record.topic, producerConfig.topicName.value), key, value)
+          val record = ProducerRecord(addTopicPrefix(committable.record.topic, producerConfig.topicName), key, value)
           committable.offset -> ProducerRecords.one(record)
         }
       }
@@ -81,10 +80,10 @@ final class KafkaConsumer[F[_]: Async] extends KafkaConsumerAPI[F]:
           .flatMap { producer =>
             offsetsAndProducerRecords
               .evalMap { case (offset, producerRecord) => producer.produce(producerRecord).map(_.as(offset)) }
-              .parEvalMap(producerConfig.maxConcurrent.value)(identity)
+              .parEvalMap(producerConfig.maxConcurrent)(identity)
           }
       }
-      .through(commitBatchWithin(producerConfig.commitBatchWithinSize.value, producerConfig.commitBatchWithinTime))
+      .through(commitBatchWithin(producerConfig.commitBatchWithinSize, producerConfig.commitBatchWithinTime))
 
     stream.compile.drain
 

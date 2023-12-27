@@ -31,7 +31,7 @@ final private[flink] case class FlinkProcessorConfiguration(
     schemaRegistry: SchemaRegistryConfiguration
 ) extends FlinkProcessorConfigurationI
 
-final private[flink] case class SchemaRegistryConfiguration(schemaRegistryUrl: SchemaRegistryUrl)
+final private[flink] case class SchemaRegistryConfiguration(schemaRegistryUrl: NonEmptyString)
     extends FlinkProcessorSchemaRegistryConfigurationI
 
 final private[flink] case class KafkaConfiguration(
@@ -40,21 +40,21 @@ final private[flink] case class KafkaConfiguration(
     producer: Option[ProducerConfiguration]
 ) extends FlinkProcessorKafkaConfigurationI
 
-final private[flink] case class BrokerConfiguration(brokerAddress: BrokerAddress)
+final private[flink] case class BrokerConfiguration(brokerAddress: NonEmptyString)
     extends FlinkProcessorBrokerConfigurationI
 
 final private[flink] case class ConsumerConfiguration(
-    topicName: TopicName,
+    topicName: NonEmptyString,
     autoOffsetReset: KafkaAutoOffsetReset,
-    groupId: GroupId,
-    maxConcurrent: MaxConcurrent
+    groupId: NonEmptyString,
+    maxConcurrent: PositiveInt
 ) extends FlinkProcessorConsumerConfigurationI
 
 final private[flink] case class ProducerConfiguration(
-    topicName: TopicName,
-    valueSerializerClass: ValueSerializerClass,
-    maxConcurrent: MaxConcurrent,
+    topicName: NonEmptyString,
+    valueSerializerClass: NonEmptyString,
+    maxConcurrent: PositiveInt,
     compressionType: KafkaCompressionType,
-    commitBatchWithinSize: CommitBatchWithinSize,
+    commitBatchWithinSize: PositiveInt,
     commitBatchWithinTime: FiniteDuration
 ) extends FlinkProcessorProducerConfigurationI

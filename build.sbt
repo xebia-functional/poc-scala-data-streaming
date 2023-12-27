@@ -86,7 +86,7 @@ lazy val `common-api`: Project = project
   .in(file("02-c-api"))
   .dependsOn(domain % Cctt)
   .settings(commonSettings)
-  .settings(name := "common-api", libraryDependencies ++= Seq(Libraries.iron.core))
+  .settings(name := "common-api", libraryDependencies ++= Seq())
 
 lazy val `input-api`: Project = project
   .in(file("02-i-api"))
@@ -116,10 +116,7 @@ lazy val `configuration-ciris`: Project = project
   .in(file("03-c-config-ciris"))
   .dependsOn(`common-api` % Cctt)
   .settings(commonSettings)
-  .settings(
-    name := "ciris",
-    libraryDependencies ++= Seq(Libraries.config.ciris, Libraries.cats.effectKernel, Libraries.iron.core)
-  )
+  .settings(name := "ciris", libraryDependencies ++= Seq(Libraries.config.ciris, Libraries.cats.effectKernel))
 
 lazy val `configuration-pureconfig`: Project = project
   .in(file("03-c-config-pureconfig"))
@@ -132,8 +129,7 @@ lazy val `configuration-pureconfig`: Project = project
       Libraries.cats.core,
       Libraries.cats.effectKernel,
       Libraries.config.pureConfigCE,
-      Libraries.test.munitCatsEffect,
-      Libraries.iron.core
+      Libraries.test.munitCatsEffect
     )
   )
 
@@ -171,8 +167,7 @@ lazy val `data-generator`: Project = project
       Libraries.kafka.kafkaSchemaSerializer,
       Libraries.kafka.kafkaSerializer,
       Libraries.test.munitCatsEffect,
-      Libraries.test.munitScalacheck,
-      Libraries.iron.core
+      Libraries.test.munitScalacheck
     )
   )
 
@@ -191,8 +186,7 @@ lazy val `consumer-kafka`: Project = project
       Libraries.cats.effectKernel,
       Libraries.kafka.kafkaClients,
       Libraries.fs2.kafka,
-      Libraries.fs2.core,
-      Libraries.iron.core
+      Libraries.fs2.core
     )
   )
 
@@ -220,8 +214,7 @@ lazy val `processor-flink`: Project = project
       Libraries.kafka.kafkaClients,
       Libraries.logging.catsCore,
       Libraries.logging.catsSlf4j,
-      Libraries.logging.logback,
-      Libraries.iron.core
+      Libraries.logging.logback
     )
   )
 

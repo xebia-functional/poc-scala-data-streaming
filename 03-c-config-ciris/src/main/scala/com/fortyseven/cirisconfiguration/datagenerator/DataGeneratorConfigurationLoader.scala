@@ -20,6 +20,7 @@ import cats.effect.kernel.Async
 
 import scala.concurrent.duration.*
 
+import com.fortyseven.cirisconfiguration.decoders.given
 import com.fortyseven.common.api.ConfigurationAPI
 import com.fortyseven.common.configuration.refinedTypes.*
 
@@ -29,16 +30,15 @@ final class DataGeneratorConfigurationLoader[F[_]: Async] extends ConfigurationA
 
   private def defaultConfig(): ConfigValue[Effect, DataGeneratorConfiguration] =
     for
-      kafkaBrokerBoostrapServers <- default(BootstrapServers.assume("localhost:9092")).as[BootstrapServers]
-      kafkaProducerTopicName <- default(TopicName.assume("data-generator")).as[TopicName]
-      kafkaProducerValueSerializerClass <- default(
-        ValueSerializerClass.assume("io.confluent.kafka.serializers.KafkaAvroSerializer")
-      ).as[ValueSerializerClass]
-      kafkaProducerMaxConcurrent <- default(MaxConcurrent.assume(Int.MaxValue)).as[MaxConcurrent]
+      kafkaBrokerBoostrapServers <- default("localhost:9092").as[NonEmptyString]
+      kafkaProducerTopicName <- default("data-generator").as[NonEmptyString]
+      kafkaProducerValueSerializerClass <- default("io.confluent.kafka.serializers.KafkaAvroSerializer")
+        .as[NonEmptyString]
+      kafkaProducerMaxConcurrent <- default(Int.MaxValue).as[PositiveInt]
       kafkaProducerCompressionType <- default(KafkaCompressionType.lz4).as[KafkaCompressionType]
-      kafkaProducerCommitBatchWithinSize <- default(CommitBatchWithinSize.assume(10)).as[CommitBatchWithinSize]
+      kafkaProducerCommitBatchWithinSize <- default(10).as[PositiveInt]
       kafkaProducerCommitBatchWithinTime <- default(15.seconds).as[FiniteDuration]
-      schemaRegistryUrl <- default(SchemaRegistryUrl.assume("http://localhost:8081")).as[SchemaRegistryUrl]
+      schemaRegistryUrl <- default("http://localhost:8081").as[NonEmptyString]
     yield DataGeneratorConfiguration(
       kafka = DataGeneratorKafkaConfiguration(
         broker = DataGeneratorBrokerConfiguration(bootstrapServers = kafkaBrokerBoostrapServers),

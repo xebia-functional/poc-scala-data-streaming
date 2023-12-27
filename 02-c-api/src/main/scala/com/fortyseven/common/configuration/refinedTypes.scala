@@ -19,10 +19,9 @@ package com.fortyseven.common.configuration
 import scala.compiletime.codeOf
 import scala.compiletime.constValue
 import scala.compiletime.error
+import scala.compiletime.ops.int.*
+import scala.compiletime.ops.string.Matches
 import scala.util.Try
-
-import io.github.iltotore.iron.*
-import io.github.iltotore.iron.constraint.all.*
 
 /** Before running the whole program or a part of it, the involved configuration must be loaded. Refining the types of
   * the configuration's values reduces the cardinality and helps catching an invalid configuration's value while
@@ -40,47 +39,6 @@ import io.github.iltotore.iron.constraint.all.*
   *   inline internals at [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
   */
 object refinedTypes:
-
-  opaque type SchemaRegistryUrl = String :| Not[Empty]
-  object SchemaRegistryUrl extends RefinedTypeOps[String, Not[Empty], SchemaRegistryUrl]
-
-  opaque type BootstrapServers = String :| Not[Empty]
-  object BootstrapServers extends RefinedTypeOps[String, Not[Empty], BootstrapServers]
-
-  opaque type TopicName = String :| Not[Empty]
-
-  object TopicName extends RefinedTypeOps[String, Not[Empty], TopicName]
-
-  opaque type ValueSerializerClass = String :| Not[Empty]
-
-  object ValueSerializerClass extends RefinedTypeOps[String, Not[Empty], ValueSerializerClass]
-
-  opaque type MaxConcurrent = Int :| Positive
-  object MaxConcurrent extends RefinedTypeOps[Int, Positive, MaxConcurrent]
-
-  opaque type CommitBatchWithinSize = Int :| Positive
-
-  object CommitBatchWithinSize extends RefinedTypeOps[Int, Positive, CommitBatchWithinSize]
-
-  opaque type BrokerAddress = String :| Not[Empty]
-
-  object BrokerAddress extends RefinedTypeOps[String, Not[Empty], BrokerAddress]
-
-  opaque type AppName = String :| Not[Empty]
-
-  object AppName extends RefinedTypeOps[String, Not[Empty], AppName]
-
-  opaque type MasterUrl = String :| ValidURL
-  object MasterUrl extends RefinedTypeOps[String, ValidURL, MasterUrl]
-
-  opaque type GroupId = String :| Not[Empty]
-  object GroupId extends RefinedTypeOps[String, Not[Empty], GroupId]
-
-  opaque type Offset = String :| ForAll[Digit]
-  object Offset extends RefinedTypeOps[String, ForAll[Digit], Offset]
-
-  enum Format:
-    case csv, delta, avro, parquet
 
   /** Set of allowed compression types for Kafka producers.
     *
@@ -170,5 +128,88 @@ object refinedTypes:
 
   /** Type alias for String. The validation happens in the factory methods of the companion object.
     */
+  opaque type NonEmptyString = String
+
+  /** Factory for [[NonEmptyString]] instances.
+    */
+  object NonEmptyString:
+
+    /** Smart constructor for unknown strings at compile time.
+      *
+      * @param nonEmptyStringCandidate
+      *   An unknown string.
+      * @return
+      *   An Either with a Right NonEmptyString or a Left IllegalStateException.
+      */
+    def from(nonEmptyStringCandidate: String): Either[Throwable, NonEmptyString] =
+      if nonEmptyStringCandidate.isBlank then
+        Left(new IllegalStateException(s"The provided string $nonEmptyStringCandidate is empty."))
+      else Right(nonEmptyStringCandidate)
+
+    /** Smart constructor for known strings at compile time. Use this method and not [[from]] when working with fixed
+      * values (''magic numbers'').
+      *
+      * @param nonEmptyString
+      *   A known string.
+      * @return
+      *   A valid NonEmptyString or a compiler error.
+      * @see
+      *   More info at [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
+      */
+    inline def apply(nonEmptyString: String): NonEmptyString =
+      inline if constValue[Matches[nonEmptyString.type, "^\\S+$"]] then nonEmptyString
+      else error(codeOf(nonEmptyString) + " is invalid. Empty String is not allowed here.")
+
+    /** When the compiler expects a value of type String but it finds a value of type NonEmptyString, it executes this.
+      *
+      * @return
+      *   Value of type NonEmptyString as type String.
+      */
+    given Conversion[NonEmptyString, String] with
+      override def apply(x: NonEmptyString): String = x
+
+  end NonEmptyString
+
+  /** Type alias for Int. The validation happens in the factory methods of the companion object.
+    */
+  opaque type PositiveInt = Int
+
+  /** Factory for [[PositiveInt]] instances.
+    */
+  object PositiveInt:
+
+    /** Smart constructor for unknown integers at compile time.
+      *
+      * @param intCandidate
+      *   An unknown integer.
+      * @return
+      *   An Either with a Right PositiveInt or a Left IllegalStateException.
+      */
+    def from(intCandidate: Int): Either[Throwable, PositiveInt] =
+      if intCandidate < 0 then Left(new IllegalStateException(s"The provided int $intCandidate is not positive."))
+      else Right(intCandidate)
+
+    /** Smart constructor for known integers at compile time. Use this method and not [[from]] when working with fixed
+      * values (''magic numbers'').
+      *
+      * @param int
+      *   A known integer.
+      * @return
+      *   A valid PositiveInt or a compiler error.
+      * @see
+      *   More info at [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
+      */
+    inline def apply(int: Int): PositiveInt =
+      inline if constValue[int.type >= 0] then int else error(codeOf(int) + " is negative. Int must be positive.")
+
+    /** When the compiler expects a value of type Int but it finds a value of type PositiveInt, it executes this.
+      *
+      * @return
+      *   Value of type PositiveInt as type Int.
+      */
+    given Conversion[PositiveInt, Int] with
+      override def apply(x: PositiveInt): Int = x
+
+  end PositiveInt
 
 end refinedTypes

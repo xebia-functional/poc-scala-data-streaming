@@ -82,14 +82,6 @@ object Dependencies {
       val munitScalacheck: ModuleID = "org.typelevel" %% "scalacheck-effect-munit" % munitScalacheckVersion % Test
     }
 
-    object iron {
-      val version: String = "2.3.0"
-      val core: ModuleID = "io.github.iltotore" %% "iron" % version
-      val cats: ModuleID = "io.github.iltotore" %% "iron-cats" % version
-      val circe: ModuleID = "io.github.iltotore" %% "iron-circe" % version
-      val scalacheck: ModuleID = "io.github.iltotore" %% "iron-scalacheck" % version % Test
-    }
-
   }
 
 }

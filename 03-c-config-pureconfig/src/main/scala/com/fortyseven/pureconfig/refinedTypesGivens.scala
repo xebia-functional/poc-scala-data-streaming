@@ -28,49 +28,12 @@ import pureconfig.error.ExceptionThrown
   */
 object refinedTypesGivens:
 
+  given ConfigReader[NonEmptyString] = ConfigReader.fromString(NonEmptyString.from(_).leftMap(ExceptionThrown.apply))
+
+  given ConfigReader[PositiveInt] = ConfigReader[Int].emap(PositiveInt.from(_).leftMap(ExceptionThrown.apply))
+
   given ConfigReader[KafkaAutoOffsetReset] = ConfigReader
     .fromString(KafkaAutoOffsetReset.from(_).leftMap(ExceptionThrown.apply))
 
   given ConfigReader[KafkaCompressionType] = ConfigReader
     .fromString(KafkaCompressionType.from(_).leftMap(ExceptionThrown.apply))
-
-  given ConfigReader[SchemaRegistryUrl] = ConfigReader.fromString(
-    SchemaRegistryUrl
-      .either(_)
-      .leftMap { error =>
-        val throwable = new Throwable(error)
-        ExceptionThrown(throwable)
-      }
-  )
-
-  given ConfigReader[BootstrapServers] = ConfigReader
-    .fromString(BootstrapServers.either(_).leftMap(error => ExceptionThrown(new Throwable(error))))
-
-  given ConfigReader[TopicName] = ConfigReader
-    .fromString(TopicName.either(_).leftMap(error => ExceptionThrown(new Throwable(error))))
-
-  given ConfigReader[ValueSerializerClass] = ConfigReader
-    .fromString(ValueSerializerClass.either(_).leftMap(error => ExceptionThrown(new Throwable(error))))
-
-  given ConfigReader[MaxConcurrent] = ConfigReader[Int]
-    .emap(MaxConcurrent.either(_).leftMap(error => ExceptionThrown(new Throwable(error))))
-
-  given ConfigReader[CommitBatchWithinSize] = ConfigReader[Int]
-    .emap(CommitBatchWithinSize.either(_).leftMap(error => ExceptionThrown(new Throwable(error))))
-
-  given ConfigReader[BrokerAddress] = ConfigReader
-    .fromString(BrokerAddress.either(_).leftMap(error => ExceptionThrown(new Throwable(error))))
-
-  given ConfigReader[GroupId] = ConfigReader
-    .fromString(GroupId.either(_).leftMap(error => ExceptionThrown(new Throwable(error))))
-
-  given ConfigReader[AppName] = ConfigReader
-    .fromString(AppName.either(_).leftMap(error => ExceptionThrown(new Throwable(error))))
-
-  given ConfigReader[MasterUrl] = ConfigReader
-    .fromString(MasterUrl.either(_).leftMap(error => ExceptionThrown(new Throwable(error))))
-
-  given ConfigReader[Offset] = ConfigReader
-    .fromString(Offset.either(_).leftMap(error => ExceptionThrown(new Throwable(error))))
-
-end refinedTypesGivens

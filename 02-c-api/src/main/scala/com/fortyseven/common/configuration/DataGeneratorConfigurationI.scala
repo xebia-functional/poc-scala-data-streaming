@@ -18,7 +18,9 @@ package com.fortyseven.common.configuration
 
 import scala.concurrent.duration.FiniteDuration
 
-import com.fortyseven.common.configuration.refinedTypes.*
+import com.fortyseven.common.configuration.refinedTypes.KafkaCompressionType
+import com.fortyseven.common.configuration.refinedTypes.NonEmptyString
+import com.fortyseven.common.configuration.refinedTypes.PositiveInt
 
 trait DataGeneratorConfigurationI:
   val kafka: DataGeneratorKafkaConfigurationI
@@ -29,15 +31,15 @@ trait DataGeneratorKafkaConfigurationI:
   val producer: DataGeneratorProducerConfigurationI
 
 trait DataGeneratorBrokerConfigurationI:
-  val bootstrapServers: BootstrapServers
+  val bootstrapServers: NonEmptyString
 
 trait DataGeneratorProducerConfigurationI:
-  val topicName: TopicName
-  val valueSerializerClass: ValueSerializerClass
-  val maxConcurrent: MaxConcurrent
+  val topicName: NonEmptyString
+  val valueSerializerClass: NonEmptyString
+  val maxConcurrent: PositiveInt
   val compressionType: KafkaCompressionType
-  val commitBatchWithinSize: CommitBatchWithinSize
+  val commitBatchWithinSize: PositiveInt
   val commitBatchWithinTime: FiniteDuration
 
 trait DataGeneratorSchemaRegistryConfigurationI:
-  val schemaRegistryUrl: SchemaRegistryUrl
+  val schemaRegistryUrl: NonEmptyString
