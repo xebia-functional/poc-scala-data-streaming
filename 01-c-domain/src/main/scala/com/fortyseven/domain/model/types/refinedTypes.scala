@@ -16,10 +16,9 @@
 
 package com.fortyseven.domain.model.types
 
-import scala.compiletime.error
-import scala.compiletime.requireConst
-
-import com.fortyseven.domain.model.iot.errors.*
+import io.github.iltotore.iron.*
+import io.github.iltotore.iron.constraint.all.*
+import io.github.iltotore.iron.constraint.numeric.Interval.Closed
 
 /** Contains the types of the business logic.
   *
@@ -36,255 +35,31 @@ import com.fortyseven.domain.model.iot.errors.*
   */
 object refinedTypes:
 
-  opaque type Latitude = Double
+  type Latitude = Double :| Closed[-90.0, 90.0]
 
-  opaque type Longitude = Double
+  object Latitude extends RefinedTypeOps[Double, Closed[-90.0, 90.0], Latitude]
 
-  opaque type Percentage = Double
+  type Longitude = Double :| Closed[-180.0, 180.0]
 
-  opaque type Speed = Double // Should be typed better. Meters/second or Km/h?
+  object Longitude extends RefinedTypeOps[Double, Closed[-180.0, 180.0], Longitude]
 
-  opaque type Hz = Double // IS measure for frequency 1/60 Hz would be 1 RPM
+  type Percentage = Double :| Closed[0.0, 100.0]
 
-  opaque type Bar = Double
+  object Percentage extends RefinedTypeOps[Double, Closed[0.0, 100.0], Percentage]
 
-  opaque type Meters = Int
+  type Speed = Double :| GreaterEqual[0.0]
 
-  /** Factory for [[Latitude]] instances.
-    */
-  object Latitude:
+  object Speed extends RefinedTypeOps[Double, GreaterEqual[0.0], Speed]
 
-    /** Smart constructor for unknown doubles at compile time.
-      *
-      * @param coordinateCandidate
-      *   An unknown double.
-      * @return
-      *   An Either with a Right Latitude or a Left OutOfBoundsError.
-      */
-    def from(coordinateCandidate: Double): Either[OutOfBoundsError, Latitude] = coordinateCandidate match
-      case c if c < -90.0 || c > 90.0 => Left(OutOfBoundsError(s"Invalid latitude value $c"))
-      case c => Right(c)
+  type Hz = Double :| GreaterEqual[0.0]
 
-    /** Smart constructor for known doubles at compile time. Use this method and not [[from]] when working with fixed
-      * values (''magic numbers'').
-      *
-      * @param coordinate
-      *   A known double.
-      * @return
-      *   A valid Latitude or a compiler error.
-      * @see
-      *   [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
-      */
-    inline def apply(coordinate: Double): Latitude =
-      requireConst(coordinate)
-      inline if coordinate < -90.0 || coordinate > 90.0 then
-        error("Invalid latitude value. Accepted coordinate values are between -90.0 and 90.0.")
-      else coordinate
+  object Hz extends RefinedTypeOps[Double, GreaterEqual[0.0], Hz]
 
-    extension (coordinate: Latitude) def value: Double = coordinate
+  type Bar = Double :| GreaterEqual[0.0]
 
-  end Latitude
+  object Bar extends RefinedTypeOps[Double, GreaterEqual[0.0], Bar]
 
-  /** Factory for [[Longitude]] instances.
-    */
-  object Longitude:
+  type Meters = Int :| GreaterEqual[0]
 
-    /** Smart constructor for unknown doubles at compile time.
-      *
-      * @param coordinateCandidate
-      *   An unknown double.
-      * @return
-      *   An Either with a Right Longitude or a Left OutOfBoundsError.
-      */
-    def from(coordinateCandidate: Double): Either[OutOfBoundsError, Longitude] = coordinateCandidate match
-      case c if c < -180.0 || c > 180.0 => Left(OutOfBoundsError(s"Invalid longitude value $c"))
-      case c => Right(c)
-
-    /** Smart constructor for known doubles at compile time. Use this method and not [[from]] when working with fixed
-      * values (''magic numbers'').
-      *
-      * @param coordinate
-      *   A known double.
-      * @return
-      *   A valid Longitude or a compiler error.
-      * @see
-      *   [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
-      */
-    inline def apply(coordinate: Double): Longitude =
-      requireConst(coordinate)
-      inline if coordinate < -180.0 || coordinate > 180.0 then
-        error("Invalid longitude value. Accepted coordinate values are between -180.0 and 180.0.")
-      else coordinate
-
-    extension (coordinate: Longitude) def value: Double = coordinate
-
-  end Longitude
-
-  /** Factory for [[Percentage]] instances.
-    */
-  object Percentage:
-
-    /** Smart constructor for unknown doubles at compile time.
-      *
-      * @param percentageCandidate
-      *   An unknown double.
-      * @return
-      *   An Either with a Right Percentage or a Left OutOfBoundsError.
-      */
-    def from(percentageCandidate: Double): Either[OutOfBoundsError, Percentage] = percentageCandidate match
-      case p if p < 0.0 || p > 100.0 => Left(OutOfBoundsError(s"Invalid percentage value $p"))
-      case percentage => Right(percentage)
-
-    /** Smart constructor for known doubles at compile time. Use this method and not [[from]] when working with fixed
-      * values (''magic numbers'').
-      *
-      * @param percentage
-      *   A known double.
-      * @return
-      *   A valid Percentage or a compiler error.
-      * @see
-      *   [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
-      */
-    inline def apply(percentage: Double): Percentage =
-      requireConst(percentage)
-      inline if percentage < 0.0 || percentage > 100.0 then
-        error("Invalid percentage value. Accepted percentage values are between -0.0 and 100.0.")
-      else percentage
-
-    extension (percentage: Percentage) def value: Double = percentage
-
-  end Percentage
-
-  /** Factory for [[Speed]] instances.
-    */
-  object Speed:
-
-    /** Smart constructor for unknown doubles at compile time.
-      *
-      * @param speedCandidate
-      *   An unknown double.
-      * @return
-      *   An Either with a Right Speed or a Left OutOfBoundsError.
-      */
-    def from(speedCandidate: Double): Either[OutOfBoundsError, Speed] = speedCandidate match
-      case speed if speed < 0.0 => Left(OutOfBoundsError(s"Invalid speed value $speed"))
-      case speed => Right(speed)
-
-    /** Smart constructor for known doubles at compile time. Use this method and not [[from]] when working with fixed
-      * values (''magic numbers'').
-      *
-      * @param speed
-      *   A known double.
-      * @return
-      *   A valid Speed or a compiler error.
-      * @see
-      *   [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
-      */
-    inline def apply(speed: Double): Speed =
-      requireConst(speed)
-      inline if speed < 0.0 then error("Invalid speed value. Accepted speed values are greater than 0.0.") else speed
-
-    extension (speed: Speed) def value: Double = speed
-
-  end Speed
-
-  /** Factory for [[Hz]] instances.
-    */
-  object Hz:
-
-    /** Smart constructor for unknown doubles at compile time.
-      *
-      * @param hertzCandidate
-      *   An unknown double.
-      * @return
-      *   An Either with a Right Hz or a Left OutOfBoundsError.
-      */
-    def from(hertzCandidate: Double): Either[OutOfBoundsError, Hz] = hertzCandidate match
-      case hz if hz < 0.0 => Left(OutOfBoundsError(s"Invalid frequency value $hz"))
-      case hz => Right(hz)
-
-    /** Smart constructor for known doubles at compile time. Use this method and not [[from]] when working with fixed
-      * values (''magic numbers'').
-      *
-      * @param hertz
-      *   A known double.
-      * @return
-      *   A valid Hz or a compiler error.
-      * @see
-      *   [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
-      */
-    inline def apply(hertz: Double): Hz =
-      inline if hertz < 0.0 then error("Invalid frequency value. Accepted hertz values are greater than 0.0.")
-      else hertz
-
-    extension (hertz: Hz) def value: Double = hertz
-
-  end Hz
-
-  /** Factory for [[Bar]] instances.
-    */
-  object Bar:
-
-    /** Smart constructor for unknown doubles at compile time.
-      *
-      * @param barCandidate
-      *   An unknown double.
-      * @return
-      *   An Either with a Right Bar or a Left OutOfBoundsError.
-      */
-    def from(barCandidate: Double): Either[OutOfBoundsError, Bar] = barCandidate match
-      case p if p < 0.0 => Left(OutOfBoundsError(s"Invalid pressure value $p"))
-      case p => Right(p)
-
-    /** Smart constructor for known doubles at compile time. Use this method and not [[from]] when working with fixed
-      * values (''magic numbers'').
-      *
-      * @param bar
-      *   A known double.
-      * @return
-      *   A valid Bar or a compiler error.
-      * @see
-      *   [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
-      */
-    inline def apply(bar: Double): Bar =
-      requireConst(bar)
-      inline if bar < 0.0 then error("Invalid pressure value. Accepted bar values are greater than 0.0.") else bar
-
-    extension (bar: Bar) def value: Double = bar
-
-  end Bar
-
-  /** Factory for [[Meters]] instances.
-    */
-  object Meters:
-
-    /** Smart constructor for unknown integers at compile time.
-      *
-      * @param metersCandidate
-      *   An unknown integer.
-      * @return
-      *   An Either with a Right Meters or a Left OutOfBoundsError.
-      */
-    def from(metersCandidate: Int): Either[OutOfBoundsError, Meters] = metersCandidate match
-      case meters if meters < 0 => Left(OutOfBoundsError(s"Invalid meters value $meters"))
-      case meters => Right(meters)
-
-    /** Smart constructor for known integers at compile time. Use this method and not [[from]] when working with fixed
-      * values (''magic numbers'').
-      *
-      * @param meters
-      *   A known integer.
-      * @return
-      *   A valid Meters or a compiler error.
-      * @see
-      *   [[https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html]]
-      */
-    inline def apply(meters: Int): Meters =
-      requireConst(meters)
-      inline if meters < 0 then error("Invalid meters value. Accepted bar values are greater than 0.") else meters
-
-    extension (meters: Meters) def value: Int = meters
-
-  end Meters
-
+  object Meters extends RefinedTypeOps[Int, GreaterEqual[0.0], Meters]
 end refinedTypes

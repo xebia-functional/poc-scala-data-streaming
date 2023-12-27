@@ -21,6 +21,10 @@ import cats.syntax.all.*
 import com.fortyseven.common.configuration.*
 import com.fortyseven.common.configuration.refinedTypes.*
 
+import io.github.iltotore.iron.RefinedTypeOps
+import io.github.iltotore.iron.constraint.any.!
+import io.github.iltotore.iron.constraint.collection.Empty
+import io.github.iltotore.iron.constraint.numeric.Positive
 import pureconfig.ConfigReader
 import pureconfig.error.ExceptionThrown
 
@@ -28,12 +32,19 @@ import pureconfig.error.ExceptionThrown
   */
 object refinedTypesGivens:
 
-  given ConfigReader[NonEmptyString] = ConfigReader.fromString(NonEmptyString.from(_).leftMap(ExceptionThrown.apply))
+  private object NonEmptyStringBuilder extends RefinedTypeOps[String, ![Empty], NonEmptyString]
+  private object PositiveIntBuilder extends RefinedTypeOps[Int, Positive, PositiveInt]
 
-  given ConfigReader[PositiveInt] = ConfigReader[Int].emap(PositiveInt.from(_).leftMap(ExceptionThrown.apply))
+  given ConfigReader[NonEmptyString] = ConfigReader
+    .fromString(NonEmptyStringBuilder.either(_).leftMap(error => ExceptionThrown(new Throwable(error))))
+
+  given ConfigReader[PositiveInt] = ConfigReader[Int]
+    .emap(PositiveIntBuilder.either(_).leftMap(error => ExceptionThrown(new Throwable(error))))
 
   given ConfigReader[KafkaAutoOffsetReset] = ConfigReader
     .fromString(KafkaAutoOffsetReset.from(_).leftMap(ExceptionThrown.apply))
 
   given ConfigReader[KafkaCompressionType] = ConfigReader
     .fromString(KafkaCompressionType.from(_).leftMap(ExceptionThrown.apply))
+
+end refinedTypesGivens
